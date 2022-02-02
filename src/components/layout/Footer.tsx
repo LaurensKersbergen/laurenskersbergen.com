@@ -27,12 +27,10 @@ export function Footer({ className, ...props }: ComponentProps<"footer">) {
           <time className="hidden sm:inline" dateTime={String(date)}>
             {date}{" "}
           </time>
-          <span className="text-zinc-300 dark:text-zinc-600">—</span> he
-          <span className="text-zinc-300 dark:text-zinc-600">/</span>they
         </span>
         <a
           className="link ml-auto inline-flex items-center gap-1.5"
-          href="https://github.com/marcbouchenoire/marcbouchenoire.com"
+          href="https://github.com/laurenskersbergen/"
           rel="noreferrer"
           target="_blank"
         >
@@ -51,7 +49,7 @@ export function Footer({ className, ...props }: ComponentProps<"footer">) {
             />
           </svg>
           <span>
-            <span>marcbouchenoire.com</span>
+            <span>laurenskersbergen.com</span>
             <span className="hidden text-zinc-350 dark:text-zinc-450 sm:inline">
               #{commit}
             </span>
