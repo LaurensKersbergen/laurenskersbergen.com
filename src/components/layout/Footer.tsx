@@ -30,7 +30,7 @@ export function Footer({ className, ...props }: ComponentProps<"footer">) {
         </span>
         <a
           className="link ml-auto inline-flex items-center gap-1.5"
-          href="https://github.com/laurenskersbergen/"
+          href="https://github.com/laurenskersbergen/laurenskersbergen.com"
           rel="noreferrer"
           target="_blank"
         >
