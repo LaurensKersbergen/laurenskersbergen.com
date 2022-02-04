@@ -133,7 +133,7 @@ export function Projects(props: ComponentProps<"section">) {
           A selection of personal—and{" "}
           <a
             className="link text-zinc-800 dark:text-white"
-            href="https://github.com/marcbouchenoire"
+            href="https://github.com/laurenskersbergen"
             rel="noreferrer"
             target="_blank"
           >

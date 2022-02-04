@@ -34,9 +34,9 @@ function App({ Component, pageProps }: AppProps) {
       >
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Head>
-            <title>Marc Bouchenoire</title>
-            <meta content="Marc Bouchenoire" name="title" />
-            <meta content="Marc Bouchenoire" name="author" />
+            <title>Laurens Kersbergen</title>
+            <meta content="Laurens Kersbergen" name="title" />
+            <meta content="Laurens Kersbergen" name="author" />
             <meta
               content="initial-scale=1, viewport-fit=cover"
               name="viewport"
@@ -46,29 +46,29 @@ function App({ Component, pageProps }: AppProps) {
               name="description"
             />
             <meta content="website" property="og:type" />
-            <meta content="https://marcbouchenoire.com" property="og:url" />
-            <meta content="Marc Bouchenoire" property="og:title" />
+            <meta content="https://laurenskersbergen.com" property="og:url" />
+            <meta content="Laurens Kersbergen" property="og:title" />
             <meta
               content="A detail-obsessed Design Engineer, designing and building delightful products."
               property="og:description"
             />
             <meta
-              content="https://marcbouchenoire.com/meta.png"
+              content="https://laurenskersbergen.com/meta.png"
               property="og:image"
             />
             <meta
-              content="https://marcbouchenoire.com"
+              content="https://laurenskersbergen.com"
               property="twitter:url"
             />
-            <meta content="@marcbouchenoire" property="twitter:creator" />
-            <meta content="Marc Bouchenoire" property="twitter:title" />
+            <meta content="@lvkersbergen" property="twitter:creator" />
+            <meta content="Laurens Kersbergen" property="twitter:title" />
             <meta content="photo" name="twitter:card" />
             <meta
               content="A detail-obsessed Design Engineer, designing and building delightful products."
               property="twitter:description"
             />
             <meta
-              content="https://marcbouchenoire.com/meta.png"
+              content="https://laurenskersbergen.com/meta.png"
               property="twitter:image"
             />
             <link href="/favicon.png" rel="icon" sizes="any" type="image/png" />

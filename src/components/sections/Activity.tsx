@@ -368,7 +368,7 @@ export function Activity(props: ComponentProps<"section">) {
         I <del>occasionally</del>{" "}
         <a
           className="link text-zinc-800 dark:text-white"
-          href="https://www.last.fm/user/marcbouchenoire"
+          href="https://www.last.fm/user/lvkersbergen"
           rel="noreferrer"
           target="_blank"
         >
@@ -377,7 +377,7 @@ export function Activity(props: ComponentProps<"section">) {
         and{" "}
         <a
           className="link text-zinc-800 dark:text-white"
-          href="https://letterboxd.com/marcbouchenoire/"
+          href="https://letterboxd.com/lvkersbergen/"
           rel="noreferrer"
           target="_blank"
         >
