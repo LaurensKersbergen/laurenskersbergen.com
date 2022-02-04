@@ -26,12 +26,12 @@ export function Introduction(props: ComponentProps<"section">) {
           Laurens Kersbergen
         </h1>
         <p className="text-lg text-zinc-400 dark:text-zinc-450">
-          Experiment-driven Product manager
+          Product Manager
         </p>
       </div>
       <div className="my-10 max-w-[58ch] text-zinc-500 dark:text-zinc-350">
         <p className="my-4 leading-loose">
-          Hey, I'm Laurens. I’m currently living in Amsterdam and working at{" "}
+          Hey, I’m Laurens. I’m currently living in Amsterdam and working at{" "}
           <a
             className="focusable rounded-sm font-medium text-zinc-800 underline decoration-sky-500 decoration-2 underline-offset-2 transition duration-100 hover:text-sky-500 hover:decoration-sky-500/30 focus:text-sky-500 focus:ring-sky-500/40 dark:text-white dark:decoration-sky-400 dark:hover:text-sky-400 dark:hover:decoration-sky-400/30 dark:focus:text-sky-400 dark:focus:ring-sky-400/40"
             href="https://www.miro.com/"
