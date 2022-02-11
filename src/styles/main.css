@@ -249,3 +249,46 @@
 .transform-elements {
   transform: rotateX(6deg) rotateY(-12deg) rotateZ(4deg) translateX(-2%);
 }
+
+.post-content h2 {
+  @apply mb-2 text-xl font-bold text-zinc-800 dark:text-white;
+}
+
+.post-content h3 {
+  @apply mb-2 text-lg font-bold text-zinc-800 dark:text-white;
+}
+
+.post-content p,
+.post-content ul,
+.post-content ol {
+  @apply mb-6 leading-loose;
+}
+
+.post-content ul,
+.post-content ol {
+  @apply list-inside;
+}
+
+.post-content ul {
+  @apply list-disc;
+}
+
+.post-content p > a {
+  @apply focusable rounded-sm text-blue-500 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500 focus:ring-sky-500/40 dark:text-blue-400 dark:decoration-sky-400 dark:hover:text-sky-400 dark:focus:text-sky-400 dark:focus:ring-sky-400/40;
+}
+
+.post-content hr {
+  @apply my-6;
+}
+
+.kg-image {
+  @apply rounded-xl;
+}
+
+.kg-card figcaption {
+  @apply mt-2 text-center text-sm italic text-light-400 dark:text-light-300;
+}
+
+.kg-card {
+  @apply my-8;
+}

@@ -59,6 +59,18 @@ module.exports = {
           400: "#f377a9",
           500: "#ea4c89"
         },
+        light: {
+          DEFAULT: "#F5F5F5",
+          400: "#737373",
+          300: "#A3A3A3"
+        },
+        black: {
+          DEFAULT: "#000000"
+        },
+        dark: {
+          DEFAULT: "#121212",
+          1: "#111111"
+        },
         primary: {
           50: "#f0f9ff",
           100: "#e0f2fe",

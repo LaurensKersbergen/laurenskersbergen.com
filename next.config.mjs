@@ -31,6 +31,9 @@ export default () => {
     trailingSlash: false,
     eslint: {
       ignoreDuringBuilds: true
+    },
+    images: {
+      domains: ["static.ghost.org"]
     }
   }
 }
