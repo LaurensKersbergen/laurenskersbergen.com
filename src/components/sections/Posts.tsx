@@ -38,10 +38,10 @@ export function Posts({ posts }: Props) {
     <section className="mt-16 md:mt-20 lg:mt-24">
       <div className="content mb-8">
         <h2 className="mb-2 text-xl">Writing</h2>
-        <div className="mt-4">
+        <div className="mt-6 space-y-6">
           {posts?.slice(0, 3).map((post: PostType, idx: number) => {
             return (
-              <div className="my-5" key={`${idx}-post`}>
+              <div key={`${idx}-post`}>
                 <Link href={`/writing/${post.slug}`}>
                   <a className="font-semibold text-black hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-600">
                     {post.title}

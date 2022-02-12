@@ -40,7 +40,7 @@
   }
 
   body {
-    @apply bg-white text-zinc-500 selection:bg-primary-500/30 dark:bg-black dark:text-light-300 dark:selection:bg-primary-400/40;
+    @apply bg-white text-text selection:bg-primary-500/30 dark:bg-black dark:text-light-300 dark:selection:bg-primary-400/40;
 
     -webkit-tap-highlight-color: transparent;
   }
@@ -51,7 +51,7 @@
   h4,
   h5,
   h6 {
-    @apply font-semibold text-zinc-800 dark:text-dark-2;
+    @apply font-semibold text-black dark:text-white;
   }
 
   [data-reactroot] {
@@ -110,7 +110,7 @@
 
 @layer components {
   .content {
-    @apply mx-auto max-w-screen-sm px-5-safe;
+    @apply mx-auto max-w-screen-sm px-5 md:px-0;
   }
 
   .skeleton {
@@ -270,7 +270,7 @@
 .post-content p,
 .post-content ul,
 .post-content ol {
-  @apply mb-6 leading-loose;
+  @apply mb-6 leading-loose text-black dark:text-light-300;
 }
 
 .post-content ul,

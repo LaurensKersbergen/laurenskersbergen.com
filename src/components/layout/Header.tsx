@@ -68,9 +68,9 @@ function ActiveLink({
     <a
       className={`${
         router.asPath === href
-          ? "bg-zinc-850 text-zinc-150 dark:text-white"
-          : "text-zinc-500 hover:bg-zinc-850 dark:text-light-350"
-      } leading inline-block rounded-full px-3 py-9.5 font-medium leading-none md:mx-1 md:px-4`}
+          ? "bg-zinc-850 font-semibold text-white dark:bg-dark-3 dark:text-white"
+          : "text-zinc-500 hover:bg-light dark:text-light-350 dark:hover:bg-transparent dark:hover:text-white"
+      } inline-block rounded-full px-3 py-9.5 font-medium leading-none md:mx-1 md:px-4`}
       href={href}
       onClick={handleClick}
     >

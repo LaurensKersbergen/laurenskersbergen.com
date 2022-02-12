@@ -36,8 +36,10 @@ function WritingPage({ posts }: Props) {
                     />
                   </div>
                 )}
-                <p className="font-semibold dark:text-white">{post.title}</p>
-                <p className="my-2 text-sm dark:text-light-300">
+                <p className="font-semibold text-black dark:text-white">
+                  {post.title}
+                </p>
+                <p className="my-2 text-sm text-black dark:text-light-300">
                   {post.excerpt}
                 </p>
                 <p className="mt-2 text-sm text-light-400 dark:text-light-300">

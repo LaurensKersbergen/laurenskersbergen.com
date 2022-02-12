@@ -64,13 +64,20 @@ module.exports = {
           350: "#7A7A7A",
           400: "#737373"
         },
+        text: {
+          DEFAULT: "#404040"
+        },
+        nav: {
+          hover: "#7F7F7F"
+        },
         black: {
           DEFAULT: "#000000"
         },
         dark: {
           DEFAULT: "#121212",
           1: "#111111",
-          2: "#D4D4D4"
+          2: "#D4D4D4",
+          3: "#222222"
         },
         primary: {
           50: "#f0f9ff",
@@ -121,7 +128,7 @@ module.exports = {
       },
       fontFamily: {
         // sans: ["Inter", ...defaultTheme.fontFamily.sans]
-        sans: "system-ui"
+        sans: ["SF Pro Display", "system-ui"]
       },
       fontSize: {
         "2xs": [

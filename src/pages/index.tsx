@@ -21,7 +21,7 @@ interface Props {
 function Page({ posts }: Props) {
   return (
     <main className="flex-1 pb-16 md:pb-20 lg:pb-24">
-      <Introduction className="content mt-12 md:mt-16 lg:mt-20" />
+      <Introduction className="content mt-12 md:mt-16 lg:mt-104" />
       <Posts posts={posts} />
       <Work className="mt-16 md:mt-20 lg:mt-24" />
       <Projects className="mt-16 md:mt-20 lg:mt-24" />
