@@ -126,10 +126,8 @@ export function Projects(props: ComponentProps<"section">) {
   return (
     <section {...props}>
       <div className="content">
-        <h2 className="mb-2 text-xl font-bold text-zinc-800 dark:text-white">
-          Projects
-        </h2>
-        <p className="max-w-[46ch] leading-relaxed text-zinc-500 dark:text-zinc-350">
+        <h2 className="mb-2 text-xl">Projects</h2>
+        <p className="max-w-[46ch] leading-relaxed">
           A selection of personal—and{" "}
           <a
             className="link text-zinc-800 dark:text-white"
@@ -142,7 +140,7 @@ export function Projects(props: ComponentProps<"section">) {
           —projects.
         </p>
       </div>
-      <div className="content mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-8 lg:max-w-screen-md-8">
+      <div className="content mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-8">
         <Project repository="marcbouchenoire/dimmmensions">
           <h3 className="mb-2 font-semibold text-dimmmensions-500 dark:text-dimmmensions-400">
             <svg
@@ -183,7 +181,7 @@ export function Projects(props: ComponentProps<"section">) {
               />
             </svg>
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
+          <p className="leading-relaxed">
             A collection of dimensions from iOS and iPadOS&nbsp;devices.
           </p>
           <a
@@ -225,7 +223,7 @@ export function Projects(props: ComponentProps<"section">) {
               />
             </svg>
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
+          <p className="leading-relaxed">
             A collection of every symbol from SF&nbsp;Symbols.
           </p>
           <a
@@ -291,9 +289,7 @@ export function Projects(props: ComponentProps<"section">) {
               />
             </svg>
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
-            Measure text asynchronously.
-          </p>
+          <p className="leading-relaxed">Measure text asynchronously.</p>
           <a
             className="focusable mt-4 flex cursor-pointer items-center justify-center rounded-md bg-typometer-500 py-2 px-2.5 font-medium text-white shadow-lg shadow-typometer-500/10 transition selection:bg-white/30 hover:bg-typometer-500/80 hover:shadow-typometer-500/5 focus:ring-typometer-500/40 dark:bg-typometer-400 dark:text-zinc-900 dark:shadow-typometer-400/10 dark:selection:bg-zinc-900/30 dark:hover:bg-typometer-400/80 dark:hover:shadow-typometer-400/5 dark:focus:ring-typometer-400/40"
             href="https://typometer.marcbouchenoire.com"
@@ -307,7 +303,7 @@ export function Projects(props: ComponentProps<"section">) {
           <h3 className="mb-2 font-semibold text-lime-500 dark:text-lime-400">
             Tsatsiki
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
+          <p className="leading-relaxed">
             Run <code>tsc</code> with both a configuration and
             specific&nbsp;files.
           </p>
@@ -316,7 +312,7 @@ export function Projects(props: ComponentProps<"section">) {
           <h3 className="mb-2 font-semibold text-amber-500 dark:text-amber-400">
             Sketch Constraints
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
+          <p className="leading-relaxed">
             A plugin that integrates constraints in Sketch to lay
             out&nbsp;layers.
           </p>
@@ -325,7 +321,7 @@ export function Projects(props: ComponentProps<"section">) {
           <h3 className="mb-2 font-semibold text-teal-500 dark:text-teal-400">
             Alembic
           </h3>
-          <p className="leading-relaxed text-zinc-500 dark:text-zinc-350">
+          <p className="leading-relaxed">
             Extract a color palette from Sketch&nbsp;images.
           </p>
         </Project>

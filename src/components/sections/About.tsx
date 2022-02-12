@@ -3,7 +3,7 @@ import { ComponentProps } from "react"
 import photo from "../../../public/laurenskersbergen.jpg"
 
 const linkClass =
-  "focusable decoration rounded-sm text-blue-500 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500 focus:ring-sky-500/40 dark:text-blue-400 dark:decoration-sky-400 dark:hover:text-sky-400 dark:focus:text-sky-400 dark:focus:ring-sky-400/40"
+  "focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
 
 /**
  * An introduction section with a short bio.
@@ -13,8 +13,8 @@ const linkClass =
 export function About(props: ComponentProps<"section">) {
   return (
     <section {...props}>
-      <div className="text-zinc-850 dark:text-zinc-150">
-        <div className="">
+      <div>
+        <div>
           <Image
             alt="Laurens Kersbergen at work"
             className="w-full overflow-hidden rounded-lg object-cover"
@@ -25,7 +25,7 @@ export function About(props: ComponentProps<"section">) {
           />
         </div>
       </div>
-      <div className="mt-10 text-zinc-850 dark:text-zinc-150">
+      <div className="mt-10">
         <p className="my-4 leading-loose">
           Hey, I’m Laurens. I’m a product manager, writer, and{" "}
           <a className={linkClass} href="" rel="noreferrer" target="_blank">
@@ -42,9 +42,7 @@ export function About(props: ComponentProps<"section">) {
           </a>
           .
         </p>
-        <h2 className="mb-2 text-xl font-bold text-zinc-800 dark:text-white">
-          Escaping the meta of product design
-        </h2>
+        <h2 className="mb-2 text-xl">Escaping the meta of product design</h2>
         <p className="my-4 leading-loose">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry’s standard dummy text ever

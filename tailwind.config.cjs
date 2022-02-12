@@ -1,4 +1,3 @@
-const defaultTheme = require("tailwindcss/defaultTheme")
 const plugin = require("tailwindcss/plugin")
 
 const paddingSafe = plugin(({ addUtilities, config, e }) => {
@@ -61,15 +60,17 @@ module.exports = {
         },
         light: {
           DEFAULT: "#F5F5F5",
-          400: "#737373",
-          300: "#A3A3A3"
+          300: "#A3A3A3",
+          350: "#7A7A7A",
+          400: "#737373"
         },
         black: {
           DEFAULT: "#000000"
         },
         dark: {
           DEFAULT: "#121212",
-          1: "#111111"
+          1: "#111111",
+          2: "#D4D4D4"
         },
         primary: {
           50: "#f0f9ff",
@@ -107,11 +108,20 @@ module.exports = {
           950: "#121215"
         }
       },
+      padding: {
+        9.5: "9.5px",
+        11.5: "11.5px",
+        104: "104px"
+      },
+      margin: {
+        104: "104px"
+      },
       dropShadow: {
         phone: "0 1px 4px rgba(0, 0, 0, 0.06)"
       },
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans]
+        // sans: ["Inter", ...defaultTheme.fontFamily.sans]
+        sans: "system-ui"
       },
       fontSize: {
         "2xs": [
@@ -126,6 +136,9 @@ module.exports = {
             lineHeight: 1
           }
         ]
+      },
+      lineHeight: {
+        17: "17px"
       },
       maxWidth: ({ theme }) => ({
         "screen-md-8": `calc(${theme("screens.md")} + ${theme("spacing.16")})`,

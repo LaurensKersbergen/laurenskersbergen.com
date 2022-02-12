@@ -361,10 +361,8 @@ export function Song({ className, ...props }: ComponentProps<"a">) {
 export function Activity(props: ComponentProps<"section">) {
   return (
     <section {...props}>
-      <h2 className="mb-2 text-xl font-bold text-zinc-800 dark:text-white">
-        Activity
-      </h2>
-      <p className="max-w-[46ch] leading-relaxed text-zinc-500 dark:text-zinc-350">
+      <h2 className="mb-2 text-xl">Activity</h2>
+      <p className="max-w-[46ch] leading-relaxed">
         I <del>occasionally</del>{" "}
         <a
           className="link text-zinc-800 dark:text-white"

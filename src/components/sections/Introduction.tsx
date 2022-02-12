@@ -29,7 +29,7 @@ export function Introduction(props: ComponentProps<"section">) {
           Product Manager
         </p>
       </div>
-      <div className="my-10 max-w-[58ch] text-zinc-500 dark:text-zinc-350">
+      <div className="my-10 max-w-[58ch]">
         <p className="my-4 leading-loose">
           Hey, I’m Laurens. I’m currently living in Amsterdam and working at{" "}
           <a

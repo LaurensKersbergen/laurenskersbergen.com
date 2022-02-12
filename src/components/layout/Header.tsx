@@ -2,10 +2,8 @@ import clsx from "clsx"
 import { Transition, Variants, m as motion } from "framer-motion"
 import { useRouter } from "next/router"
 import { ComponentProps } from "react"
-import { useInternetTime } from "../../hooks/use-internet-time"
 import { useSystemTheme } from "../../hooks/use-system-theme"
 import { springiest } from "../../transitions"
-import { Counter } from "../miscellaneous/Counter"
 
 const themeTransition: Transition = {
   default: springiest,
@@ -71,8 +69,8 @@ function ActiveLink({
       className={`${
         router.asPath === href
           ? "bg-zinc-850 text-zinc-150 dark:text-white"
-          : "text-zinc-500 hover:bg-zinc-250 hover:bg-opacity-30"
-      } rounded-full px-3 py-2 dark:text-zinc-350 md:mx-1 md:px-4`}
+          : "text-zinc-500 hover:bg-zinc-850 dark:text-light-350"
+      } leading inline-block rounded-full px-3 py-9.5 font-medium leading-none md:mx-1 md:px-4`}
       href={href}
       onClick={handleClick}
     >
@@ -89,27 +87,15 @@ function ActiveLink({
  */
 export function Header({ className, ...props }: ComponentProps<"header">) {
   const [theme, toggleTheme] = useSystemTheme()
-  const time = useInternetTime()
 
   return (
     <header
-      className="border-b border-dark border-opacity-10 bg-white py-4 dark:border-light dark:border-opacity-20 dark:bg-dark-1 lg:py-6"
+      className="border-b border-dark border-opacity-10 bg-white py-4 dark:border-light dark:border-opacity-20 dark:bg-dark-1 lg:py-2.5"
       {...props}
     >
       <div className={clsx(className)}>
         <div className="flex items-center text-zinc-700 dark:text-zinc-100">
-          <p>
-            <a
-              className="focusable inline-flex cursor-help items-center rounded-sm font-semibold transition hover:opacity-60"
-              href="https://en.wikipedia.org/wiki/Swatch_Internet_Time"
-              rel="noreferrer"
-              target="_blank"
-            >
-              <span className="font-normal text-zinc-400">@</span>
-              <Counter value={time} />
-            </a>
-          </p>
-          <div className="mx-auto">
+          <div className="mx-auto text-sm">
             <nav>
               {navbar.map((i, idx) => (
                 <ActiveLink href={i.href} key={idx}>
@@ -118,7 +104,7 @@ export function Header({ className, ...props }: ComponentProps<"header">) {
               ))}
             </nav>
           </div>
-          <div className="">
+          <div className="hidden">
             <button
               aria-label="Toggle Theme"
               className="focusable rounded-md bg-transparent p-1.5 transition hover:bg-zinc-500/10 dark:hover:bg-zinc-400/20"

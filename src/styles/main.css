@@ -40,9 +40,18 @@
   }
 
   body {
-    @apply bg-white selection:bg-primary-500/30 dark:bg-zinc-900 dark:selection:bg-primary-400/40;
+    @apply bg-white text-zinc-500 selection:bg-primary-500/30 dark:bg-black dark:text-light-300 dark:selection:bg-primary-400/40;
 
     -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold text-zinc-800 dark:text-dark-2;
   }
 
   [data-reactroot] {
@@ -101,7 +110,7 @@
 
 @layer components {
   .content {
-    @apply mx-auto max-w-screen-md px-5-safe;
+    @apply mx-auto max-w-screen-sm px-5-safe;
   }
 
   .skeleton {
@@ -251,11 +260,11 @@
 }
 
 .post-content h2 {
-  @apply mb-2 text-xl font-bold text-zinc-800 dark:text-white;
+  @apply mb-2 text-xl;
 }
 
 .post-content h3 {
-  @apply mb-2 text-lg font-bold text-zinc-800 dark:text-white;
+  @apply mb-2 text-lg;
 }
 
 .post-content p,
@@ -275,7 +284,7 @@
 
 .post-content p > a,
 .post-content li > a {
-  @apply focusable rounded-sm text-blue-500 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500 focus:ring-sky-500/40 dark:text-blue-400 dark:decoration-sky-400 dark:hover:text-sky-400 dark:focus:text-sky-400 dark:focus:ring-sky-400/40;
+  @apply focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500;
 }
 
 .post-content hr {
@@ -283,7 +292,7 @@
 }
 
 .kg-image {
-  @apply rounded-xl;
+  @apply rounded-lg;
 }
 
 .kg-card figcaption {

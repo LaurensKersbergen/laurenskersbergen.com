@@ -26,14 +26,12 @@ export function Work(props: ComponentProps<"section">) {
   return (
     <section {...props}>
       <div className="content mt-12 sm:mt-24">
-        <h2 className="mb-2 text-xl font-bold text-zinc-800 dark:text-white">
-          Work
-        </h2>
-        <p className="max-w-[46ch] leading-relaxed text-zinc-500 dark:text-zinc-350">
+        <h2 className="mb-2 text-xl">Work</h2>
+        <p className="max-w-[46ch] leading-relaxed">
           A list of places I worked.
         </p>
         <ul className="text-sm">
-          <li className="my-5 flex items-center gap-4 text-zinc-500 dark:text-zinc-350">
+          <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
               href="https://www.miro.com/"
@@ -50,7 +48,7 @@ export function Work(props: ComponentProps<"section">) {
               <span className="inline-block w-10 text-center" />
             </span>
           </li>
-          <li className="my-5 flex items-center gap-4 text-zinc-500 dark:text-zinc-350">
+          <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
               href="https://www.growthtribe.io/"
@@ -67,7 +65,7 @@ export function Work(props: ComponentProps<"section">) {
               <span className="inline-block w-10 text-center">2022</span>
             </span>
           </li>
-          <li className="my-5 flex items-center gap-4 text-zinc-500 dark:text-zinc-350">
+          <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
               href="https://www.kpn.com/"
@@ -84,7 +82,7 @@ export function Work(props: ComponentProps<"section">) {
               <span className="inline-block w-10 text-center">2021</span>
             </span>
           </li>
-          <li className="my-5 flex items-center gap-4 text-zinc-500 dark:text-zinc-350">
+          <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
               href="https://www.kpn.com/"
@@ -101,7 +99,7 @@ export function Work(props: ComponentProps<"section">) {
               <span className="inline-block w-10 text-center">2019</span>
             </span>
           </li>
-          <li className="my-5 flex items-center gap-4 text-zinc-500 dark:text-zinc-350">
+          <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
               href="https://www.vinla.nl/"

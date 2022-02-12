@@ -14,7 +14,7 @@
     ],
     "**/*.{ts,tsx}": [
       "eslint --fix",
-      "tsatsiki --project tsconfig.json next-env.d.ts declarations.d.ts",
+      "tsatsiki --project tsconfig.json next-env.d.ts declarations.d.ts ghostContent.d.ts",
       "yarn prettier"
     ],
     "**/*.css": [

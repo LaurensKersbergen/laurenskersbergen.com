@@ -27,10 +27,8 @@ export function Articles(props: ComponentProps<"section">) {
   return (
     <section {...props}>
       <div className="content mb-8">
-        <h2 className="mb-2 text-xl font-bold text-zinc-800 dark:text-white">
-          Writing
-        </h2>
-        <p className="max-w-[46ch] leading-relaxed text-zinc-500 dark:text-zinc-350">
+        <h2 className="mb-2 text-xl">Writing</h2>
+        <p className="max-w-[46ch] leading-relaxed">
           Thinking out loud about product management and design.
         </p>
 
