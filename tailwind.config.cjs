@@ -128,7 +128,7 @@ module.exports = {
       },
       fontFamily: {
         // sans: ["Inter", ...defaultTheme.fontFamily.sans]
-        sans: ["SF Pro Display", "system-ui"]
+        sans: "system-ui"
       },
       fontSize: {
         "2xs": [
