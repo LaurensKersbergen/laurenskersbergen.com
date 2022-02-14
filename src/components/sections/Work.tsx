@@ -37,11 +37,15 @@ export function Work(props: ComponentProps<"section">) {
             >
               Miro
             </a>
-            <span className="truncate">Product Manager, Website</span>
+            <span className="truncate text-neutral-400 dark:text-neutral-500">
+              Product Manager, Website
+            </span>
             <span className="wave flex-1" />
-            <span className="-mr-1 whitespace-nowrap font-medium">
-              <span className="inline-block w-10 text-center">2022</span>
-              <span className="text-zinc-300 dark:text-zinc-550">—</span>
+            <span className="-mr-1 whitespace-nowrap">
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2022
+              </span>
+              <span className="text-neutral-500 dark:text-zinc-550">—</span>
               <span className="inline-block w-10 text-center" />
             </span>
           </li>
@@ -54,12 +58,18 @@ export function Work(props: ComponentProps<"section">) {
             >
               Growth Tribe
             </a>
-            <span className="truncate">Product Manager</span>
+            <span className="truncate text-neutral-400 dark:text-neutral-500">
+              Product Manager
+            </span>
             <span className="wave flex-1" />
-            <span className="-mr-1 whitespace-nowrap font-medium">
-              <span className="inline-block w-10 text-center">2021</span>
-              <span className="text-zinc-300 dark:text-zinc-550">—</span>
-              <span className="inline-block w-10 text-center">2022</span>
+            <span className="-mr-1 whitespace-nowrap">
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2021
+              </span>
+              <span className="text-neutral-500 dark:text-zinc-550">—</span>
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2022
+              </span>
             </span>
           </li>
           <li className="my-5 flex items-center gap-4">
@@ -71,12 +81,18 @@ export function Work(props: ComponentProps<"section">) {
             >
               KPN.com
             </a>
-            <span className="truncate">Product Manager, Growth</span>
+            <span className="truncate text-neutral-400 dark:text-neutral-500">
+              Product Manager, Growth
+            </span>
             <span className="wave flex-1" />
-            <span className="-mr-1 whitespace-nowrap font-medium">
-              <span className="inline-block w-10 text-center">2019</span>
-              <span className="text-zinc-300 dark:text-zinc-550">—</span>
-              <span className="inline-block w-10 text-center">2021</span>
+            <span className="-mr-1 whitespace-nowrap">
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2019
+              </span>
+              <span className="text-neutral-500 dark:text-zinc-550">—</span>
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2021
+              </span>
             </span>
           </li>
           <li className="my-5 flex items-center gap-4">
@@ -88,12 +104,18 @@ export function Work(props: ComponentProps<"section">) {
             >
               KPN.com
             </a>
-            <span className="truncate">Marketing Manager</span>
+            <span className="truncate text-neutral-400 dark:text-neutral-500">
+              Marketing Manager
+            </span>
             <span className="wave flex-1" />
-            <span className="-mr-1 whitespace-nowrap font-medium">
-              <span className="inline-block w-10 text-center">2018</span>
-              <span className="text-zinc-300 dark:text-zinc-550">—</span>
-              <span className="inline-block w-10 text-center">2019</span>
+            <span className="-mr-1 whitespace-nowrap">
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2018
+              </span>
+              <span className=" text-neutral-500 dark:text-zinc-550">—</span>
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2019
+              </span>
             </span>
           </li>
           <li className="my-5 flex items-center gap-4">
@@ -105,12 +127,18 @@ export function Work(props: ComponentProps<"section">) {
             >
               Vinla
             </a>
-            <span className="truncate">Founder & Owner</span>
+            <span className="truncate text-neutral-400 dark:text-neutral-500">
+              Founder & Owner
+            </span>
             <span className="wave flex-1" />
-            <span className="-mr-1 whitespace-nowrap font-medium">
-              <span className="inline-block w-10 text-center">2011</span>
-              <span className="text-zinc-300 dark:text-zinc-550">—</span>
-              <span className="inline-block w-10 text-center">2018</span>
+            <span className="-mr-1 whitespace-nowrap">
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2011
+              </span>
+              <span className="text-neutral-400 dark:text-zinc-500">—</span>
+              <span className="inline-block w-10 text-center text-neutral-500">
+                2018
+              </span>
             </span>
           </li>
         </ul>

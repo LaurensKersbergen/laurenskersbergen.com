@@ -43,7 +43,7 @@ export function Posts({ posts }: Props) {
             return (
               <div key={`${idx}-post`}>
                 <Link href={`/writing/${post.slug}`}>
-                  <a className="font-semibold text-black hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-600">
+                  <a className="font-medium text-black hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-600">
                     {post.title}
                   </a>
                 </Link>
@@ -58,7 +58,7 @@ export function Posts({ posts }: Props) {
         </div>
 
         <Link href="/writing">
-          <a className="mt-8 flex h-6 rounded-lg leading-6 text-zinc-800 dark:text-white">
+          <a className="mt-8 flex h-6 rounded-lg leading-6 text-neutral-700 dark:text-white">
             Read all posts &rarr;
           </a>
         </Link>

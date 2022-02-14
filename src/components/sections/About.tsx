@@ -26,7 +26,7 @@ export function About(props: ComponentProps<"section">) {
         </div>
       </div>
       <div className="mt-10">
-        <p className="my-4 leading-loose">
+        <p className="my-4 leading-loose text-neutral-700 dark:text-neutral-400">
           Hey, I’m Laurens. I’m a product manager, writer, and{" "}
           <a className={linkClass} href="" rel="noreferrer" target="_blank">
             software tinkerer
@@ -43,7 +43,7 @@ export function About(props: ComponentProps<"section">) {
           .
         </p>
         <h2 className="mb-2 text-xl">Escaping the meta of product design</h2>
-        <p className="my-4 leading-loose">
+        <p className="my-4 leading-loose text-neutral-700 dark:text-neutral-400">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry’s standard dummy text ever
           since the 1500s, when an unknown printer took a galley of type and
