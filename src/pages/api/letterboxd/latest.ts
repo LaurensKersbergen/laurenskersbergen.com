@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser"
 import { decode } from "html-entities"
 import { NextApiRequest, NextApiResponse } from "next"
 
-const LETTERBOXD_USERNAME = "marcbouchenoire"
+const LETTERBOXD_USERNAME = "lvkersbergen"
 const LETTERBOXD_URL = "https://letterboxd.com"
 const LETTERBOXD_FEED = `${LETTERBOXD_URL}/${LETTERBOXD_USERNAME}/rss/`
 const LETTERBOXD_FILM_URL = (film: string) => `${LETTERBOXD_URL}/film/${film}/`
