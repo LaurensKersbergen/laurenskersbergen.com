@@ -37,7 +37,7 @@ export function Work(props: ComponentProps<"section">) {
             >
               Miro
             </a>
-            <span className="truncate text-neutral-400 dark:text-neutral-500">
+            <span className="truncate text-neutral-400">
               Product Manager, Website
             </span>
             <span className="wave flex-1" />
@@ -58,9 +58,7 @@ export function Work(props: ComponentProps<"section">) {
             >
               Growth Tribe
             </a>
-            <span className="truncate text-neutral-400 dark:text-neutral-500">
-              Product Manager
-            </span>
+            <span className="truncate text-neutral-400">Product Manager</span>
             <span className="wave flex-1" />
             <span className="-mr-1 whitespace-nowrap">
               <span className="inline-block w-10 text-center text-neutral-500">
@@ -81,7 +79,7 @@ export function Work(props: ComponentProps<"section">) {
             >
               KPN.com
             </a>
-            <span className="truncate text-neutral-400 dark:text-neutral-500">
+            <span className="truncate text-neutral-400">
               Product Manager, Growth
             </span>
             <span className="wave flex-1" />
@@ -104,9 +102,7 @@ export function Work(props: ComponentProps<"section">) {
             >
               KPN.com
             </a>
-            <span className="truncate text-neutral-400 dark:text-neutral-500">
-              Marketing Manager
-            </span>
+            <span className="truncate text-neutral-400">Marketing Manager</span>
             <span className="wave flex-1" />
             <span className="-mr-1 whitespace-nowrap">
               <span className="inline-block w-10 text-center text-neutral-500">
@@ -127,9 +123,7 @@ export function Work(props: ComponentProps<"section">) {
             >
               Vinla
             </a>
-            <span className="truncate text-neutral-400 dark:text-neutral-500">
-              Founder & Owner
-            </span>
+            <span className="truncate text-neutral-400">Founder & Owner</span>
             <span className="wave flex-1" />
             <span className="-mr-1 whitespace-nowrap">
               <span className="inline-block w-10 text-center text-neutral-500">
