@@ -3,7 +3,6 @@ import { ThemeProvider } from "next-themes"
 import { AppProps } from "next/app"
 import Head from "next/head"
 import { SWRConfig } from "swr"
-import { Footer } from "../components/layout/Footer"
 import { Header } from "../components/layout/Header"
 import "../styles/fonts.css"
 import "../styles/main.css"
@@ -75,7 +74,6 @@ function App({ Component, pageProps }: AppProps) {
           </Head>
           <Header className="content" />
           <Component {...pageProps} />
-          <Footer className="content pb-0-safe" />
         </ThemeProvider>
       </SWRConfig>
     </LazyMotion>
