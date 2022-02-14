@@ -41,14 +41,14 @@ function App({ Component, pageProps }: AppProps) {
               name="viewport"
             />
             <meta
-              content="A detail-obsessed Design Engineer, designing and building delightful products."
+              content="A product manager, designing and building delightful products."
               name="description"
             />
             <meta content="website" property="og:type" />
             <meta content="https://laurenskersbergen.com" property="og:url" />
             <meta content="Laurens Kersbergen" property="og:title" />
             <meta
-              content="A detail-obsessed Design Engineer, designing and building delightful products."
+              content="A product manager, designing and building delightful products."
               property="og:description"
             />
             <meta
@@ -63,7 +63,7 @@ function App({ Component, pageProps }: AppProps) {
             <meta content="Laurens Kersbergen" property="twitter:title" />
             <meta content="photo" name="twitter:card" />
             <meta
-              content="A detail-obsessed Design Engineer, designing and building delightful products."
+              content="A product manager, designing and building delightful products."
               property="twitter:description"
             />
             <meta
