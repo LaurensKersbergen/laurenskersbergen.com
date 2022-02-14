@@ -362,27 +362,6 @@ export function Activity(props: ComponentProps<"section">) {
   return (
     <section {...props}>
       <h2 className="mb-2 text-xl">Activity</h2>
-      <p className="max-w-[46ch] leading-relaxed">
-        I <del>occasionally</del>{" "}
-        <a
-          className="link text-zinc-800 dark:text-white"
-          href="https://www.last.fm/user/lvkersbergen"
-          rel="noreferrer"
-          target="_blank"
-        >
-          listen to things
-        </a>{" "}
-        and{" "}
-        <a
-          className="link text-zinc-800 dark:text-white"
-          href="https://letterboxd.com/lvkersbergen/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          watch films
-        </a>
-        .
-      </p>
       <div className="mt-8 flex flex-col gap-8">
         <Song className="min-w-0 max-w-full" />
         <Film className="min-w-0 max-w-full" />

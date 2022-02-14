@@ -27,10 +27,7 @@ export function Work(props: ComponentProps<"section">) {
     <section {...props}>
       <div className="content mt-12 sm:mt-24">
         <h2 className="mb-2 text-xl">Work</h2>
-        <p className="max-w-[46ch] leading-relaxed">
-          A list of places I worked.
-        </p>
-        <ul className="text-sm">
+        <ul>
           <li className="my-5 flex items-center gap-4">
             <a
               className="link focusable font-medium text-zinc-800 dark:text-white"
