@@ -1,7 +1,6 @@
 import { Activity } from "../components/sections/Activity"
 import { Introduction } from "../components/sections/Introduction"
 import { Posts } from "../components/sections/Posts"
-import { Projects } from "../components/sections/Projects"
 import { Work } from "../components/sections/Work"
 import PostType from "../types/post"
 import { getPosts } from "../utils/posts"
@@ -24,7 +23,6 @@ function Page({ posts }: Props) {
       <Introduction className="content mt-12 md:mt-16 lg:mt-104" />
       <Posts posts={posts} />
       <Work className="mt-16 md:mt-20 lg:mt-24" />
-      <Projects className="mt-16 md:mt-20 lg:mt-24" />
       <Activity className="content mt-16 md:mt-20 lg:mt-24" />
     </main>
   )
