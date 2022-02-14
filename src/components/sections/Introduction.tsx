@@ -8,7 +8,7 @@ import { ComponentProps } from "react"
 export function Introduction(props: ComponentProps<"section">) {
   return (
     <section {...props}>
-      <div className="space-y-7 text-lg font-normal leading-8 text-neutral-700 dark:text-neutral-400">
+      <div className="space-y-7 font-normal leading-7 text-neutral-700 dark:text-neutral-400">
         <p>
           Hey, I’m Laurens – a product manager living in Amsterdam. I care about
           form and function and believe in the power of simplicity. I’m
