@@ -47,7 +47,7 @@ export function Posts({ posts }: Props) {
                     {post.title}
                   </a>
                 </Link>
-                <p className="mt-3 text-sm text-light-400 dark:text-light-300">
+                <p className="mt-3 text-light-400 dark:text-light-300">
                   <Moment format="MMMM D, YYYY" withTitle>
                     {post.published_at}
                   </Moment>
@@ -59,21 +59,7 @@ export function Posts({ posts }: Props) {
 
         <Link href="/writing">
           <a className="mt-8 flex h-6 rounded-lg leading-6 text-zinc-800 dark:text-white">
-            Read all posts
-            <svg
-              className="ml-1 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M17.5 12h-15m11.667-4l3.333 4-3.333-4zm3.333 4l-3.333 4 3.333-4z"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            Read all posts &rarr;
           </a>
         </Link>
       </div>
