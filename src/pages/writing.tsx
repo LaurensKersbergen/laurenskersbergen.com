@@ -39,10 +39,10 @@ function WritingPage({ posts }: Props) {
                 <p className="font-semibold text-black dark:text-white">
                   {post.title}
                 </p>
-                <p className="my-2 text-sm text-black dark:text-light-300">
+                <p className="my-2 text-black dark:text-light-300">
                   {post.excerpt}
                 </p>
-                <p className="mt-2 text-sm text-light-400 dark:text-light-300">
+                <p className="mt-2 text-light-400 dark:text-light-300">
                   <Moment format="MMMM D, YYYY" withTitle>
                     {post.published_at}
                   </Moment>
