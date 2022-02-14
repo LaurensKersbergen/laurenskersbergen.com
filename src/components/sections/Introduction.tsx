@@ -14,7 +14,7 @@ export function Introduction(props: ComponentProps<"section">) {
           form and function and believe in the power of simplicity. I’m
           currently building websites at{" "}
           <a
-            className="focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
+            className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.miro.com/"
             rel="noreferrer"
             target="_blank"
@@ -27,7 +27,7 @@ export function Introduction(props: ComponentProps<"section">) {
         <p>
           Previously, I worked on the initial release of a learning platform at{" "}
           <a
-            className="focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
+            className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.growthtribe.io/"
             rel="noreferrer"
             target="_blank"
@@ -36,7 +36,7 @@ export function Introduction(props: ComponentProps<"section">) {
           </a>
           . Before that, I focused on improving high-traffic websites at{" "}
           <a
-            className="focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
+            className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.kpn.com/"
             rel="noreferrer"
             target="_blank"
@@ -45,7 +45,7 @@ export function Introduction(props: ComponentProps<"section">) {
           </a>{" "}
           and{" "}
           <a
-            className="focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
+            className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://fitchannel.com/"
             rel="noreferrer"
             target="_blank"
