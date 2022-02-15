@@ -44,7 +44,7 @@ export function About(props: ComponentProps<"section">) {
         </p>
         <h2 className="mb-2 text-xl">Escaping the meta of product design</h2>
         <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
+          Lorem Ipsum a is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry’s standard dummy text ever
           since the 1500s, when an unknown printer took a galley of type and
           scrambled it to make a type specimen book.
