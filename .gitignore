@@ -5,4 +5,4 @@ node_modules
 data.json
 *.tsbuildinfo
 *.log
-.env
+.env.local
