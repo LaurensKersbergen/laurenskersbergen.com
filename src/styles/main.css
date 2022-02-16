@@ -284,7 +284,7 @@
 
 .post-content p > a,
 .post-content li > a {
-  @apply focusable rounded-sm text-blue-600 text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500;
+  @apply focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500;
 }
 
 .post-content hr {
