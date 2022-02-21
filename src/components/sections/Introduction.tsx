@@ -8,11 +8,10 @@ import { ComponentProps } from "react"
 export function Introduction(props: ComponentProps<"section">) {
   return (
     <section {...props}>
-      <div className="space-y-7 font-normal leading-7 text-neutral-700 dark:text-neutral-400">
+      <div className="space-y-7 text-lg font-normal leading-8 text-neutral-700 dark:text-neutral-400">
         <p>
-          Hey, I’m Laurens – a product manager living in Amsterdam. I care about
-          form and function and believe in the power of simplicity. I’m
-          currently building websites at{" "}
+          Hey, I’m Laurens — a product manager living in Amsterdam. I currently
+          work at{" "}
           <a
             className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.miro.com/"
@@ -21,11 +20,11 @@ export function Introduction(props: ComponentProps<"section">) {
           >
             Miro
           </a>
-          .
+          , focusing on building a best-in-class marketing website.
         </p>
 
         <p>
-          Previously, I worked on the initial release of a learning platform at{" "}
+          Previously, I worked on the initial release of{" "}
           <a
             className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.growthtribe.io/"
@@ -34,7 +33,7 @@ export function Introduction(props: ComponentProps<"section">) {
           >
             Growth Tribe
           </a>
-          . Before that, I focused on improving high-traffic websites at{" "}
+          ’s learning platform. Before that, I improved high-traffic websites at{" "}
           <a
             className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.kpn.com/"
@@ -56,8 +55,8 @@ export function Introduction(props: ComponentProps<"section">) {
         </p>
 
         <p>
-          I flip through design and art books in my free time, pull god-shot
-          espressos at home, and do CrossFit.
+          After hours, I flip through design and art books, prepare god-shot
+          espressos, and thruster with friends at our favorite CrossFit box.
         </p>
       </div>
     </section>
