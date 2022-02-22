@@ -89,11 +89,7 @@ export function About(props: ComponentProps<"section">) {
 
         <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
           I’m always interested in new ideas and perspectives. Feel free to drop
-          me a note to talk more about the WWW.
-        </p>
-
-        <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
-          You can find me on{" "}
+          me a note. You can find me on{" "}
           <a
             className={linkClass}
             href="https://twitter.com/lvkersbergen/"

@@ -1,4 +1,6 @@
+import Link from "next/link"
 import { ComponentProps } from "react"
+import Button from "../button"
 
 /**
  * An introduction section with a short bio.
@@ -58,6 +60,20 @@ export function Introduction(props: ComponentProps<"section">) {
           After hours, I flip through design and art books, prepare god-shot
           espressos, and thruster with friends at our favorite CrossFit box.
         </p>
+        <div className="flex flex-col space-y-3 md:flex-row md:space-x-4 md:space-y-0">
+          <Link href="/about" passHref>
+            <a>
+              <Button className="block w-full">Learn more about me</Button>
+            </a>
+          </Link>
+          <a
+            href="https://www.polywork.com/laurens"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Button className="block w-full">View changelog</Button>
+          </a>
+        </div>
       </div>
     </section>
   )
