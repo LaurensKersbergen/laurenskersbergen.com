@@ -34,8 +34,8 @@ export default function Button({ className, ...rest }: Props) {
 }
 
 /**
- * @param root0
- * @param root0.className
+ * @param root0 - Some classes.
+ * @param root0.className - Some text here.
  */
 export function LinkButton({ className, ...rest }: Props) {
   return (
