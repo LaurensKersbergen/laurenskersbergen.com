@@ -71,7 +71,9 @@ export function Introduction(props: ComponentProps<"section">) {
             rel="noreferrer"
             target="_blank"
           >
-            <Button className="block w-full">View changelog &nbsp;↗︎</Button>
+            <Button className="block w-full">
+              View changelog &nbsp;&#8599;
+            </Button>
           </a>
         </div>
       </div>
