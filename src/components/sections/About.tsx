@@ -83,11 +83,6 @@ export function About(props: ComponentProps<"section">) {
         </p>
 
         <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
-          After hours, I flip through design and art books, prepare god-shot
-          espressos, and thruster with friends at our favorite CrossFit box.
-        </p>
-
-        <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
           I’m always interested in new ideas and perspectives. Feel free to drop
           me a note. You can find me on{" "}
           <a
