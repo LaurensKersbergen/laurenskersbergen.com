@@ -36,7 +36,7 @@
   html,
   body,
   [data-reactroot] {
-    @apply min-h-screen max-w-full overflow-x-hidden;
+    @apply min-h-screen max-w-full overflow-x-hidden text-base antialiased;
   }
 
   body {
@@ -270,7 +270,7 @@
 .post-content p,
 .post-content ul,
 .post-content ol {
-  @apply mb-6 leading-loose text-black dark:text-light-300;
+  @apply mb-6 leading-loose text-neutral-700 dark:text-light-300;
 }
 
 .post-content ul,
