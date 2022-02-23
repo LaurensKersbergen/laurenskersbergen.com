@@ -126,10 +126,6 @@ module.exports = {
       dropShadow: {
         phone: "0 1px 4px rgba(0, 0, 0, 0.06)"
       },
-      fontFamily: {
-        // sans: ["Inter", ...defaultTheme.fontFamily.sans]
-        sans: "system-ui"
-      },
       fontSize: {
         "2xs": [
           "0.65rem",
