@@ -136,6 +136,15 @@ export function Work(props: ComponentProps<"section">) {
             </span>
           </li>
         </ul>
+
+        <a
+          className="mt-8 flex h-6 rounded-lg leading-6 text-neutral-700 dark:text-white"
+          href="https://www.linkedin.com/in/lvkersbergen/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          View on LinkedIn &#8599;
+        </a>
       </div>
     </section>
   )
