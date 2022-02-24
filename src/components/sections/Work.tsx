@@ -56,7 +56,7 @@ export function Work(props: ComponentProps<"section">) {
               rel="noreferrer"
               target="_blank"
             >
-              Growth Tribe
+              GrowthTribe
             </a>
             <span className="wave flex-1" />
             <span className="truncate text-neutral-500">Product Manager</span>
