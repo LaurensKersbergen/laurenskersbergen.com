@@ -12,8 +12,8 @@ export function Introduction(props: ComponentProps<"section">) {
     <section {...props}>
       <div className="space-y-7 text-lg font-normal leading-8 text-neutral-700 dark:text-neutral-400">
         <p>
-          Hey, I’m Laurens — a product manager living in Amsterdam. I currently
-          work at{" "}
+          Hey, I’m Laurens. I’m a product manager living in Amsterdam. I’m
+          currently working on the marketing website at{" "}
           <a
             className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.miro.com/"
@@ -22,7 +22,7 @@ export function Introduction(props: ComponentProps<"section">) {
           >
             Miro
           </a>
-          , focusing on building a best-in-class marketing website.
+          .
         </p>
 
         <p>
@@ -54,11 +54,6 @@ export function Introduction(props: ComponentProps<"section">) {
             Fitchannel.com
           </a>
           .
-        </p>
-
-        <p>
-          After hours, I flip through design and art books, prepare god-shot
-          espressos, and thruster with friends at our favorite CrossFit box.
         </p>
         <div className="flex flex-col space-y-3 md:flex-row md:space-x-4 md:space-y-0">
           <Link href="/about" passHref>
