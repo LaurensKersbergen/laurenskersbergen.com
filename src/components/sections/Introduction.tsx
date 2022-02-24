@@ -13,7 +13,7 @@ export function Introduction(props: ComponentProps<"section">) {
       <div className="space-y-7 text-lg font-normal leading-8 text-neutral-700 dark:text-neutral-400">
         <p>
           Hey, I’m Laurens. I’m a product manager living in Amsterdam. I’m
-          currently working on the marketing website at{" "}
+          currently working at{" "}
           <a
             className="focusable rounded-sm text-blue-600 underline-offset-2 transition duration-100 hover:underline focus:text-sky-500"
             href="https://www.miro.com/"
@@ -22,7 +22,7 @@ export function Introduction(props: ComponentProps<"section">) {
           >
             Miro
           </a>
-          .
+          —focusing on the marketing site.
         </p>
 
         <p>
