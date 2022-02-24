@@ -278,6 +278,10 @@
   @apply list-inside;
 }
 
+.post-content ol {
+  @apply list-decimal;
+}
+
 .post-content ul {
   @apply list-disc;
 }
