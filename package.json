@@ -1,11 +1,11 @@
 {
-  "name": "marcbouchenoire.com",
+  "name": "laurenskersbergen.com",
   "version": "1.0.0",
-  "description": "My personal website and portfolio.",
-  "author": "Marc Bouchenoire",
+  "description": "My personal website.",
+  "author": "Laurens Kersbergen",
   "license": "MIT",
-  "repository": "https://github.com/marcbouchenoire/marcbouchenoire.com",
-  "homepage": "https://marcbouchenoire.com",
+  "repository": "https://github.com/LaurensKersbergen/laurenskersbergen.com",
+  "homepage": "https://laurenskersbergen.com",
   "prettier": "@marcbouchenoire/prettier-config",
   "nano-staged": {
     "**/*.{cjs,mjs}": [
