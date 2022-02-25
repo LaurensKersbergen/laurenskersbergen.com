@@ -33,7 +33,7 @@ export default () => {
       ignoreDuringBuilds: true
     },
     images: {
-      domains: ["static.ghost.org"]
+      domains: ["static.ghost.org", "laurens-kersbergen.ghost.io"]
     }
   }
 }
