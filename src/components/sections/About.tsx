@@ -27,7 +27,7 @@ export function About(props: ComponentProps<"section">) {
       </div>
       <div className="mt-10">
         <p className="my-4 leading-7 text-neutral-700 dark:text-neutral-400">
-          Hey, I’m Laurens — a product manager with +5 years of experience
+          Hey, I’m Laurens — a product manager with +10 years of experience
           living in Amsterdam. I’m drawn to modern technology teams working on
           complex and meaningful issues. I currently work at{" "}
           <a
