@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { CollabCursor } from "@/components/collab-cursor";
 
 export default function Home() {
   return (
     <div className="mt-16">
-      <CollabCursor />
       <h1 className="text-xl md:text-2xl font-medium mb-1" style={{ lineHeight: "3.25rem" }}>Laurens Kersbergen</h1>
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
         {"I'm a product manager in Amsterdam, currently working at "}
