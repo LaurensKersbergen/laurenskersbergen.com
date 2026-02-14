@@ -1,0 +1,27 @@
+---
+title: "Hello World"
+date: "2025-01-15"
+summary: "A fresh start for my personal website."
+---
+
+This is my new personal website. I rebuilt it from scratch using Next.js, Tailwind CSS, and MDX — with an Obsidian vault as the content source.
+
+## Why rebuild?
+
+I wanted something minimal. A simple place to share my writing without the overhead of a traditional CMS. Now I can write posts in Obsidian — my daily notes app — and publish them by pushing to GitHub.
+
+## How it works
+
+Each post is a `.mdx` file with frontmatter for metadata:
+
+```yaml
+---
+title: "My Post"
+date: "2025-01-15"
+summary: "A short description."
+---
+```
+
+The site reads these files at build time and generates static pages. Vercel auto-deploys on every push.
+
+Simple as that.
