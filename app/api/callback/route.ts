@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code,
-      redirect_uri: "https://laurenskersbergen.com/api/callback",
+      redirect_uri: "https://www.laurenskersbergen.com/api/callback",
     }),
   });
 
