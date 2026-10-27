@@ -38,6 +38,7 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
       <div
         className={`relative block w-full md:left-1/2 md:-translate-x-1/2 md:w-screen my-8 md:my-16 grid ${cols} gap-4`}
         style={{ maxWidth: 1100 }}
+        data-no-hover-sound
       >
         {images.map((image, i) => (
           <button

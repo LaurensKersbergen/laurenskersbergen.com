@@ -2,6 +2,7 @@
 
 @theme {
   --font-serif: var(--font-serif), "Georgia", serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
@@ -11,6 +12,8 @@
   --text-copy: #171717;
   --muted: #737373;
   --border: #e5e5e5;
+  --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");
+  --image-outline: oklch(0 0 0 / 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,6 +23,7 @@
     --text-copy: #eaeaea;
     --muted: #a3a3a3;
     --border: #262626;
+    --image-outline: oklch(1 0 0 / 0.1);
   }
 }
 
@@ -42,7 +46,7 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 17px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -57,20 +61,47 @@ a {
   transition: text-decoration-color 0.15s;
 }
 
-a:hover {
-  text-decoration-color: var(--fg);
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: var(--fg);
+  }
 }
 
 /* Inline company link with logo, e.g. "working at [logo] Miro" */
 .logo-link {
   font-weight: 600;
-  text-decoration: none;
   white-space: nowrap;
-  transition: color 0.15s;
+  text-decoration: none;
 }
 
-.logo-link:hover {
-  color: var(--muted);
+/* Hand-drawn wave under the name (not the logo). One SVG shape used as a
+   mask over currentColor, so it follows the theme and its opacity can
+   transition (CSS `wavy` ties amplitude to thickness). */
+.logo-link > span {
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.logo-link > span::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 7px;
+  background-color: currentColor;
+  mask: var(--link-wave) 0 0 / 36px 7px repeat-x;
+  opacity: 0.35;
+  transition: opacity 0.15s;
+  forced-color-adjust: none;
+}
+
+.logo-link:focus-visible > span::after {
+  opacity: 0.7;
+}
+
+@media (hover: hover) {
+  .logo-link:hover > span::after {
+    opacity: 0.7;
+  }
 }
 
 .logo-link-icon {
@@ -81,6 +112,8 @@ a:hover {
   margin-right: 0.3em;
   border-radius: 0.25em;
   vertical-align: -0.2em;
+  outline: 1px solid var(--image-outline);
+  outline-offset: -1px;
 }
 
 h1, h2, h3, h4 {

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { STIX_Two_Text } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { UISounds } from "@/components/ui-sounds";
 import "./globals.css";
 
 const stix = STIX_Two_Text({
@@ -37,9 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${stix.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="mx-auto min-h-screen" style={{ maxWidth: 650, padding: "4rem 2rem" }}>
         <main>{children}</main>
+        <UISounds />
       </body>
     </html>
   );
