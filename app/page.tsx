@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoLink } from "@/components/logo-link";
 
 export default function Home() {
   return (
@@ -6,12 +7,12 @@ export default function Home() {
       <h1 className="text-xl md:text-2xl font-medium mb-1" style={{ lineHeight: "3.25rem" }}>Laurens Kersbergen</h1>
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
         {"I'm a product manager in Amsterdam, currently working at "}
-        <a href="https://miro.com/" target="_blank" rel="noopener noreferrer">Miro</a>
+        <LogoLink href="https://miro.com/" logo="/logos/miro.png">Miro</LogoLink>
         {" on databases and AI for visual collaboration."}
       </p>
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
         {"Before Miro, I founded a B2B SaaS company (learned to build with zero resources), then scaled products to millions at "}
-        <a href="https://www.kpn.com/" target="_blank" rel="noopener noreferrer">KPN</a>
+        <LogoLink href="https://www.kpn.com/" logo="/logos/kpn.png">KPN</LogoLink>
         {" (learned enterprise quality). That combination of founder speed and enterprise discipline defines how I work."}
       </p>
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
