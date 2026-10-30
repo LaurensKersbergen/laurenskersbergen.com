@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { cn, groupLabelClass, List, ListItem, Thumbnail } from "@kit/ui";
 import { LogoLink } from "@/components/logo-link";
+import { getProjects } from "@/lib/projects";
 
 export default function Home() {
+  const projects = getProjects();
+
   return (
     <div className="mt-16">
       <h1 className="text-xl md:text-2xl font-medium mb-1" style={{ lineHeight: "3.25rem" }}>Laurens Kersbergen</h1>
@@ -21,6 +25,34 @@ export default function Home() {
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
         {"I live in Amsterdam with my partner, our two-year-old daughter, and cat Dries. You'll find me doing CrossFit, competing in HYROX races, cooking for friends, or pulling god-shot double espressos. Weekends: gaming with friends, building side projects (just shipped a hyper-personalized meal planning app), or skiing if it's winter. Also bit of a biohacker."}
       </p>
+      {projects.length > 0 ? (
+        <section aria-labelledby="projects-heading" className="my-5">
+          <h2 id="projects-heading" className={cn(groupLabelClass, "text-ink-2")}>
+            Projects
+          </h2>
+          <List>
+            {projects.map((project) => (
+              <ListItem
+                key={project.slug}
+                variant="reading"
+                render={<Link href={`/projects/${project.slug}`} className="no-underline!" />}
+                leading={
+                  // Sized and outlined like the logos in the intro (.logo-link-icon).
+                  <Thumbnail
+                    src={project.logo}
+                    className="size-[1.1em] rounded-tiny bg-transparent outline outline-(--image-outline) -outline-offset-1 [&_img]:p-0"
+                  />
+                }
+                title={<span className="font-semibold">{project.title}</span>}
+                description={project.tagline}
+              />
+            ))}
+          </List>
+          <p className="mt-2">
+            <Link href="/projects">All projects</Link>
+          </p>
+        </section>
+      ) : null}
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
         <Link href="/about">More about me</Link>
         {" · "}

@@ -58,11 +58,36 @@ export type ListItemProps = {
   href?: string;
   /** The app's router link instead of href: <Link href="/tasks/1" />. */
   render?: LinkRender;
+  /**
+   * New to the kit (kit/README.md). `reading` is for a short list inside long-form text, like a
+   * homepage's projects: text at the reading size (text-prose), titles and descriptions that wrap
+   * instead of truncating, no hover fill, and an underline under the title on hover or keyboard
+   * focus so it still reads as a link. Its content lines up with the paragraphs around it; the focus
+   * ring sits just outside.
+   */
+  variant?: "default" | "reading";
   className?: string;
 };
 
-export function ListItem({ title, description, leading, trailing, start, selected, unread, unreadLabel = "New", onClick, onPointerDown, href, render, className }: ListItemProps) {
-  const body = (
+export function ListItem({ title, description, leading, trailing, start, selected, unread, unreadLabel = "New", onClick, onPointerDown, href, render, variant = "default", className }: ListItemProps) {
+  const reading = variant === "reading";
+  const body = reading ? (
+    <>
+      {/* One title line tall, so the leading sits level with the title when the text wraps. */}
+      {leading ? <span className="flex h-[1lh] shrink-0 items-center text-ink-2">{leading}</span> : null}
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span
+          className={cn(
+            "text-ink underline decoration-transparent underline-offset-4 transition-colors duration-fast group-hover:decoration-current group-has-focus-visible:decoration-current",
+            unread && "font-medium",
+          )}
+        >
+          {title}
+        </span>
+        {description ? <span className="text-ink-2">{description}</span> : null}
+      </span>
+    </>
+  ) : (
     <>
       {leading ? <span className="flex shrink-0 items-center text-ink-2">{leading}</span> : null}
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -71,13 +96,15 @@ export function ListItem({ title, description, leading, trailing, start, selecte
       </span>
     </>
   );
-  const main = "flex min-w-0 flex-1 items-center gap-3 py-2 pl-2 text-left outline-none focus-visible:outline-none";
+  const main = reading
+    ? "flex min-w-0 flex-1 items-start gap-3 py-1.5 pl-2 text-left text-prose outline-none focus-visible:outline-none"
+    : "flex min-w-0 flex-1 items-center gap-3 py-2 pl-2 text-left outline-none focus-visible:outline-none";
   return (
     <li
       data-selected={selected || undefined}
       className={cn(
         "group flex items-center gap-1 rounded-control pr-1.5 transition-colors has-focus-visible:outline-2 has-focus-visible:outline-accent",
-        (onClick || href || render) && "hover:bg-hover",
+        reading ? "-mx-2 pr-2" : (onClick || href || render) && "hover:bg-hover",
         "data-selected:bg-selected",
         className,
       )}

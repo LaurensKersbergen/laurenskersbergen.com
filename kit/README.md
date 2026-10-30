@@ -19,9 +19,10 @@ Kit code keeps the kit's style (named function exports, `cn()`, tokens, Base UI 
 | Extension: the brand chooses its font. `theme.css` no longer imports `@fontsource-variable/inter`; `brand.css` sets `--brand-font` and the app (or `brand.css`) loads the font. | `theme.css`, `brand.css` | done |
 | Extension: reading-size text token for long-form text (17px, line-height 1.5): `--ui-text-prose` and `--ui-text-prose-line-height` in `tokens.css`, `text-prose` in `theme.css`, `prose` in the `text` group in `cn.ts`. | `tokens.css`, `theme.css`, `cn.ts` | done |
 | Extension: spring motion token for size changes: `--ui-ease-spring` (a `linear()` curve from a damped spring with a 0.1 bounce), `--ui-duration-spring` (400ms, opening), `--ui-duration-spring-out` (300ms, closing) and `--ui-spring-stagger` (25ms) in `tokens.css`; `ease-spring`, `duration-spring` and `duration-spring-out` in `theme.css`. | `tokens.css`, `theme.css` | done |
-| Extension: reading-size `ListItem` variant without the hover fill. | `list.tsx` | planned |
+| Extension: reading-size `ListItem` variant without the hover fill: `variant="reading"` sets the row in `text-prose`, lets the title and description wrap, drops the hover fill, underlines the title on hover or keyboard focus, and lines the content up with the surrounding text (the focus ring sits just outside). | `list.tsx` | done |
 | Addition: `Island`, the floating menu. | `island.tsx` | done |
 | Addition: `Media` and `MediaGrid`, images and videos with captions, including the reduced-motion video behaviour. `MediaGrid` takes an optional `onOpen` so the app supplies its own lightbox. | `media.tsx` | done |
 | Addition: `Embed`, a lazy live embed with a link out beneath it. | `embed.tsx` | done |
+| Fix to consider: `groupLabelClass` uses `text-ink-3`, which fails WCAG AA contrast at its 12px size on a white background (axe `color-contrast`). This site overrides it with `text-ink-2` on the homepage. | `group-label.ts` | to decide |
 
 Update a row to "done" when the change lands in `kit/ui/`.
