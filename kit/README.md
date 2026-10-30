@@ -1,0 +1,27 @@
+# Starter kit UI (copy)
+
+`kit/ui/` is a copy of part of the starter kit's UI package, imported in this site as `@kit/ui` (a `paths` entry in `tsconfig.json`). The theme is imported by relative path in `app/globals.css`, right after Tailwind.
+
+- **Source:** the starter repo, `packages/ui/src`, at commit `0374e58`.
+- **Copied:** `theme.css`, `tokens.css`, `brand.css`, `cn.ts`, `link.tsx`, `list.tsx`, `display.tsx`, `avatar.tsx`, `meta-list.tsx`, `button-class.ts`, `icons.tsx`, `group-label.ts`. These import nothing else from the kit. `index.ts` is the kit's, trimmed to these files.
+- **Runtime dependencies they import:** `@base-ui/react`, `clsx`, `tailwind-merge`, `lucide-react`.
+
+Kit code keeps the kit's style (named function exports, `cn()`, tokens, Base UI for interactive parts), so changes can be copied back unchanged. Each change below is marked in its file with a comment saying it is new to the kit.
+
+## This site's brand
+
+`brand.css` is set to this site's look: Geist Sans (loaded by `geist/font/sans` in `app/layout.tsx`), pure greys (neutral chroma 0), a 0.5rem radius, and the site's selection blue `#0066db` as the accent (a lighter blue of the same hue in dark mode). The site's own `--bg`, `--fg`, `--text-copy`, `--muted` and `--border` in `app/globals.css` point at the kit's tokens.
+
+## To copy back to the starter
+
+| Change | Files | Status |
+|---|---|---|
+| Extension: the brand chooses its font. `theme.css` no longer imports `@fontsource-variable/inter`; `brand.css` sets `--brand-font` and the app (or `brand.css`) loads the font. | `theme.css`, `brand.css` | done |
+| Extension: reading-size text token for long-form text (17px, line-height 1.5): `--ui-text-prose` and `--ui-text-prose-line-height` in `tokens.css`, `text-prose` in `theme.css`, `prose` in the `text` group in `cn.ts`. | `tokens.css`, `theme.css`, `cn.ts` | done |
+| Extension: spring motion token (a `linear()` curve, about 0.1 bounce) for size changes. | `tokens.css`, `theme.css` | planned |
+| Extension: reading-size `ListItem` variant without the hover fill. | `list.tsx` | planned |
+| Addition: `Island`, the floating menu. | new file | planned |
+| Addition: `Media` and `MediaGrid`, images and videos with captions, including the reduced-motion video behaviour. | new file | planned |
+| Addition: `Embed`, a lazy live embed with a link out beneath it. | new file | planned |
+
+Update a row to "done" when the change lands in `kit/ui/`.

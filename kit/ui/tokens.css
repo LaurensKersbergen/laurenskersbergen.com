@@ -1,0 +1,148 @@
+/*
+ * Design tokens, all derived from brand.css. Change brand.css per product, not this file.
+ * Colours use light-dark(): pages follow the system setting, and data-theme="light" or "dark"
+ * on <html> overrides it. Plain CSS, so the landing page (no build) reads the same tokens.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Neutral scale from the brand's hue and chroma; lightness steps follow Tailwind's neutral. */
+  --palette-50: oklch(0.985 calc(var(--brand-neutral-chroma) * 0.4) var(--brand-neutral-hue));
+  --palette-100: oklch(0.97 calc(var(--brand-neutral-chroma) * 0.6) var(--brand-neutral-hue));
+  --palette-200: oklch(0.922 calc(var(--brand-neutral-chroma) * 0.8) var(--brand-neutral-hue));
+  --palette-300: oklch(0.87 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-400: oklch(0.708 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-500: oklch(0.556 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-600: oklch(0.439 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-700: oklch(0.371 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-800: oklch(0.269 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-900: oklch(0.205 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-950: oklch(0.145 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+
+  /* Surfaces */
+  --ui-bg: light-dark(color-mix(in oklch, var(--palette-50) 40%, white), var(--palette-950));
+  --ui-canvas: light-dark(var(--palette-100), oklch(0.115 var(--brand-neutral-chroma) var(--brand-neutral-hue)));
+  --ui-surface: light-dark(white, var(--palette-900));
+  --ui-popover: light-dark(white, var(--palette-900));
+  --ui-fill: light-dark(var(--palette-100), var(--palette-800));
+  /* Hover: a see-through tint of the text colour, like Notion's, so it shows on white, the sidebar and coloured alerts alike. */
+  --ui-hover: light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), color-mix(in oklch, var(--palette-50) 8%, transparent));
+  /* Selected: the row that's open, one step stronger than hover so the two never look alike. */
+  --ui-selected: light-dark(color-mix(in oklch, var(--palette-950) 9%, transparent), color-mix(in oklch, var(--palette-50) 12%, transparent));
+  --ui-sidebar: light-dark(var(--brand-sidebar), color-mix(in oklch, var(--palette-900) 50%, var(--palette-950)));
+  --ui-sidebar-hover: light-dark(var(--brand-sidebar-hover), var(--palette-800));
+  --ui-scrim: light-dark(oklch(0.145 0 0 / 0.2), oklch(0 0 0 / 0.55));
+
+  /* Lines and text */
+  --ui-line: light-dark(var(--palette-200), var(--palette-800));
+  --ui-line-2: light-dark(var(--palette-300), var(--palette-700));
+  --ui-ink: light-dark(var(--palette-950), var(--palette-100));
+  --ui-ink-2: light-dark(var(--palette-600), var(--palette-400));
+  --ui-ink-3: light-dark(var(--palette-400), var(--palette-500));
+
+  /* Controls: the secondary button and other raised parts */
+  --ui-raised: light-dark(color-mix(in oklch, var(--palette-50) 50%, white), var(--palette-800));
+  --ui-raised-hover: light-dark(var(--palette-100), var(--palette-700));
+  --ui-control-edge: light-dark(color-mix(in oklch, var(--palette-600) 20%, transparent), color-mix(in oklch, var(--palette-950) 70%, transparent));
+
+  /* The strong (primary) button and tooltips: dark on light pages, light on dark pages */
+  --ui-strong: light-dark(var(--palette-800), var(--palette-200));
+  --ui-strong-hover: light-dark(var(--palette-700), var(--palette-300));
+  --ui-on-strong: light-dark(var(--palette-50), var(--palette-900));
+  --ui-tooltip: light-dark(var(--palette-900), var(--palette-200));
+  --ui-on-tooltip: light-dark(var(--palette-50), var(--palette-900));
+
+  /* Accent */
+  --ui-accent: light-dark(var(--brand-accent), var(--brand-accent-dark));
+  --ui-on-accent: light-dark(var(--brand-on-accent), var(--palette-950));
+
+  /*
+   * Status: Notion's muted text and background colours, with the text's lightness moved just
+   * enough to reach 4.5:1 on its tint and on surfaces (WCAG AA). Each has a colour for text,
+   * icons and the danger button, and a tint for badge and alert backgrounds. They don't follow
+   * the brand: red means a problem in every product.
+   */
+  --ui-danger: light-dark(#b54740, #df6f66);
+  --ui-danger-tint: light-dark(#faecec, #332523);
+  --ui-warn: light-dark(#916400, #c19138);
+  --ui-warn-tint: light-dark(#faf3dd, #372e20);
+  --ui-success: light-dark(#497559, #58a071);
+  --ui-success-tint: light-dark(#eef3ed, #242b26);
+  --ui-info: light-dark(#3c7098, #5990e3);
+  --ui-info-tint: light-dark(#e9f3f7, #1f282d);
+
+  /*
+   * Category colours, for things that differ by kind rather than by state: groups, tags, timeline
+   * bars, chart series. The same Notion family as the status colours and the same AA rule (text on
+   * its tint and on cards); yellow, green, blue and red are the status colours themselves, so the
+   * two sets never drift apart. Teal is ours, in the same muted range, for a tenth distinct hue.
+   */
+  --ui-cat-gray: light-dark(#6c6b68, #9b9b9b);
+  --ui-cat-gray-tint: light-dark(#f1f1ef, #252525);
+  --ui-cat-brown: light-dark(#8b614c, #b28772);
+  --ui-cat-brown-tint: light-dark(#f3eeee, #2e2724);
+  --ui-cat-orange: light-dark(#a65500, #d2813e);
+  --ui-cat-orange-tint: light-dark(#f8ecdf, #36291f);
+  --ui-cat-yellow: var(--ui-warn);
+  --ui-cat-yellow-tint: var(--ui-warn-tint);
+  --ui-cat-green: var(--ui-success);
+  --ui-cat-green-tint: var(--ui-success-tint);
+  --ui-cat-teal: light-dark(#377571, #529c95);
+  --ui-cat-teal-tint: light-dark(#e8f2f1, #1f2a29);
+  --ui-cat-blue: var(--ui-info);
+  --ui-cat-blue-tint: var(--ui-info-tint);
+  --ui-cat-purple: light-dark(#825fa2, #a47bdc);
+  --ui-cat-purple-tint: light-dark(#f6f3f8, #2a2430);
+  --ui-cat-pink: light-dark(#ab4d81, #db6895);
+  --ui-cat-pink-tint: light-dark(#f9f2f5, #2e2328);
+  --ui-cat-red: var(--ui-danger);
+  --ui-cat-red-tint: var(--ui-danger-tint);
+
+  /*
+   * Motion, after Hori and Notion: one soft ease-out curve (fast start, long gentle stop) and
+   * three speeds. Fast for colour and tooltips, base for popups appearing, slow for things that
+   * move or change size (indicators, sidebar, a tab label sliding open). Reduced motion turns it
+   * all off (theme.css).
+   */
+  --ui-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-duration-fast: 120ms;
+  --ui-duration-base: 180ms;
+  --ui-duration-slow: 260ms;
+
+  /* New to the kit: reading size for long-form text, larger than the app UI's control sizes. */
+  --ui-text-prose: 1.0625rem;
+  --ui-text-prose-line-height: 1.5;
+
+  /* Shape */
+  --ui-radius-control: var(--brand-radius);
+  --ui-radius-card: calc(var(--brand-radius) * 1.5);
+  --ui-radius-small: calc(var(--brand-radius) * 0.75);
+  /* Inside a control with 2px padding (tabs, segmented control, toolbar), so the corners stay parallel. */
+  --ui-radius-inner: max(calc(var(--brand-radius) - 2px), 0px);
+  /* 16px parts such as the checkbox. */
+  --ui-radius-tiny: calc(var(--brand-radius) * 0.45);
+
+  /* Depth: a hairline edge, a soft drop and a highlight on top, like a physical key */
+  --ui-shadow-control:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 1px 2px -0.5px light-dark(color-mix(in oklch, var(--palette-700) 12%, transparent), color-mix(in oklch, var(--palette-950) 30%, transparent)),
+    0 2px 2px -1px light-dark(color-mix(in oklch, var(--palette-700) 6%, transparent), transparent),
+    inset 0 1px 0 light-dark(color-mix(in oklch, var(--palette-50) 70%, transparent), color-mix(in oklch, var(--palette-200) 10%, transparent)),
+    inset 0 0 0 0.5px light-dark(transparent, color-mix(in oklch, var(--palette-200) 5%, transparent));
+  --ui-shadow-control-filled:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 1px 2px light-dark(color-mix(in oklch, var(--palette-700) 10%, transparent), color-mix(in oklch, var(--palette-950) 30%, transparent)),
+    inset 0 0.5px 0 light-dark(color-mix(in oklch, var(--palette-50) 16%, transparent), color-mix(in oklch, var(--palette-200) 20%, transparent));
+  --ui-shadow-overlay:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 2px 4px -1px light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), oklch(0 0 0 / 0.3)),
+    0 12px 32px -8px light-dark(color-mix(in oklch, var(--palette-950) 16%, transparent), oklch(0 0 0 / 0.5));
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}

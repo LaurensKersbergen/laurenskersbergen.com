@@ -1,0 +1,147 @@
+/*
+ * The Tailwind theme for every app. Import after `@import "tailwindcss";` in an app's global CSS,
+ * and point Tailwind at this package with `@source` so its classes are generated.
+ * The values come from tokens.css, which derives them from brand.css: a product changes its
+ * look in brand.css, never here.
+ */
+/* New to the kit: no font import here; brand.css chooses the font and the app loads it. */
+@import "./brand.css";
+@import "./tokens.css";
+
+@theme inline {
+  /* Only these colours exist: Tailwind's default palette (red-500, white, …) is switched off,
+     so every colour in the apps comes from the brand and follows dark mode. */
+  --color-*: initial;
+  --color-bg: var(--ui-bg);
+  --color-canvas: var(--ui-canvas);
+  --color-surface: var(--ui-surface);
+  --color-popover: var(--ui-popover);
+  --color-fill: var(--ui-fill);
+  --color-hover: var(--ui-hover);
+  --color-selected: var(--ui-selected);
+  --color-scrim: var(--ui-scrim);
+  --color-sidebar: var(--ui-sidebar);
+  --color-sidebar-hover: var(--ui-sidebar-hover);
+  --color-line: var(--ui-line);
+  --color-line-2: var(--ui-line-2);
+  --color-ink: var(--ui-ink);
+  --color-ink-2: var(--ui-ink-2);
+  --color-ink-3: var(--ui-ink-3);
+  --color-raised: var(--ui-raised);
+  --color-raised-hover: var(--ui-raised-hover);
+  --color-strong: var(--ui-strong);
+  --color-strong-hover: var(--ui-strong-hover);
+  --color-on-strong: var(--ui-on-strong);
+  --color-tooltip: var(--ui-tooltip);
+  --color-on-tooltip: var(--ui-on-tooltip);
+  --color-accent: var(--ui-accent);
+  --color-on-accent: var(--ui-on-accent);
+  --color-danger: var(--ui-danger);
+  --color-danger-tint: var(--ui-danger-tint);
+  --color-warn: var(--ui-warn);
+  --color-warn-tint: var(--ui-warn-tint);
+  --color-success: var(--ui-success);
+  --color-success-tint: var(--ui-success-tint);
+  --color-info: var(--ui-info);
+  --color-info-tint: var(--ui-info-tint);
+  --color-cat-gray: var(--ui-cat-gray);
+  --color-cat-gray-tint: var(--ui-cat-gray-tint);
+  --color-cat-brown: var(--ui-cat-brown);
+  --color-cat-brown-tint: var(--ui-cat-brown-tint);
+  --color-cat-orange: var(--ui-cat-orange);
+  --color-cat-orange-tint: var(--ui-cat-orange-tint);
+  --color-cat-yellow: var(--ui-cat-yellow);
+  --color-cat-yellow-tint: var(--ui-cat-yellow-tint);
+  --color-cat-green: var(--ui-cat-green);
+  --color-cat-green-tint: var(--ui-cat-green-tint);
+  --color-cat-teal: var(--ui-cat-teal);
+  --color-cat-teal-tint: var(--ui-cat-teal-tint);
+  --color-cat-blue: var(--ui-cat-blue);
+  --color-cat-blue-tint: var(--ui-cat-blue-tint);
+  --color-cat-purple: var(--ui-cat-purple);
+  --color-cat-purple-tint: var(--ui-cat-purple-tint);
+  --color-cat-pink: var(--ui-cat-pink);
+  --color-cat-pink-tint: var(--ui-cat-pink-tint);
+  --color-cat-red: var(--ui-cat-red);
+  --color-cat-red-tint: var(--ui-cat-red-tint);
+
+  --font-sans: var(--brand-font);
+
+  --radius-control: var(--ui-radius-control);
+  --radius-card: var(--ui-radius-card);
+  --radius-small: var(--ui-radius-small);
+  --radius-inner: var(--ui-radius-inner);
+  --radius-tiny: var(--ui-radius-tiny);
+
+  --shadow-control: var(--ui-shadow-control);
+  --shadow-control-filled: var(--ui-shadow-control-filled);
+  --shadow-overlay: var(--ui-shadow-overlay);
+
+  /* Motion: plain `transition` classes use the fast speed and the brand curve; `ease-out` is that curve too. */
+  --ease-out: var(--ui-ease);
+  --default-transition-duration: var(--ui-duration-fast);
+  --default-transition-timing-function: var(--ui-ease);
+
+  /* Control sizes, matched to shiori.sh: 40px / 14px and 32px / 13px. */
+  --spacing-control: 2.5rem;
+  --spacing-control-sm: 2rem;
+  --text-control: 0.875rem;
+  --text-control--line-height: 1.25rem;
+  --text-control-sm: 0.8125rem;
+  --text-control-sm--line-height: 1.25rem;
+
+  /* New to the kit: reading size for long-form text (articles, project write-ups), as text-prose. */
+  --text-prose: var(--ui-text-prose);
+  --text-prose--line-height: var(--ui-text-prose-line-height);
+}
+
+/* The three speeds as classes: duration-fast, duration-base, duration-slow. Never a number of milliseconds. */
+@utility duration-fast {
+  --tw-duration: var(--ui-duration-fast);
+  transition-duration: var(--ui-duration-fast);
+}
+@utility duration-base {
+  --tw-duration: var(--ui-duration-base);
+  transition-duration: var(--ui-duration-base);
+}
+@utility duration-slow {
+  --tw-duration: var(--ui-duration-slow);
+  transition-duration: var(--ui-duration-slow);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    /* Lets dialog backdrops use position: absolute, which covers Safari's see-through toolbars (iOS 26). */
+    position: relative;
+    background: var(--ui-bg);
+    color: var(--ui-ink);
+    font-family: var(--brand-font);
+  }
+  /*
+   * The app's own stacking context, as Base UI recommends: popups, menus and dialogs render in
+   * portals next to it, so they always sit above the page and no z-index in the app can cover them.
+   */
+  #root {
+    isolation: isolate;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  /* People who asked their system for less motion get changes without slides, zooms or pulses. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
