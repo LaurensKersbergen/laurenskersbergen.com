@@ -38,3 +38,8 @@ next-env.d.ts
 
 # obsidian
 .obsidian/
+
+# test output
+/test-results/
+/playwright-report/
+/blob-report/
