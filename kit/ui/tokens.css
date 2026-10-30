@@ -109,6 +109,17 @@
   --ui-duration-base: 180ms;
   --ui-duration-slow: 260ms;
 
+  /*
+   * New to the kit: a spring for things that grow and shrink in place, such as the floating island
+   * menu, after Apple's smooth springs. A damped spring with a 0.1 bounce (damping ratio 0.9, so it
+   * overshoots by about 0.15%: it settles rather than bounces), sampled at 33 points as a linear()
+   * curve. Opening takes the longer speed and closing the shorter one; items inside stagger by a step.
+   */
+  --ui-ease-spring: linear(0, 0.024, 0.084, 0.164, 0.254, 0.347, 0.437, 0.521, 0.598, 0.666, 0.726, 0.777, 0.821, 0.858, 0.888, 0.913, 0.933, 0.949, 0.962, 0.973, 0.98, 0.986, 0.991, 0.994, 0.997, 0.999, 1, 1.001, 1.001, 1.001, 1.002, 1.002, 1);
+  --ui-duration-spring: 400ms;
+  --ui-duration-spring-out: 300ms;
+  --ui-spring-stagger: 25ms;
+
   /* New to the kit: reading size for long-form text, larger than the app UI's control sizes. */
   --ui-text-prose: 1.0625rem;
   --ui-text-prose-line-height: 1.5;

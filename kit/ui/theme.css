@@ -81,6 +81,8 @@
   --ease-out: var(--ui-ease);
   --default-transition-duration: var(--ui-duration-fast);
   --default-transition-timing-function: var(--ui-ease);
+  /* New to the kit: the spring curve (tokens.css), as ease-spring. */
+  --ease-spring: var(--ui-ease-spring);
 
   /* Control sizes, matched to shiori.sh: 40px / 14px and 32px / 13px. */
   --spacing-control: 2.5rem;
@@ -107,6 +109,15 @@
 @utility duration-slow {
   --tw-duration: var(--ui-duration-slow);
   transition-duration: var(--ui-duration-slow);
+}
+/* New to the kit: the spring's two speeds, opening (duration-spring) and closing (duration-spring-out). */
+@utility duration-spring {
+  --tw-duration: var(--ui-duration-spring);
+  transition-duration: var(--ui-duration-spring);
+}
+@utility duration-spring-out {
+  --tw-duration: var(--ui-duration-spring-out);
+  transition-duration: var(--ui-duration-spring-out);
 }
 
 @layer base {
