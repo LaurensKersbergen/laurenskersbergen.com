@@ -127,3 +127,42 @@ test.describe("project detail page", () => {
     });
   }
 });
+
+test.describe("/projects overview", () => {
+  test("lists the published projects in order, without drafts, under its own title", async ({ page }) => {
+    const response = await page.goto("/projects");
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveTitle(/^Projects/);
+    await expect(page.getByRole("heading", { level: 1, name: "Projects" })).toBeVisible();
+
+    const entries = page.getByRole("main").getByRole("listitem");
+    await expect(entries).toHaveCount(published.length);
+    for (const [i, entry] of published.entries()) {
+      await expect(entries.nth(i).getByRole("link")).toHaveAttribute("href", `/projects/${entry.slug}`);
+    }
+    await expect(page.locator('main a[href="/projects/example-project"]')).toHaveCount(0);
+  });
+
+  test("shows the meal-planner entry with its status and year, and opens it", async ({ page }) => {
+    await page.goto("/projects");
+    const entry = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: meta.title }) });
+    await expect(entry.getByRole("heading", { level: 2, name: meta.title })).toBeVisible();
+    await expect(entry.getByText(meta.tagline)).toBeVisible();
+    await expect(entry.getByText(meta.status, { exact: true })).toBeVisible();
+    await expect(entry.getByText(String(meta.year), { exact: true })).toBeVisible();
+    await expect(entry.locator("img")).toBeVisible();
+
+    await entry.getByRole("link").click();
+    await expect(page).toHaveURL(`/projects/${slug}`);
+    await expect(page.getByRole("heading", { level: 1, name: meta.title })).toBeVisible();
+  });
+
+  for (const colorScheme of ["light", "dark"] as const) {
+    test(`passes an accessibility check in ${colorScheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme });
+      await page.goto("/projects");
+      const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+});
