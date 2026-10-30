@@ -60,6 +60,16 @@ export function pickNextProject(
   return projects[(index + 1) % projects.length];
 }
 
+/** The still that stands for the project: the cover, or its poster when the cover is a video. */
+export function previewImage(meta: ProjectMeta) {
+  return meta.cover.endsWith(".mp4") ? meta.poster : meta.cover;
+}
+
+/** The status badge's tone: "Live" projects read as success, everything else as neutral. */
+export function statusTone(status: string) {
+  return status === "Live" ? "success" : "neutral";
+}
+
 function readProjectFile(
   slug: string
 ): { meta: ProjectMeta; content: string } | null {

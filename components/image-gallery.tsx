@@ -48,7 +48,7 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
 }
 
 /** The photo shown large over the page; a click anywhere or Escape closes it. */
-export function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void }) {
+function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void }) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();

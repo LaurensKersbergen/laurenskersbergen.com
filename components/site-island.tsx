@@ -11,8 +11,6 @@ const sections = [
   { href: "/about", label: "About" },
 ];
 
-// The site's floating menu: the four sections, matched by the first path segment, so
-// /projects/<slug> is in Projects. Pages outside them (such as /listening) show "Menu".
 export function SiteIsland() {
   const pathname = usePathname() ?? "/";
   const segment = `/${pathname.split("/")[1] ?? ""}`;

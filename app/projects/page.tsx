@@ -2,14 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge, Card, EmptyState, MetaList } from "@kit/ui";
-import { getProjects, type ProjectMeta } from "@/lib/projects";
+import { getProjects, previewImage, statusTone } from "@/lib/projects";
 
 const description = "Side projects I designed and built, and how I built them.";
-
-/** The still that stands for the project: the cover, or its poster when the cover is a video. */
-function previewImage(meta: ProjectMeta) {
-  return meta.cover.endsWith(".mp4") ? meta.poster : meta.cover;
-}
 
 export function generateMetadata(): Metadata {
   const image = getProjects().map(previewImage).find(Boolean);
@@ -59,7 +54,7 @@ export default function ProjectsPage() {
                       <h2 className="m-0 font-medium text-ink underline-offset-4 group-hover:underline">{project.title}</h2>
                       <p className="mt-1 mb-0 text-control text-ink-2">{project.tagline}</p>
                       <MetaList
-                        items={[<Badge key="status" tone={project.status === "Live" ? "success" : "neutral"}>{project.status}</Badge>, project.year]}
+                        items={[<Badge key="status" tone={statusTone(project.status)}>{project.status}</Badge>, project.year]}
                         className="mt-3 text-control text-ink-2 tabular-nums"
                       />
                     </div>

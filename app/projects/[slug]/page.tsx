@@ -5,7 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { ArrowLeftIcon, ArrowRightIcon, Badge, buttonClass, cn, DescriptionList, LinkOrAnchor, Media } from "@kit/ui";
 import { LogoLink } from "@/components/logo-link";
 import { breakoutMedium, breakoutWide, projectMdxComponents } from "@/components/project-mdx";
-import { getNextProject, getProject, getProjects, type ProjectMeta } from "@/lib/projects";
+import { getNextProject, getProject, getProjects, previewImage, statusTone } from "@/lib/projects";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -15,11 +15,6 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return getProjects().map((project) => ({ slug: project.slug }));
-}
-
-/** The still that stands for the project: the cover, or its poster when the cover is a video. */
-function previewImage(meta: ProjectMeta) {
-  return meta.cover.endsWith(".mp4") ? meta.poster : meta.cover;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -52,7 +47,7 @@ export default async function ProjectPage({ params }: Props) {
   const facts = [
     { term: "Role", details: meta.role },
     { term: "Year", details: meta.year },
-    { term: "Status", details: <Badge tone={meta.status === "Live" ? "success" : "neutral"}>{meta.status}</Badge> },
+    { term: "Status", details: <Badge tone={statusTone(meta.status)}>{meta.status}</Badge> },
     { term: "Built with", details: meta.stack.join(", ") },
   ];
   if (meta.url) {
