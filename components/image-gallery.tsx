@@ -1,8 +1,8 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { useState, useCallback, useEffect, type ComponentProps } from "react";
-import { MediaGrid, type MediaImage } from "@kit/ui";
+import { useState, useCallback, useEffect, useRef, type ComponentProps } from "react";
+import { CloseIcon, MediaGrid, type MediaImage } from "@kit/ui";
 
 interface GalleryImage {
   src: string | StaticImageData;
@@ -47,11 +47,24 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
   );
 }
 
-/** The photo shown large over the page; a click anywhere or Escape closes it. */
+/**
+ * The photo shown large over the page, as a modal dialog: focus moves to its close button and
+ * stays there, and returns to whatever opened it. A click anywhere or Escape closes it.
+ */
 function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeRef.current?.focus();
+
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
+      // The close button is the dialog's only control, so Tab stays on it
+      if (e.key === "Tab") {
+        e.preventDefault();
+        closeRef.current?.focus();
+      }
     }
 
     document.body.style.overflow = "hidden";
@@ -60,11 +73,15 @@ function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
+      opener?.focus();
     };
   }, [onClose]);
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={image.alt}
       className="fixed inset-0 z-50 flex items-center justify-center cursor-zoom-out"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)" }}
       onClick={onClose}
@@ -72,6 +89,16 @@ function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void
       <div className="relative w-full h-full p-4 md:p-12 flex items-center justify-center">
         <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-contain" priority />
       </div>
+      <button
+        ref={closeRef}
+        type="button"
+        aria-label="Close"
+        onClick={onClose}
+        className="absolute top-3 right-3 grid size-10 cursor-pointer place-items-center rounded-full opacity-80 transition-opacity hover:opacity-100"
+        style={{ color: "rgb(255, 255, 255)", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      >
+        <CloseIcon size={20} />
+      </button>
     </div>
   );
 }

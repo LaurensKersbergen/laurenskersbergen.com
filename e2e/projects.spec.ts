@@ -97,6 +97,24 @@ test.describe("project detail page", () => {
     await expect(copies).toHaveCount(1);
   });
 
+  test("the enlarged image is a modal dialog that keeps and returns keyboard focus", async ({ page }) => {
+    await page.goto(`/projects/${slug}`);
+    const trigger = page.locator("main button:has(img)").first();
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Close" })).toBeFocused();
+
+    await page.keyboard.press("Tab");
+    await expect(dialog.getByRole("button", { name: "Close" })).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
   test("clicking All projects plays the navigate sound", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "desktop", "sounds play only with a mouse or trackpad");
 
