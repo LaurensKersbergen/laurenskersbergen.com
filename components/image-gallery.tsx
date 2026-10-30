@@ -1,7 +1,8 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, type ComponentProps } from "react";
+import { MediaGrid, type MediaImage } from "@kit/ui";
 
 interface GalleryImage {
   src: string | StaticImageData;
@@ -14,22 +15,6 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
   const closeLightbox = useCallback(() => {
     setLightboxIndex(null);
   }, []);
-
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") closeLightbox();
-    }
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [lightboxIndex, closeLightbox]);
 
   const cols = images.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2";
 
@@ -57,24 +42,49 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
         ))}
       </div>
 
-      {lightboxIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center cursor-zoom-out"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.9)" }}
-          onClick={closeLightbox}
-        >
-          <div className="relative w-full h-full p-4 md:p-12 flex items-center justify-center">
-            <Image
-              src={images[lightboxIndex].src}
-              alt={images[lightboxIndex].alt}
-              fill
-              sizes="100vw"
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
-      )}
+      {lightboxIndex !== null && <Lightbox image={images[lightboxIndex]} onClose={closeLightbox} />}
+    </>
+  );
+}
+
+/** The photo shown large over the page; a click anywhere or Escape closes it. */
+export function Lightbox({ image, onClose }: { image: GalleryImage; onClose: () => void }) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center cursor-zoom-out"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.9)" }}
+      onClick={onClose}
+    >
+      <div className="relative w-full h-full p-4 md:p-12 flex items-center justify-center">
+        <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-contain" priority />
+      </div>
+    </div>
+  );
+}
+
+/** The kit's MediaGrid with its images opening in the Lightbox, for project write-ups. */
+export function LightboxMediaGrid(props: Omit<ComponentProps<typeof MediaGrid>, "onOpen">) {
+  const [image, setImage] = useState<MediaImage | null>(null);
+  const close = useCallback(() => setImage(null), []);
+
+  return (
+    <>
+      <MediaGrid {...props} onOpen={setImage} />
+      {image && <Lightbox image={image} onClose={close} />}
     </>
   );
 }

@@ -10,3 +10,5 @@ export { type LinkRender, LinkOrAnchor } from "./link";
 export { List, ListGroup, ListItem, type ListItemProps } from "./list";
 // New to the kit (kit/README.md): the floating island menu, media blocks and live embeds.
 export * from "./island";
+export * from "./media";
+export * from "./embed";
