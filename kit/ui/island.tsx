@@ -6,8 +6,9 @@ import { type LinkRender, LinkOrAnchor } from "./link";
 
 /*
  * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill in the top-right
- * corner; pressing it grows the pill downward and wider into a panel of links, in groups split by
- * hairlines, with the toggle as the panel's first row, now reading "Close". The look and motion live
+ * corner; pressing it grows the pill downward and wider into a panel of left-aligned links, the
+ * current one marked with a dot, below the toggle, which stays in the corner and now reads "Close".
+ * Links can start groups split by hairlines. The look and motion live
  * in theme.css (.ui-island) and tokens.css (the springs and the surface).
  *
  * It follows the disclosure pattern (a button and a plain list of links), not an ARIA menu. Only a
@@ -67,8 +68,6 @@ function rowsFor(links: IslandLink[]): Row[] {
     if (link.startsGroup && index > 0) rows.push({ kind: "divider", key: `divider-${link.href}` });
     rows.push({ kind: "link", link });
   });
-  // A hairline always separates the toggle from the links below it.
-  rows.unshift({ kind: "divider", key: "divider-toggle" });
   return rows;
 }
 

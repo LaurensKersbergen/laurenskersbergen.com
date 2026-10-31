@@ -152,7 +152,7 @@
  * open and closed states swap springs and speeds through custom properties.
  *
  * The nav is a clipping window in the top-right corner over a panel pinned to its top-right corner,
- * with the toggle as the panel's first row. Collapsed, only that row ("Menu") shows; opening widens
+ * with the toggle (right-aligned, so it stays put) as the panel's first row. Collapsed, only that row ("Menu") shows; opening widens
  * the window leftward on the x spring and lowers it on the y spring, uncovering the links, which fade in from the toggle down.
  * Opening and closing use their own springs and speeds; island.tsx varies the four speeds
  * (--island-duration-*) on every toggle and writes the open height (--island-open-h) and, for
@@ -234,7 +234,7 @@
     transform: translateX(4px);
     display: flex;
     flex-direction: column;
-    padding: 6px 22px;
+    padding: 6px 22px 6px 36px;
     transition:
       transform var(--island-duration-x) var(--island-ease-x),
       top var(--island-duration-y) var(--island-ease-y);
@@ -282,6 +282,8 @@
     transition: color 264ms ease;
   }
   .ui-island-link {
+    position: relative;
+    text-align: left;
     border-radius: var(--ui-radius-small);
   }
   .ui-island-link:hover,
@@ -290,6 +292,18 @@
   }
   .ui-island-link[aria-current="page"] {
     color: var(--ui-island-text-current);
+  }
+  /* The current link's dot, in the gutter left of the links, 9px before its first letter. */
+  .ui-island-link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -15px;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+    background: currentColor;
   }
   .ui-island-trigger {
     border: none;

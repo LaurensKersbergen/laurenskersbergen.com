@@ -6,10 +6,10 @@ import { Island } from "@kit/ui";
 
 const sections = [
   { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects", startsGroup: true },
+  { href: "/projects", label: "Projects" },
   { href: "/writing", label: "Writing" },
   { href: "/about", label: "About" },
-  { href: "/listening", label: "Listening", startsGroup: true },
+  { href: "/listening", label: "Listening" },
 ];
 
 export function SiteIsland() {
