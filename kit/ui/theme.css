@@ -151,9 +151,9 @@
  * New to the kit: the floating island menu (island.tsx). Plain CSS rather than classes, because its
  * open and closed states swap springs and speeds through custom properties.
  *
- * The nav is a clipping window over a panel pinned to its bottom-left corner, with the toggle as the
- * panel's last row. Collapsed, only that row ("Menu") shows; opening widens the window on the x
- * spring and raises it on the y spring, uncovering the links, which fade in from the bottom up.
+ * The nav is a clipping window, centred at the bottom of the page, over a panel centred inside it,
+ * with the toggle as the panel's last row. Collapsed, only that row ("Menu") shows; opening widens
+ * the window evenly to both sides on the x spring and raises it on the y spring, uncovering the links, which fade in from the bottom up.
  * Opening and closing use their own springs and speeds; island.tsx varies the four speeds
  * (--island-duration-*) on every toggle and writes the open height (--island-open-h) and, for
  * phones, the collapsed width that fits the label (--island-collapsed-fit).
@@ -174,11 +174,12 @@
     --island-duration-y: var(--island-duration-close-y);
     position: fixed;
     bottom: 32px;
-    left: 32px;
+    left: 50%;
     z-index: 40;
     width: var(--island-collapsed-w);
     height: var(--island-collapsed-h);
-    transform: translateX(4px);
+    /* Centred on the page at every width, so it grows evenly to both sides. */
+    transform: translateX(-50%);
     overflow: hidden;
     contain: layout paint;
     will-change: width, height, transform, bottom;
@@ -210,7 +211,6 @@
     width: var(--island-open-w);
     height: var(--island-open-h);
     bottom: 24px;
-    transform: translateX(0);
     border-radius: 26px;
     background: var(--ui-island-open);
     box-shadow: var(--ui-shadow-island-open);
@@ -229,9 +229,9 @@
   .ui-island-inner {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 50%;
     width: var(--island-open-w);
-    transform: translateX(-4px);
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     padding: 6px 22px;
@@ -240,7 +240,6 @@
       bottom var(--island-duration-y) var(--island-ease-y);
   }
   .ui-island[data-open] .ui-island-inner {
-    transform: translateX(0);
     bottom: 8px;
   }
   .ui-island-list {
@@ -276,7 +275,7 @@
     line-height: 28px;
     font-weight: 400;
     color: var(--ui-island-text);
-    text-align: left;
+    text-align: center;
     text-decoration: none;
     white-space: nowrap;
     transition: color 264ms ease;
@@ -304,25 +303,18 @@
     color: var(--ui-island-label);
   }
 
-  /* Phones (720px and narrower): closer to the corner, above the safe area, no sideways drift; the
-     collapsed width fits the label, and scrolling down hides the island until scrolling back up
-     (unless focus is inside it). */
+  /* Phones (720px and narrower): closer to the bottom edge, above the safe area; the collapsed
+     width fits the label, and scrolling down hides the island until scrolling back up (unless
+     focus is inside it). */
   @media (width <= 45rem) {
     .ui-island {
       bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      left: calc(20px + env(safe-area-inset-left, 0px));
-      transform: none;
     }
     .ui-island[data-open] {
       bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-      transform: none;
     }
     .ui-island:not([data-open]) {
       width: var(--island-collapsed-fit, var(--island-collapsed-w));
-    }
-    .ui-island-inner,
-    .ui-island[data-open] .ui-island-inner {
-      transform: none;
     }
     .ui-island[data-scroll-hidden]:not(:focus-within) {
       opacity: 0;

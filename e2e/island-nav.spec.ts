@@ -1,6 +1,6 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
-// The floating island menu: a disclosure in the bottom-left corner of every page. Only a press on its
+// The floating island menu: a disclosure centred at the bottom of every page. Only a press on its
 // toggle (the panel's last row) opens it; the toggle reads "Menu" collapsed and "Close" open.
 const island = (page: Page) => page.getByRole("navigation", { name: "Site" });
 const toggle = (page: Page) => island(page).getByRole("button");
@@ -206,4 +206,20 @@ test("scrolled to the bottom, the last paragraph stays clear of the toggle", asy
   const bar = await island(page).boundingBox();
   expect(last && bar).toBeTruthy();
   expect(last!.y + last!.height).toBeLessThanOrEqual(bar!.y);
+});
+
+test("it is centred horizontally, collapsed and open", async ({ page }) => {
+  await page.goto("/");
+  const viewport = page.viewportSize()!;
+  const centreOffset = async () => {
+    const box = (await island(page).boundingBox())!;
+    return Math.abs(box.x + box.width / 2 - viewport.width / 2);
+  };
+  expect(await centreOffset()).toBeLessThanOrEqual(1);
+
+  await toggle(page).click();
+  await expect(toggle(page)).toHaveAttribute("aria-expanded", "true");
+  // Let the springs settle before measuring the open panel.
+  await page.waitForTimeout(900);
+  expect(await centreOffset()).toBeLessThanOrEqual(1);
 });

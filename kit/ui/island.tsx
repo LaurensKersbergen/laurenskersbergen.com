@@ -5,8 +5,8 @@ import { cn } from "./cn";
 import { type LinkRender, LinkOrAnchor } from "./link";
 
 /*
- * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill in the bottom-left
- * corner; pressing it grows the pill upward and wider into a panel of links, in groups split by
+ * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill centred at the
+ * bottom of the page; pressing it grows the pill upward and wider into a panel of links, in groups split by
  * hairlines, with the toggle as the panel's last row, now reading "Close". The look and motion live
  * in theme.css (.ui-island) and tokens.css (the springs and the surface).
  *
