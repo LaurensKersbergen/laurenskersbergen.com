@@ -6,17 +6,14 @@ import { type LinkRender, LinkOrAnchor } from "./link";
 
 /*
  * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill in the bottom-left
- * corner that grows upward and wider, from that corner, into a panel with the links stacked above
- * it, in groups split by hairlines. It follows the disclosure pattern (a button and a plain list of
- * links), not an ARIA menu: Escape, an outside press, a route change and focus leaving it all close
- * it, and the collapsed list is inert. On mouse and trackpad it also opens on hover, with a short
- * close delay; a click while it is hover-opened pins it open. Once a press has opened or pinned it,
- * the pill itself reads "Close" (its accessible name too), so the panel's last row closes it.
+ * corner; pressing it grows the pill upward and wider into a panel of links, in groups split by
+ * hairlines, with the toggle as the panel's last row, now reading "Close". The look and motion live
+ * in theme.css (.ui-island) and tokens.css (the springs and the surface).
  *
- * CSS can't animate to or from `auto` in Safari, so the component measures the label row and the
- * list with a ResizeObserver and writes the size to --island-w and --island-h; the size moves on
- * the spring curve (ease-spring), the links settle in with a stagger. With reduced motion only the
- * opacity changes, at the base speed.
+ * It follows the disclosure pattern (a button and a plain list of links), not an ARIA menu. Only a
+ * press on the toggle opens it; a second press, Escape, a press outside, following a link, a route
+ * change and keyboard focus leaving it all close it, and the collapsed list is inert. On phones,
+ * scrolling down the page hides it and scrolling back up shows it again.
  */
 
 export type IslandLink = {
@@ -30,24 +27,49 @@ export type IslandLink = {
   startsGroup?: boolean;
 };
 
-/** How the island was opened: by hover (closes when the pointer leaves), by a press, or pinned by a press while hover-opened. */
-type OpenedBy = "hover" | "press" | "pinned" | null;
+type Row = { kind: "link"; link: IslandLink } | { kind: "divider"; key: string };
 
-const CLOSE_DELAY_MS = 200;
-const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+/* Each toggle redraws the four spring speeds from their tokens, between 85% and 115% of each. */
+const SPEEDS = [
+  ["--island-duration-close-x", "--ui-duration-spring-x-out"],
+  ["--island-duration-close-y", "--ui-duration-spring-y-out"],
+  ["--island-duration-open-x", "--ui-duration-spring-x"],
+  ["--island-duration-open-y", "--ui-duration-spring-y"],
+] as const;
 
-/* Text only, no fills: links other than the current page's, and the pill while it reads "Close", are
-   muted (palette-500 keeps 4.5:1 on white) and turn ink on hover. */
-const mutedText = "text-[color:light-dark(var(--palette-500),var(--palette-400))]";
+/* The open window is the panel plus this much: the nav's border (2px) and 8px of room below and above the panel. */
+const OPEN_EXTRA_HEIGHT = 18;
+/* On phones the collapsed pill is the label plus this much: the panel's side padding (44px) and the nav's border (2px). */
+const LABEL_EXTRA_WIDTH = 46;
+/* Scrolling hides the island once the page is this far down, and shows it again after scrolling up this much. */
+const SCROLL_HIDE_FROM = 80;
+const SCROLL_SHOW_AFTER = 60;
+/* Transitions pause this long after the window resizes. */
+const RESIZE_PAUSE_MS = 150;
 
-type Sizes = { pillW: number; pillH: number; listW: number; listH: number };
+/** A CSS time in milliseconds; build tools may rewrite "590ms" as ".59s". */
+function toMs(time: string) {
+  const value = Number.parseFloat(time);
+  return time.trim().endsWith("ms") ? value : value * 1000;
+}
 
-function writeSize(surface: HTMLElement | null, sizes: Sizes | null, open: boolean) {
-  if (!surface || !sizes) return;
-  surface.style.setProperty("--island-w", `${open ? Math.max(sizes.listW, sizes.pillW) : sizes.pillW}px`);
-  surface.style.setProperty("--island-h", `${open ? sizes.listH + sizes.pillH : sizes.pillH}px`);
-  surface.style.setProperty("--island-r", `${sizes.pillH / 2}px`);
+function varySpeeds(nav: HTMLElement) {
+  const style = getComputedStyle(nav);
+  for (const [property, token] of SPEEDS) {
+    const base = toMs(style.getPropertyValue(token));
+    nav.style.setProperty(property, `${Math.round(base * (0.85 + 0.3 * Math.random()))}ms`);
+  }
+}
+
+function rowsFor(links: IslandLink[]): Row[] {
+  const rows: Row[] = [];
+  links.forEach((link, index) => {
+    if (link.startsGroup && index > 0) rows.push({ kind: "divider", key: `divider-${link.href}` });
+    rows.push({ kind: "link", link });
+  });
+  // A hairline always separates the links from the toggle below them.
+  rows.push({ kind: "divider", key: "divider-toggle" });
+  return rows;
 }
 
 export function Island({
@@ -58,9 +80,9 @@ export function Island({
   navLabel = "Site",
   className,
 }: {
-  /** The pill's text while it is collapsed or hover-opened, e.g. "Menu". */
+  /** The toggle's text while the island is collapsed, e.g. "Menu". */
   label: string;
-  /** The pill's text once a press has opened or pinned it, when pressing it closes the panel. */
+  /** The toggle's text while the island is open, when pressing it closes the panel. */
   closeLabel?: string;
   links: IslandLink[];
   /** The current route; the island closes when it changes. */
@@ -70,210 +92,189 @@ export function Island({
   className?: string;
 }) {
   const listId = useId();
-  const surfaceRef = useRef<HTMLDivElement>(null);
-  const rowRef = useRef<HTMLSpanElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const sizes = useRef<Sizes | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // A press inside the island moves focus to nothing in Safari (or to its padding), which isn't focus leaving it.
+  const pressingInside = useRef(false);
 
-  const [openedBy, setOpenedBy] = useState<OpenedBy>(null);
-  const open = openedBy !== null;
+  const [open, setOpen] = useState(false);
   const openRef = useRef(open);
-  // Transitions switch on after the first measurement, so nothing animates on page load.
+  const [scrollHidden, setScrollHidden] = useState(false);
+  // Marks the island as hydrated, so tests and scripts know the toggle works.
   const [ready, setReady] = useState(false);
 
   // A route change closes it.
   const [lastPath, setLastPath] = useState(path);
   if (path !== lastPath) {
     setLastPath(path);
-    setOpenedBy(null);
+    setOpen(false);
   }
 
-  // When the text changes, the old one stays a moment to cross-fade out.
-  const closes = openedBy === "press" || openedBy === "pinned";
-  const text = closes ? closeLabel : label;
-  const [shown, setShown] = useState(text);
-  const [leaving, setLeaving] = useState<string | null>(null);
-  if (text !== shown) {
-    setLeaving(shown);
-    setShown(text);
-  }
-
-  function clearCloseTimer() {
-    clearTimeout(closeTimer.current);
+  /** Opens or closes it with freshly varied spring speeds. */
+  function toggle(next: boolean) {
+    if (navRef.current) varySpeeds(navRef.current);
+    setOpen(next);
   }
 
   useLayoutEffect(() => {
-    const row = rowRef.current;
-    const list = listRef.current;
-    if (!row || !list) return;
+    openRef.current = open;
+  }, [open]);
+
+  // Measures the open height, and on phones the collapsed width that fits the label, without animating it.
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    const inner = innerRef.current;
+    const button = buttonRef.current;
+    if (!nav || !inner || !button) return;
+    let cancelled = false;
     const measure = () => {
-      const rowBox = row.getBoundingClientRect();
-      const listBox = list.getBoundingClientRect();
-      sizes.current = { pillW: Math.ceil(rowBox.width), pillH: Math.ceil(rowBox.height), listW: Math.ceil(listBox.width), listH: Math.ceil(listBox.height) };
-      writeSize(surfaceRef.current, sizes.current, openRef.current);
+      if (cancelled) return;
+      nav.style.setProperty("--island-open-h", `${inner.scrollHeight + OPEN_EXTRA_HEIGHT}px`);
+      if (openRef.current) return;
+      const range = document.createRange();
+      range.selectNodeContents(button);
+      const width = range.getBoundingClientRect().width;
+      if (width <= 0) return;
+      nav.setAttribute("data-no-anim", "");
+      nav.style.setProperty("--island-collapsed-fit", `${width + LABEL_EXTRA_WIDTH}px`);
+      void nav.offsetWidth;
+      nav.removeAttribute("data-no-anim");
     };
     measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(row);
-    observer.observe(list);
+    // The label's width changes if the web font arrives after the first measurement.
+    document.fonts?.ready.then(measure);
     const frame = requestAnimationFrame(() => setReady(true));
     return () => {
-      observer.disconnect();
+      cancelled = true;
       cancelAnimationFrame(frame);
     };
   }, []);
 
-  useLayoutEffect(() => {
-    openRef.current = open;
-    writeSize(surfaceRef.current, sizes.current, open);
-  }, [open]);
-
-  // The kit stops all motion for reduced motion (theme.css); here a short fade stays, as an inline
-  // !important, the only thing that outranks that rule.
-  useLayoutEffect(() => {
-    const reduce = window.matchMedia(REDUCED_MOTION_QUERY).matches;
-    for (const element of surfaceRef.current?.querySelectorAll<HTMLElement>("[data-island-fade]") ?? []) {
-      if (reduce) element.style.setProperty("transition-duration", "var(--ui-duration-base)", "important");
-      else element.style.removeProperty("transition-duration");
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+    function onResize() {
+      nav!.setAttribute("data-no-anim", "");
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => nav!.removeAttribute("data-no-anim"), RESIZE_PAUSE_MS);
     }
-  });
+    let lastY = window.scrollY;
+    let scrolledUp = 0;
+    function onScroll() {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      if (openRef.current || y <= SCROLL_HIDE_FROM) {
+        scrolledUp = 0;
+        setScrollHidden(false);
+      } else if (delta > 0) {
+        scrolledUp = 0;
+        setScrollHidden(true);
+      } else if (delta < 0) {
+        scrolledUp -= delta;
+        if (scrolledUp >= SCROLL_SHOW_AFTER) setScrollHidden(false);
+      }
+    }
+    function onPressEnd() {
+      pressingInside.current = false;
+    }
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("pointerup", onPressEnd, true);
+    document.addEventListener("pointercancel", onPressEnd, true);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("pointerup", onPressEnd, true);
+      document.removeEventListener("pointercancel", onPressEnd, true);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
+    function close() {
+      if (navRef.current) varySpeeds(navRef.current);
+      setOpen(false);
+    }
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
-      if (surfaceRef.current?.contains(document.activeElement)) buttonRef.current?.focus();
-      setOpenedBy(null);
+      if (navRef.current?.contains(document.activeElement)) buttonRef.current?.focus();
+      close();
     }
-    function onPointerDown(event: PointerEvent) {
-      if (!surfaceRef.current?.contains(event.target as Node)) setOpenedBy(null);
+    function onClick(event: MouseEvent) {
+      if (!navRef.current?.contains(event.target as Node)) close();
     }
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("click", onClick);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("click", onClick);
     };
   }, [open]);
 
-  useEffect(() => clearCloseTimer, []);
-
-  const labels = leaving ? [{ text: leaving, leaving: true }, { text: shown, leaving: false }] : [{ text: shown, leaving: false }];
+  const rows = rowsFor(links);
 
   return (
     <nav
+      ref={navRef}
       aria-label={navLabel}
+      data-motion="own"
       data-ready={ready ? "" : undefined}
-      className={cn(
-        "pointer-events-none fixed bottom-[calc(--spacing(5)_+_env(safe-area-inset-bottom))] left-5 z-40 flex",
-        "sm:bottom-[calc(--spacing(9)_+_env(safe-area-inset-bottom))] sm:left-9",
-        className,
-      )}
+      data-open={open ? "" : undefined}
+      data-scroll-hidden={scrollHidden ? "" : undefined}
+      className={cn("ui-island", className)}
+      onPointerDown={() => {
+        pressingInside.current = true;
+      }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpenedBy(null);
+        if (!open) return;
+        const next = event.relatedTarget as Node | null;
+        if (next ? event.currentTarget.contains(next) : pressingInside.current) return;
+        toggle(false);
       }}
     >
-      <div
-        ref={surfaceRef}
-        className={cn(
-          "pointer-events-auto relative flex flex-col justify-end overflow-hidden contain-layout contain-paint",
-          "h-(--island-h) w-(--island-w) rounded-[var(--island-r,calc(infinity*1px))]",
-          "bg-island/90 text-ink shadow-island backdrop-blur-xl backdrop-saturate-150",
-          ready && "transition-[width,height] ease-spring motion-reduce:transition-none",
-          open ? "duration-spring" : "duration-spring-out",
-        )}
-        onPointerEnter={(event) => {
-          if (event.pointerType !== "mouse" || !window.matchMedia(HOVER_QUERY).matches) return;
-          clearCloseTimer();
-          setOpenedBy((current) => current ?? "hover");
-        }}
-        onPointerLeave={(event) => {
-          if (event.pointerType !== "mouse") return;
-          clearCloseTimer();
-          closeTimer.current = setTimeout(() => setOpenedBy((current) => (current === "hover" ? null : current)), CLOSE_DELAY_MS);
-        }}
-      >
-        <div className="relative w-full shrink-0">
-          <button
-            ref={buttonRef}
-            type="button"
-            aria-expanded={open}
-            aria-controls={listId}
-            onClick={() => {
-              clearCloseTimer();
-              setOpenedBy((current) => (current === "hover" ? "pinned" : current ? null : "press"));
-            }}
-            className="group/pill flex w-full cursor-pointer select-none justify-start rounded-(--island-r) focus-visible:-outline-offset-2"
-          >
-            <span
-              ref={rowRef}
-              className={cn("relative flex h-12 items-center whitespace-nowrap px-[1.1875rem] text-[1.0625rem] transition-colors", closes && cn(mutedText, "group-hover/pill:text-ink"))}
-            >
-              {labels.map((item) => (
-                <span
-                  key={item.text}
-                  data-island-fade=""
-                  aria-hidden={item.leaving || undefined}
-                  onTransitionEnd={(event) => {
-                    if (item.leaving && event.target === event.currentTarget && event.propertyName === "opacity") setLeaving(null);
-                  }}
-                  className={cn(
-                    ready && "transition-[opacity,filter,scale] ease-spring motion-reduce:transition-opacity",
-                    item.leaving
-                      ? "absolute inset-y-0 left-[1.1875rem] flex items-center opacity-0 blur-xs scale-96 duration-spring-out motion-reduce:blur-none motion-reduce:scale-100"
-                      : cn("duration-spring", ready && "starting:opacity-0 starting:blur-xs starting:scale-96 motion-reduce:starting:blur-none motion-reduce:starting:scale-100"),
-                  )}
-                >
-                  {item.text}
-                </span>
-              ))}
-            </span>
-          </button>
-          <ul
-            ref={listRef}
-            id={listId}
-            inert={!open}
-            onClick={(event) => {
-              if ((event.target as Element).closest("a")) setOpenedBy(null);
-            }}
-            // The hairline under the links separates them from the pill's row; collapsed, it is clipped away with them.
-            className="absolute bottom-full left-0 flex w-max min-w-[max(100%,--spacing(36))] flex-col pt-3.5 pb-2.5 after:absolute after:inset-x-[1.1875rem] after:bottom-0 after:h-px after:bg-line"
-          >
-            {links.map((link, index) => (
-              <li
-                key={link.href}
-                data-island-fade=""
-                // Links settle in from the label upward and leave from the top down.
-                style={{ "--i": open ? links.length - 1 - index : index } as CSSProperties}
-                className={cn(
-                  "relative",
-                  // A group's hairline sits in the 21px gap above its first link.
-                  link.startsGroup && "mt-[1.3125rem] before:absolute before:inset-x-[1.1875rem] before:-top-[0.6875rem] before:h-px before:bg-line",
-                  ready && "transition-[opacity,filter,scale] ease-spring delay-[calc(var(--ui-spring-stagger)*var(--i))] motion-reduce:transition-opacity motion-reduce:delay-0",
-                  open ? "duration-spring" : "duration-spring-out opacity-0 blur-xs scale-96 motion-reduce:blur-none motion-reduce:scale-100",
-                )}
-              >
-                <LinkOrAnchor
-                  href={link.href}
-                  render={link.render}
-                  aria-current={link.current ? "page" : undefined}
-                  className="group/link block rounded-card no-underline! focus-visible:-outline-offset-2"
-                >
-                  <span
-                    className={cn(
-                      "flex h-9 items-center whitespace-nowrap px-[1.1875rem] text-[1.0625rem] transition-colors group-hover/link:text-ink group-aria-[current=page]/link:text-ink",
-                      mutedText,
-                    )}
-                  >
-                    {link.label}
-                  </span>
+      <div ref={innerRef} className="ui-island-inner">
+        <ul
+          id={listId}
+          inert={!open}
+          className="ui-island-list"
+          onClick={(event) => {
+            // Following a link closes it; a link opened in a new tab or window leaves it open.
+            if (!(event.target as Element).closest("a")) return;
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+            setOpen(false);
+          }}
+        >
+          {rows.map((row, index) => {
+            // Counted up from the toggle, for the stagger.
+            const style = { "--island-i": rows.length - 1 - index } as CSSProperties;
+            if (row.kind === "divider") return <li key={row.key} aria-hidden="true" className="ui-island-item ui-island-divider" style={style} />;
+            const { link } = row;
+            return (
+              <li key={link.href} className="ui-island-item" style={style}>
+                <LinkOrAnchor href={link.href} render={link.render} aria-current={link.current ? "page" : undefined} className="ui-island-link">
+                  {link.label}
                 </LinkOrAnchor>
               </li>
-            ))}
-          </ul>
-        </div>
+            );
+          })}
+        </ul>
+        <button
+          ref={buttonRef}
+          type="button"
+          aria-expanded={open}
+          aria-controls={listId}
+          className="ui-island-trigger"
+          onClick={(event) => {
+            event.preventDefault();
+            toggle(!open);
+          }}
+        >
+          {open ? closeLabel : label}
+        </button>
       </div>
     </nav>
   );

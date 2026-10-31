@@ -36,8 +36,6 @@
   --color-on-tooltip: var(--ui-on-tooltip);
   --color-accent: var(--ui-accent);
   --color-on-accent: var(--ui-on-accent);
-  /* New to the kit: the floating island menu's surface (tokens.css), as bg-island. */
-  --color-island: var(--ui-island);
   --color-danger: var(--ui-danger);
   --color-danger-tint: var(--ui-danger-tint);
   --color-warn: var(--ui-warn);
@@ -78,15 +76,11 @@
   --shadow-control: var(--ui-shadow-control);
   --shadow-control-filled: var(--ui-shadow-control-filled);
   --shadow-overlay: var(--ui-shadow-overlay);
-  /* New to the kit: the floating island menu's shadow, as shadow-island. */
-  --shadow-island: var(--ui-shadow-island);
 
   /* Motion: plain `transition` classes use the fast speed and the brand curve; `ease-out` is that curve too. */
   --ease-out: var(--ui-ease);
   --default-transition-duration: var(--ui-duration-fast);
   --default-transition-timing-function: var(--ui-ease);
-  /* New to the kit: the spring curve (tokens.css), as ease-spring. */
-  --ease-spring: var(--ui-ease-spring);
 
   /* Control sizes, matched to shiori.sh: 40px / 14px and 32px / 13px. */
   --spacing-control: 2.5rem;
@@ -114,15 +108,6 @@
   --tw-duration: var(--ui-duration-slow);
   transition-duration: var(--ui-duration-slow);
 }
-/* New to the kit: the spring's two speeds, opening (duration-spring) and closing (duration-spring-out). */
-@utility duration-spring {
-  --tw-duration: var(--ui-duration-spring);
-  transition-duration: var(--ui-duration-spring);
-}
-@utility duration-spring-out {
-  --tw-duration: var(--ui-duration-spring-out);
-  transition-duration: var(--ui-duration-spring-out);
-}
 
 @layer base {
   html {
@@ -148,15 +133,218 @@
     outline-offset: 2px;
   }
 
-  /* People who asked their system for less motion get changes without slides, zooms or pulses. */
+  /* People who asked their system for less motion get changes without slides, zooms or pulses.
+     New to the kit: a part marked data-motion="own" (the island menu) sets its own reduced motion. */
   @media (prefers-reduced-motion: reduce) {
-    *,
-    ::before,
-    ::after {
+    :where(:not([data-motion="own"], [data-motion="own"] *)),
+    :where(:not([data-motion="own"], [data-motion="own"] *))::before,
+    :where(:not([data-motion="own"], [data-motion="own"] *))::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * New to the kit: the floating island menu (island.tsx). Plain CSS rather than classes, because its
+ * open and closed states swap springs and speeds through custom properties.
+ *
+ * The nav is a clipping window over a panel pinned to its bottom-left corner, with the toggle as the
+ * panel's last row. Collapsed, only that row ("Menu") shows; opening widens the window on the x
+ * spring and raises it on the y spring, uncovering the links, which fade in from the bottom up.
+ * Opening and closing use their own springs and speeds; island.tsx varies the four speeds
+ * (--island-duration-*) on every toggle and writes the open height (--island-open-h) and, for
+ * phones, the collapsed width that fits the label (--island-collapsed-fit).
+ */
+@layer components {
+  .ui-island {
+    --island-open-w: 149px;
+    --island-collapsed-w: 82px;
+    --island-collapsed-h: 48px;
+    --island-duration-open-x: var(--ui-duration-spring-x);
+    --island-duration-open-y: var(--ui-duration-spring-y);
+    --island-duration-close-x: var(--ui-duration-spring-x-out);
+    --island-duration-close-y: var(--ui-duration-spring-y-out);
+    /* Closing (and at rest): the settling springs. */
+    --island-ease-x: var(--ui-ease-spring-x-out);
+    --island-ease-y: var(--ui-ease-spring-y-out);
+    --island-duration-x: var(--island-duration-close-x);
+    --island-duration-y: var(--island-duration-close-y);
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 40;
+    width: var(--island-collapsed-w);
+    height: var(--island-collapsed-h);
+    transform: translateX(4px);
+    overflow: hidden;
+    contain: layout paint;
+    will-change: width, height, transform, bottom;
+    border: 1px solid var(--ui-island-edge);
+    border-radius: 25px;
+    background: var(--ui-island);
+    box-shadow: var(--ui-shadow-island);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      width var(--island-duration-x) var(--island-ease-x),
+      height var(--island-duration-y) var(--island-ease-y),
+      bottom var(--island-duration-y) var(--island-ease-y),
+      transform var(--island-duration-x) var(--island-ease-x),
+      border-radius 216ms cubic-bezier(0.2, 0, 0, 1),
+      background 132ms ease,
+      border-color 132ms ease,
+      box-shadow 216ms ease,
+      opacity 216ms ease;
+  }
+  .ui-island[data-open] {
+    --island-ease-x: var(--ui-ease-spring-x);
+    --island-ease-y: var(--ui-ease-spring-y);
+    --island-duration-x: var(--island-duration-open-x);
+    --island-duration-y: var(--island-duration-open-y);
+    width: var(--island-open-w);
+    height: var(--island-open-h);
+    bottom: 24px;
+    transform: translateX(0);
+    border-radius: 26px;
+    background: var(--ui-island-open);
+    box-shadow: var(--ui-shadow-island-open);
+  }
+  /* While the window resizes, and while the collapsed width is first measured, nothing animates. */
+  .ui-island[data-no-anim],
+  .ui-island[data-no-anim] * {
+    transition: none !important;
+  }
+  /* The keyboard ring for the toggle goes round the whole island, which would clip it. */
+  .ui-island:has(.ui-island-trigger:focus-visible) {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  .ui-island-inner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: var(--island-open-w);
+    transform: translateX(-4px);
+    display: flex;
+    flex-direction: column;
+    padding: 6px 22px;
+    transition:
+      transform var(--island-duration-x) var(--island-ease-x),
+      bottom var(--island-duration-y) var(--island-ease-y);
+  }
+  .ui-island[data-open] .ui-island-inner {
+    transform: translateX(0);
+    bottom: 8px;
+  }
+  .ui-island-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Links and hairlines fade in from the bottom up, each a step after the one below it
+     (--island-i counts up from the toggle), and out from the top down. */
+  .ui-island-item {
+    opacity: 0;
+    transition: opacity 0.2s ease calc((10 - var(--island-i, 0)) * var(--ui-spring-stagger));
+  }
+  .ui-island[data-open] .ui-island-item {
+    opacity: 1;
+    transition: opacity 0.2s ease calc(var(--island-i, 0) * var(--ui-spring-stagger));
+  }
+  .ui-island:not([data-open]) .ui-island-item {
+    pointer-events: none;
+  }
+  .ui-island-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: var(--ui-island-divider);
+  }
+
+  .ui-island-link,
+  .ui-island-trigger {
+    display: block;
+    margin: 0;
+    padding: 4px 0;
+    font-size: 17px;
+    line-height: 28px;
+    font-weight: 400;
+    color: var(--ui-island-text);
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 264ms ease;
+  }
+  .ui-island-link {
+    border-radius: var(--ui-radius-small);
+  }
+  .ui-island-link:hover,
+  .ui-island-link:focus-visible {
+    color: var(--ui-island-text-hover);
+  }
+  .ui-island-link[aria-current="page"] {
+    color: var(--ui-island-text-current);
+  }
+  .ui-island-trigger {
+    border: none;
+    background: transparent;
+    font-style: normal;
+    cursor: pointer;
+  }
+  .ui-island-trigger:focus-visible {
+    outline: none;
+  }
+  .ui-island:not([data-open]) .ui-island-trigger {
+    color: var(--ui-island-label);
+  }
+
+  /* Phones (720px and narrower): closer to the corner, above the safe area, no sideways drift; the
+     collapsed width fits the label, and scrolling down hides the island until scrolling back up
+     (unless focus is inside it). */
+  @media (width <= 45rem) {
+    .ui-island {
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: calc(20px + env(safe-area-inset-left, 0px));
+      transform: none;
+    }
+    .ui-island[data-open] {
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      transform: none;
+    }
+    .ui-island:not([data-open]) {
+      width: var(--island-collapsed-fit, var(--island-collapsed-w));
+    }
+    .ui-island-inner,
+    .ui-island[data-open] .ui-island-inner {
+      transform: none;
+    }
+    .ui-island[data-scroll-hidden]:not(:focus-within) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* Reduced motion: the size, corners and surface change on a short ease, the items just fade. */
+  @media (prefers-reduced-motion: reduce) {
+    .ui-island {
+      transition:
+        width 216ms ease,
+        height 216ms ease,
+        border-radius 216ms ease,
+        background 216ms ease;
+    }
+    .ui-island-item,
+    .ui-island[data-open] .ui-island-item {
+      transition: opacity 0.15s ease;
+    }
+    .ui-island-link {
+      transition: color 0.15s ease;
     }
   }
 }
