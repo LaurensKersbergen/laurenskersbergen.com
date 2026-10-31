@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogoLink } from "@/components/logo-link";
 
-// TODO(Laurens): replace with your portrait, e.g. drop in public/images/portrait.jpg and point this at it.
-const PORTRAIT_SRC = "/images/placeholder-1.svg";
+// TODO(Laurens): a clay avatar for now; swap public/images/portrait.jpg for a photo when there is one.
+const PORTRAIT_SRC = "/images/portrait.jpg";
 
 export default function Home() {
   return (
