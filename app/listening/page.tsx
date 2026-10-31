@@ -48,11 +48,7 @@ function TrackItem({ item }: { item: RecentlyPlayedItem }) {
       href={track.external_urls.spotify}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-4 py-3 group"
-      style={{
-        textDecoration: "none",
-        borderBottom: "1px solid var(--border)",
-      }}
+      className="group flex items-center gap-4 border-b border-(--border) py-3 no-underline!"
     >
       {albumImage && (
         <Image
@@ -60,41 +56,14 @@ function TrackItem({ item }: { item: RecentlyPlayedItem }) {
           alt={`${track.album.name} album art`}
           width={56}
           height={56}
-          className="rounded flex-shrink-0"
-          style={{ objectFit: "cover" }}
+          className="shrink-0 rounded-lg object-cover"
         />
       )}
-      <div className="flex-1 min-w-0">
-        <p
-          className="font-medium truncate"
-          style={{
-            color: "var(--text-copy)",
-            margin: 0,
-            fontSize: "16px",
-          }}
-        >
-          {track.name}
-        </p>
-        <p
-          className="truncate"
-          style={{
-            color: "var(--muted)",
-            margin: 0,
-            fontSize: "14px",
-          }}
-        >
-          {track.artists.map((a) => a.name).join(", ")}
-        </p>
+      <div className="min-w-0 flex-1">
+        <p className="text-row truncate text-(--fg) underline-offset-4 group-hover:underline">{track.name}</p>
+        <p className="truncate text-base text-(--muted)">{track.artists.map((a) => a.name).join(", ")}</p>
       </div>
-      <span
-        className="flex-shrink-0 text-sm"
-        style={{
-          color: "var(--muted)",
-          fontSize: "13px",
-        }}
-      >
-        {formatTimeAgo(played_at)}
-      </span>
+      <span className="shrink-0 text-base text-(--muted) tabular-nums">{formatTimeAgo(played_at)}</span>
     </a>
   );
 }
@@ -110,26 +79,17 @@ export default async function ListeningPage() {
   }
 
   return (
-    <div className="mt-16">
-      <h1
-        className="text-xl md:text-2xl font-medium mb-1"
-        style={{ lineHeight: "3.25rem" }}
-      >
-        Listening
-      </h1>
+    <div className="page-column enter">
+      <h1 className="text-title my-6.5">Listening</h1>
 
-      <p className="my-5" style={{ color: "var(--muted)" }}>
-        Recently played on Spotify.
-      </p>
+      <p className="mb-7 text-(--muted)">Recently played on Spotify.</p>
 
       {error ? (
-        <p style={{ color: "var(--muted)" }}>
-          Unable to load listening history. Please try again later.
-        </p>
+        <p className="text-(--muted)">Unable to load listening history. Please try again later.</p>
       ) : tracks.length === 0 ? (
-        <p style={{ color: "var(--muted)" }}>No recent tracks found.</p>
+        <p className="text-(--muted)">No recent tracks found.</p>
       ) : (
-        <div className="mt-8">
+        <div>
           {tracks.map((item, index) => (
             <TrackItem key={`${item.track.name}-${item.played_at}-${index}`} item={item} />
           ))}

@@ -1,0 +1,27 @@
+/*
+ * The brand: the only file a product changes to get its own look. Every colour, radius and
+ * shadow in tokens.css is derived from these values, in light and dark mode.
+ * Try values live on /design (development only), then copy the result here.
+ */
+:root {
+  /* The greys: their hue (0–360) and how coloured they are (0 = pure grey, 0.01 = clearly warm or cool). */
+  --brand-neutral-hue: 85;
+  --brand-neutral-chroma: 0;
+
+  /* Accent for links, focus rings and the accent button. Dark mode uses the lighter one.
+     Keep white text on it at 4.5:1 or more: /design shows the ratio. */
+  --brand-accent: oklch(0.533 0.197 257.8);
+  --brand-accent-dark: oklch(0.72 0.14 257.8);
+  --brand-on-accent: oklch(0.99 0 0);
+
+  /* The sidebar's background and its hovered or current row, in light mode; dark mode derives its own. */
+  --brand-sidebar: #fafafa;
+  --brand-sidebar-hover: #efefef;
+
+  /* Corners of buttons and inputs. Cards and dialogs get 1.5×, small parts 0.75×. */
+  --brand-radius: 0.5rem;
+
+  /* New to the kit: the brand chooses and loads its font; theme.css no longer imports Inter.
+     Here Geist Sans, loaded by geist/font/sans in app/layout.tsx as --font-geist-sans. */
+  --brand-font: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
