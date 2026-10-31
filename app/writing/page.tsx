@@ -23,7 +23,7 @@ export default function WritingPage() {
   const groups = groupByYear(getPosts());
 
   return (
-    <div className="page-column">
+    <div className="page-column enter">
       <h1 className="text-title my-6.5">Writing</h1>
       {groups.length === 0 ? (
         <p className="text-(--muted)">No posts yet.</p>

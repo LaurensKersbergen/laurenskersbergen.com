@@ -1,5 +1,5 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { expectAccessible } from "./helpers";
 import { getProjects } from "../lib/projects";
 
 // The suite runs against a production build, so read the content the way production does:
@@ -15,8 +15,7 @@ test("homepage renders and passes an accessibility check", async ({ page }) => {
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Laurens Kersbergen" })).toBeVisible();
 
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
-  expect(results.violations).toEqual([]);
+  await expectAccessible(page);
 });
 
 test("homepage shows the portrait next to the intro, with links to a project, About and Email", async ({ page }) => {

@@ -22,12 +22,12 @@ export default function ProjectsPage() {
   const projects = getProjects();
 
   return (
-    <div className="page-column">
+    <div className="page-column enter">
       <h1 className="text-title my-6.5">Projects</h1>
       {projects.length === 0 ? (
         <p className="text-(--muted)">No projects yet.</p>
       ) : (
-        <ul className="text-row flex flex-col gap-4.5">
+        <ul className="enter text-row flex flex-col gap-4.5 [--enter-start:1]">
           {projects.map((project) => (
             // Text only: the title links to the project's page, then its year and tagline.
             <li key={project.slug} className="flex flex-col items-start">

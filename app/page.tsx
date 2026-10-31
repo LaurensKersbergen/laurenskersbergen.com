@@ -10,7 +10,7 @@ export default function Home() {
     // Phones and tablets: the portrait above the text in the 680px column. From 900px: portrait and
     // text side by side in an 850px block, centred in the window.
     <div className="mx-auto box-content max-w-[42.5rem] px-6 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-24 min-[900px]:flex min-[900px]:min-h-svh min-[900px]:max-w-[53.125rem] min-[900px]:items-center min-[900px]:py-30">
-      <div className="min-[900px]:flex min-[900px]:items-start min-[900px]:gap-16">
+      <div className="enter min-[900px]:flex min-[900px]:items-start min-[900px]:gap-16">
         <Image
           src={PORTRAIT_SRC}
           alt="Laurens Kersbergen"
@@ -19,7 +19,7 @@ export default function Home() {
           priority
           className="mb-8 size-45 shrink-0 rounded-2xl object-cover min-[900px]:mb-0 min-[900px]:size-75 min-[900px]:rounded-3xl"
         />
-        <div className="min-w-0 text-(--muted) min-[900px]:w-[30.375rem]">
+        <div className="enter min-w-0 text-(--muted) [--enter-start:1] min-[900px]:w-[30.375rem]">
           <h1 className="text-name mb-7">Laurens Kersbergen</h1>
           <p className="mb-7">
             {"I'm a product manager in Amsterdam, currently working at "}

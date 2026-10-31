@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { cn } from "@kit/ui";
 import { projectMdxComponents } from "@/components/project-mdx";
 import { getNextProject, getProject, getProjects, previewImage } from "@/lib/projects";
 
@@ -48,8 +49,8 @@ export default async function ProjectPage({ params }: Props) {
   const next = getNextProject(slug);
 
   return (
-    <article className="page-column">
-      <header>
+    <article className="page-column enter">
+      <header className="enter">
         <h1 className="text-title my-6.5">{meta.title}</h1>
         <p className="mb-9.25 text-(--fg)">{meta.intro}</p>
         {meta.url ? (
@@ -62,7 +63,7 @@ export default async function ProjectPage({ params }: Props) {
         ) : null}
       </header>
 
-      <div className="prose">
+      <div className={cn("prose enter", meta.url ? "[--enter-start:3]" : "[--enter-start:2]")}>
         <MDXRemote source={content} components={projectMdxComponents} />
         <section aria-labelledby="how-i-built-it">
           <h2 id="how-i-built-it">How I built it</h2>
@@ -71,7 +72,7 @@ export default async function ProjectPage({ params }: Props) {
         </section>
       </div>
 
-      <nav aria-label="Projects" className="mt-9.25 flex items-center justify-between gap-6 font-semibold">
+      <nav aria-label="Projects" className="mt-9.25 flex items-center justify-between gap-6 font-semibold [--enter-start:7]">
         <Link href="/projects" className="inline-flex items-center gap-1.5">
           <span aria-hidden="true">←</span>
           Back to Projects

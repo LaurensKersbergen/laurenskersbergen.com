@@ -1,5 +1,5 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { expectAccessible } from "./helpers";
 import { getProject, getProjects } from "../lib/projects";
 
 // The suite runs against a production build, so read the content the way production does:
@@ -151,8 +151,7 @@ test.describe("project detail page", () => {
     test(`passes an accessibility check in ${colorScheme} mode`, async ({ page }) => {
       await page.emulateMedia({ colorScheme });
       await page.goto(`/projects/${slug}`);
-      const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
-      expect(results.violations).toEqual([]);
+      await expectAccessible(page);
     });
   }
 });
@@ -194,8 +193,7 @@ test.describe("/projects overview", () => {
     test(`passes an accessibility check in ${colorScheme} mode`, async ({ page }) => {
       await page.emulateMedia({ colorScheme });
       await page.goto("/projects");
-      const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
-      expect(results.violations).toEqual([]);
+      await expectAccessible(page);
     });
   }
 });

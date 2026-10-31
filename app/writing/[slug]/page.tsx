@@ -37,14 +37,14 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <article className="page-column">
+    <article className="page-column enter">
       <header className="mb-7">
         <h1 className="text-title mt-6.5 mb-1">{post.meta.title}</h1>
         <time dateTime={post.meta.date} className="text-(--muted)">
           {formatDate(post.meta.date)}
         </time>
       </header>
-      <div className="prose">
+      <div className="prose enter [--enter-start:1]">
         <MDXRemote source={post.content} />
       </div>
     </article>

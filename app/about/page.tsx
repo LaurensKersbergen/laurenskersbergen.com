@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="page-column text-(--muted)">
+    <div className="page-column enter text-(--muted)">
       <h1 className="text-title my-6.5">About me</h1>
 
       <p className="mb-7">

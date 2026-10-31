@@ -79,7 +79,7 @@ export default async function ListeningPage() {
   }
 
   return (
-    <div className="page-column">
+    <div className="page-column enter">
       <h1 className="text-title my-6.5">Listening</h1>
 
       <p className="mb-7 text-(--muted)">Recently played on Spotify.</p>
