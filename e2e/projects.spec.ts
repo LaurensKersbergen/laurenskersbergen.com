@@ -11,42 +11,49 @@ const { meta } = project;
 const published = getProjects("production");
 
 test.describe("project detail page", () => {
-  test("opens with the title, then the intro, one meta line and the hero", async ({ page }) => {
+  test("opens with the title and the intro, with no facts line or hero above the write-up", async ({ page }) => {
     const response = await page.goto(`/projects/${slug}`);
     expect(response?.status()).toBe(200);
 
     const title = page.getByRole("heading", { level: 1, name: meta.title });
     const intro = page.getByText(meta.intro);
-    const facts = [meta.role, String(meta.year), meta.status, `Built with ${meta.stack.join(", ")}`].join(" · ");
-    const metaLine = page.locator("main p").filter({ hasText: facts });
-    const hero = page.getByRole("img", { name: meta.title, exact: true });
     await expect(title).toBeVisible();
     await expect(intro).toBeVisible();
-    await expect(metaLine).toBeVisible();
-    await expect(hero).toBeVisible();
 
+    const open = page.getByRole("link", { name: `Open ${meta.title}` });
     if (meta.url) {
-      await expect(metaLine).toHaveText(`${facts} · Visit ↗`);
-      const visit = metaLine.getByRole("link", { name: "Visit" });
-      await expect(visit).toHaveAttribute("href", meta.url);
-      await expect(visit).toHaveAttribute("target", "_blank");
+      await expect(open).toHaveAttribute("href", meta.url);
+      await expect(open).toHaveAttribute("target", "_blank");
     } else {
-      await expect(metaLine).toHaveText(facts);
-      await expect(metaLine.getByRole("link")).toHaveCount(0);
+      await expect(open).toHaveCount(0);
     }
 
-    // No facts table or status badge any more: the meta line carries them.
-    await expect(page.locator("main dl")).toHaveCount(0);
+    // The cover is only the social preview, and role, year and status aren't shown.
+    await expect(page.getByRole("img", { name: meta.title, exact: true })).toHaveCount(0);
+    await expect(page.locator("main").getByText(meta.status, { exact: true })).toHaveCount(0);
+    await expect(page.locator("main dl, main figcaption")).toHaveCount(0);
 
-    // Document order: h1, intro, meta line, hero.
+    // The first section heading follows the intro.
+    const firstSection = page.locator("main .prose h2").first();
     const order = await page.evaluate(
-      ([titleEl, introEl, metaEl, heroEl]) => {
+      ([titleEl, introEl, sectionEl]) => {
         const follows = (a: Node, b: Node) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
-        return follows(titleEl, introEl) && follows(introEl, metaEl) && follows(metaEl, heroEl);
+        return follows(titleEl, introEl) && follows(introEl, sectionEl);
       },
-      [await title.elementHandle(), await intro.elementHandle(), await metaLine.elementHandle(), await hero.elementHandle()],
+      [await title.elementHandle(), await intro.elementHandle(), await firstSection.elementHandle()],
     );
     expect(order).toBe(true);
+  });
+
+  test("shows the write-up's images one per row at the full media width", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`/projects/${slug}`);
+    const images = page.locator("main .prose img");
+    expect(await images.count()).toBeGreaterThan(0);
+    for (const image of await images.all()) {
+      await image.scrollIntoViewIfNeeded();
+      expect((await image.boundingBox())!.width).toBeCloseTo(780, 0);
+    }
   });
 
   test("explains how it was built, then links back to the projects", async ({ page }) => {
@@ -55,7 +62,7 @@ test.describe("project detail page", () => {
     const section = page.getByRole("region", { name: "How I built it" });
     await expect(section.getByRole("heading", { level: 2, name: "How I built it" })).toBeVisible();
     await expect(section.getByText(meta.workflow)).toBeVisible();
-    await expect(section.getByRole("listitem")).toHaveText(meta.stack);
+    await expect(section.getByText(`Built with ${meta.stack.join(", ")}.`)).toBeVisible();
 
     const back = page.getByRole("link", { name: "Back to Projects" });
     await expect(back).toHaveAttribute("href", "/projects");

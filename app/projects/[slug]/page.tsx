@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { Media } from "@kit/ui";
-import { mediaBlock, projectMdxComponents } from "@/components/project-mdx";
+import { projectMdxComponents } from "@/components/project-mdx";
 import { getNextProject, getProject, getProjects, previewImage } from "@/lib/projects";
 
 interface Props {
@@ -35,6 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/*
+ * The write-up reads top to bottom with nothing beside it: the title, the intro, then the MDX
+ * sections (a heading, a paragraph or two and one image each), how it was built, and the links back
+ * and on. The cover stays in the frontmatter as the social preview image.
+ */
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = getProject(slug);
@@ -42,50 +46,30 @@ export default async function ProjectPage({ params }: Props) {
 
   const { meta, content } = project;
   const next = getNextProject(slug);
-  const facts = [meta.role, meta.year, meta.status, meta.stack.length > 0 ? `Built with ${meta.stack.join(", ")}` : null].filter(Boolean);
 
   return (
     <article className="page-column">
       <header>
         <h1 className="text-title my-6.5">{meta.title}</h1>
-        <p className="mb-7 text-(--fg)">{meta.intro}</p>
-        <p className="mb-7 text-(--muted)">
-          {facts.join(" · ")}
-          {meta.url ? (
-            <>
-              {" · "}
-              <a href={meta.url} target="_blank" rel="noopener noreferrer" className="font-semibold">
-                Visit<span aria-hidden="true"> ↗</span>
-              </a>
-            </>
-          ) : null}
-        </p>
+        <p className="mb-9.25 text-(--fg)">{meta.intro}</p>
+        {meta.url ? (
+          <p className="mb-9.25">
+            <a href={meta.url} target="_blank" rel="noopener noreferrer">
+              Open {meta.title}
+              <span aria-hidden="true"> ↗</span>
+            </a>
+          </p>
+        ) : null}
       </header>
-
-      <Media
-        src={meta.cover}
-        poster={meta.poster}
-        alt={meta.title}
-        priority
-        sizes="(min-width: 828px) 780px, 100vw"
-        className={mediaBlock}
-      />
 
       <div className="prose">
         <MDXRemote source={content} components={projectMdxComponents} />
+        <section aria-labelledby="how-i-built-it">
+          <h2 id="how-i-built-it">How I built it</h2>
+          <p>{meta.workflow}</p>
+          {meta.stack.length > 0 ? <p>Built with {meta.stack.join(", ")}.</p> : null}
+        </section>
       </div>
-
-      <section aria-labelledby="how-i-built-it" className="prose">
-        <h2 id="how-i-built-it">How I built it</h2>
-        <p>{meta.workflow}</p>
-        <ul className="list-none pl-0 text-(--muted)">
-          {meta.stack.map((tool) => (
-            <li key={tool} className="mb-0">
-              {tool}
-            </li>
-          ))}
-        </ul>
-      </section>
 
       <nav aria-label="Projects" className="mt-9.25 flex items-center justify-between gap-6 font-semibold">
         <Link href="/projects" className="inline-flex items-center gap-1.5">

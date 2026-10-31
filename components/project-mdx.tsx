@@ -10,12 +10,15 @@ import { MdxLink } from "@/mdx-components";
  */
 export const mediaBlock = "media-wide my-9.25";
 
-/** The MDX names a project write-up can use, for MDXRemote's `components`. */
+/**
+ * The MDX names a project write-up can use, for MDXRemote's `components`. A MediaGrid stacks its
+ * images one per row, each the full media width, and any of them opens larger in the lightbox.
+ */
 export const projectMdxComponents: MDXComponents = {
   a: MdxLink,
   Media,
   MediaGrid: ({ className, ...props }: ComponentProps<typeof LightboxMediaGrid>) => (
-    <LightboxMediaGrid {...props} className={cn(mediaBlock, className)} data-no-hover-sound />
+    <LightboxMediaGrid {...props} className={cn(mediaBlock, "gap-9.25 md:grid-cols-1", className)} data-no-hover-sound />
   ),
   Embed: ({ className, ...props }: ComponentProps<typeof Embed>) => <Embed {...props} className={cn("my-9.25", className)} />,
 };
