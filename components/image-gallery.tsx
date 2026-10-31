@@ -20,22 +20,19 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
 
   return (
     <>
-      <div
-        className={`relative block w-full md:left-1/2 md:-translate-x-1/2 md:w-screen my-8 md:my-16 grid ${cols} gap-4`}
-        style={{ maxWidth: 1100 }}
-        data-no-hover-sound
-      >
+      {/* 780px wide, past the 680px column like the media in project write-ups (media-wide in globals.css). */}
+      <div className={`media-wide my-9.25 grid ${cols} gap-4`} data-no-hover-sound>
         {images.map((image, i) => (
           <button
             key={i}
             onClick={() => setLightboxIndex(i)}
-            className="relative aspect-[3/2] w-full overflow-hidden rounded-lg cursor-zoom-in border-0 p-0 bg-transparent"
+            className="relative aspect-[3/2] w-full overflow-hidden rounded-(--media-radius) cursor-zoom-in border-0 p-0 bg-transparent"
           >
             <Image
               src={image.src}
               alt={image.alt}
               fill
-              sizes="(max-width: 768px) 100vw, 550px"
+              sizes="(max-width: 768px) 100vw, 390px"
               className="object-cover"
             />
           </button>

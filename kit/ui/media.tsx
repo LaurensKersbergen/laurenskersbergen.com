@@ -14,9 +14,10 @@ const MediaGridContext = createContext<{ columns: number; onOpen?: (image: Media
 
 const isVideo = (src: string) => /\.(mp4|webm)$/i.test(src);
 
-/* A hairline inside the frame, so a white screenshot keeps its edge on a white page. */
+/* A hairline inside the frame, so a white screenshot keeps its edge on a white page. The corners
+   follow --media-radius when the app sets it (this site: 16px), and the card radius otherwise. */
 const frame =
-  "relative block w-full overflow-hidden rounded-card bg-fill after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-ink/10 after:ring-inset";
+  "relative block w-full overflow-hidden rounded-[var(--media-radius,var(--ui-radius-card))] bg-fill after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-ink/10 after:ring-inset";
 
 /**
  * An image or a muted, looping video in a box of `ratio` ("3:2", "16:9"), so nothing shifts as it

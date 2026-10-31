@@ -36,6 +36,8 @@
   --color-on-tooltip: var(--ui-on-tooltip);
   --color-accent: var(--ui-accent);
   --color-on-accent: var(--ui-on-accent);
+  /* New to the kit: the floating island menu's surface (tokens.css), as bg-island. */
+  --color-island: var(--ui-island);
   --color-danger: var(--ui-danger);
   --color-danger-tint: var(--ui-danger-tint);
   --color-warn: var(--ui-warn);
@@ -76,6 +78,8 @@
   --shadow-control: var(--ui-shadow-control);
   --shadow-control-filled: var(--ui-shadow-control-filled);
   --shadow-overlay: var(--ui-shadow-overlay);
+  /* New to the kit: the floating island menu's shadow, as shadow-island. */
+  --shadow-island: var(--ui-shadow-island);
 
   /* Motion: plain `transition` classes use the fast speed and the brand curve; `ease-out` is that curve too. */
   --ease-out: var(--ui-ease);

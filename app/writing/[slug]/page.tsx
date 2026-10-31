@@ -37,14 +37,10 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <article>
-      <header className="mb-8">
-        <h1 className="text-xl md:text-2xl font-medium mb-2" style={{ lineHeight: "3.25rem" }}>{post.meta.title}</h1>
-        <time
-          dateTime={post.meta.date}
-          className="text-sm"
-          style={{ color: "var(--muted)" }}
-        >
+    <article className="page-column">
+      <header className="mb-7">
+        <h1 className="text-title mt-6.5 mb-1">{post.meta.title}</h1>
+        <time dateTime={post.meta.date} className="text-(--muted)">
           {formatDate(post.meta.date)}
         </time>
       </header>

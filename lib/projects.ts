@@ -65,11 +65,6 @@ export function previewImage(meta: ProjectMeta) {
   return meta.cover.endsWith(".mp4") ? meta.poster : meta.cover;
 }
 
-/** The status badge's tone: "Live" projects read as success, everything else as neutral. */
-export function statusTone(status: string) {
-  return status === "Live" ? "success" : "neutral";
-}
-
 function readProjectFile(
   slug: string
 ): { meta: ProjectMeta; content: string } | null {

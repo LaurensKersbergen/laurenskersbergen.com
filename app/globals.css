@@ -7,14 +7,20 @@
   --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
-/* The site's colours, from the kit's tokens (light and dark), at the closest kit step to the
-   site's original values so pages keep their look. */
+/* The site's colours, from the kit's palette (light and dark).
+   --ink: headings and link words. --fg: body text and list rows. --muted: intro paragraphs,
+   descriptions and dates; palette-500 is the lightest grey that keeps 4.5:1 on the page. In dark
+   mode ink and muted sit between two palette steps so a link word still stands 3:1 apart from
+   the muted prose around it (WCAG 1.4.1) while muted keeps 4.5:1 on the page. */
 :root {
-  --bg: light-dark(var(--ui-surface), var(--ui-bg));
-  --fg: light-dark(var(--palette-900), var(--palette-200));
+  --bg: light-dark(var(--palette-50), var(--palette-900));
+  --ink: light-dark(var(--palette-950), color-mix(in oklch, var(--palette-100) 50%, var(--palette-200)));
+  --fg: light-dark(var(--palette-800), var(--palette-200));
   --text-copy: var(--fg);
-  --muted: light-dark(var(--palette-500), var(--ui-ink-2));
+  --muted: light-dark(var(--palette-500), color-mix(in oklch, var(--palette-400) 40%, var(--palette-500)));
   --border: var(--ui-line);
+  /* Corners of images and videos in write-ups and galleries (kit Media). */
+  --media-radius: 1rem;
   --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");
   --image-outline: oklch(0 0 0 / 0.1);
 }
@@ -41,32 +47,50 @@ html {
   }
 }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--brand-font);
-  font-size: var(--ui-text-prose);
-  line-height: var(--ui-text-prose-line-height);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* Element defaults sit in the base layer, so a utility class on an element (text-(--fg) on a link) wins. */
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--brand-font);
+    font-size: var(--ui-text-prose);
+    line-height: var(--ui-text-prose-line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-color: var(--muted);
-  transition: text-decoration-color 0.15s;
-}
+  /* Links are the ink word in muted prose, without an underline; one shows on hover. */
+  a {
+    color: var(--ink);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.15s;
+  }
 
-@media (hover: hover) {
-  a:hover {
-    text-decoration-color: var(--fg);
+  @media (hover: hover) {
+    a:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: -0.02em;
+  }
+
+  h2, h3, h4 {
+    letter-spacing: -0.015em;
   }
 }
 
 /* Inline company link with logo, e.g. "working at [logo] Miro" */
 .logo-link {
+  color: var(--ink);
   font-weight: 600;
   white-space: nowrap;
   text-decoration: none;
@@ -114,104 +138,169 @@ a {
   outline-offset: -1px;
 }
 
-h1, h2, h3, h4 {
-  text-wrap: balance;
-}
-
-h1 {
-  letter-spacing: -0.02em;
-}
-
-h2, h3, h4 {
-  letter-spacing: -0.025em;
-}
-
-/* Prose styles for MDX content */
-.prose {
-  color: var(--text-copy);
-}
-
-.prose h1 {
+/* The type scale. Reading text (body) is the kit's text-prose: 21px on 34px, 19px on 30px on phones. */
+@utility text-name {
+  /* The homepage's name. */
   font-size: 2rem;
-  font-weight: 500;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  @media (width >= 40rem) {
+    font-size: 2.25rem;
+    line-height: 2.625rem;
+  }
 }
 
-.prose h2 {
-  font-size: 1.5rem;
-  font-weight: 500;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.3;
+@utility text-title {
+  /* A page's title. */
+  font-size: 1.96875rem;
+  line-height: 2.3625rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
-.prose h3 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+@utility text-section {
+  /* A section heading in a write-up. */
+  font-size: 1.53125rem;
+  line-height: 1.91875rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
-.prose p {
-  margin-block: 1.25rem;
+@utility text-subheading {
+  /* A year over a list, or a heading inside a section. */
+  font-size: 1.3125rem;
+  line-height: 1.70625rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
-.prose ul,
-.prose ol {
-  margin-bottom: 1.25rem;
-  padding-left: 1.5rem;
+@utility text-row {
+  /* Rows in the projects and writing lists. */
+  font-size: 1.1875rem;
+  line-height: 2rem;
 }
 
-.prose ul {
-  list-style-type: disc;
+/* The 680px reading column inner pages sit in, with 24px gutters on phones, and room at the
+   bottom for the floating menu (its height, its offset and the safe area). */
+@utility page-column {
+  box-sizing: content-box;
+  max-width: 42.5rem;
+  margin-inline: auto;
+  padding: 2rem 1.5rem calc(7.5rem + env(safe-area-inset-bottom));
+  @media (width >= 40rem) {
+    padding-top: 5.875rem;
+  }
 }
 
-.prose ol {
-  list-style-type: decimal;
+/* Media 780px wide: 50px past the column on each side once the window has room for it. */
+@utility media-wide {
+  @media (width >= 51.75rem) {
+    margin-inline: -3.125rem;
+  }
 }
 
-.prose li {
-  margin-bottom: 0.375rem;
-}
+/* Prose styles for MDX content, in the components layer so utilities on blocks inside win. */
+@layer components {
+  .prose {
+    color: var(--text-copy);
+  }
 
-.prose blockquote {
-  border-left: 3px solid var(--border);
-  padding-left: 1rem;
-  color: var(--muted);
-  margin-bottom: 1.25rem;
-  font-style: italic;
-}
+  .prose h1 {
+    @apply text-title;
+    margin: 2.3125rem 0 1.625rem;
+  }
 
-.prose pre {
-  background: #16161e;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-  font-size: 14px;
-  line-height: 1.6;
-}
+  .prose h2 {
+    @apply text-section;
+    margin: 2.3125rem 0 1.53125rem;
+  }
 
-.prose code {
-  font-family: var(--font-mono);
-  font-size: 14px;
-}
+  .prose h3,
+  .prose h4 {
+    @apply text-subheading;
+    margin: 2.3125rem 0 0.75rem;
+  }
 
-.prose :not(pre) > code {
-  background: var(--border);
-  padding: 0.2em 0.4em;
-  border-radius: 0.3em;
-}
+  .prose h2 + h3,
+  .prose h2 + h4 {
+    margin-top: 0;
+  }
 
-.prose hr {
-  border-color: var(--border);
-  margin: 2rem 0;
-}
+  .prose p {
+    margin: 0 0 1.75rem;
+  }
 
-.prose img {
-  border-radius: 0.5rem;
-  margin-bottom: 1.25rem;
+  /* In body-coloured prose a link word can't stand apart by colour alone, so it keeps a faint underline. */
+  .prose p a,
+  .prose li a {
+    text-decoration-color: color-mix(in oklch, currentColor 35%, transparent);
+  }
+
+  @media (hover: hover) {
+    .prose p a:hover,
+    .prose li a:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .prose ul,
+  .prose ol {
+    margin: 0 0 1.75rem;
+    padding-left: 1.5rem;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+  }
+
+  .prose li {
+    margin-bottom: 0.375rem;
+  }
+
+  .prose blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 1rem;
+    color: var(--muted);
+    margin: 0 0 1.75rem;
+    font-style: italic;
+  }
+
+  .prose pre {
+    background: #16161e;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0 0 1.75rem;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+  }
+
+  .prose pre code {
+    font-size: 14px;
+  }
+
+  .prose :not(pre) > code {
+    background: var(--border);
+    padding: 0.2em 0.4em;
+    border-radius: 0.3em;
+  }
+
+  .prose hr {
+    border-color: var(--border);
+    margin: 2rem 0;
+  }
+
+  .prose p > img {
+    border-radius: var(--media-radius);
+  }
 }

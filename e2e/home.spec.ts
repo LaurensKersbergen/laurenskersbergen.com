@@ -19,21 +19,21 @@ test("homepage renders and passes an accessibility check", async ({ page }) => {
   expect(results.violations).toEqual([]);
 });
 
-test("homepage lists the published projects, each linking to its page, and links to all projects", async ({ page }) => {
+test("homepage shows the portrait next to the intro, with links to a project, About and Email", async ({ page }) => {
   await page.goto("/");
 
-  const section = page.getByRole("region", { name: "Projects" });
-  await expect(section.getByRole("heading", { level: 2, name: "Projects" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Laurens Kersbergen" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Laurens Kersbergen", exact: true })).toBeVisible();
 
-  const rows = section.getByRole("listitem");
-  await expect(rows).toHaveCount(published.length);
+  const mealPlannerLink = page.getByRole("link", { name: "just shipped a hyper-personalized meal planning app" });
+  await expect(mealPlannerLink).toHaveAttribute("href", `/projects/${mealPlanner.slug}`);
 
-  const row = rows.filter({ hasText: mealPlanner.title });
-  await expect(row.getByRole("link")).toHaveAttribute("href", `/projects/${mealPlanner.slug}`);
-  await expect(row.getByText(mealPlanner.title, { exact: true })).toBeVisible();
-  await expect(row.getByText(mealPlanner.tagline, { exact: true })).toBeVisible();
+  const main = page.getByRole("main");
+  await expect(main.getByRole("link", { name: "About", exact: true })).toHaveAttribute("href", "/about");
+  await expect(main.getByRole("link", { name: "Email", exact: true })).toHaveAttribute("href", "mailto:hey@laurenskersbergen.com");
 
-  await expect(section.getByRole("link", { name: "All projects" })).toHaveAttribute("href", "/projects");
+  // The homepage no longer lists the projects: they live on /projects, reached from the menu.
+  await expect(page.getByRole("region", { name: "Projects" })).toHaveCount(0);
 });
 
 test("the sitemap lists the projects overview and each published project, never a draft", async ({ request }) => {

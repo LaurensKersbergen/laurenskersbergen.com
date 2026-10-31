@@ -120,9 +120,17 @@
   --ui-duration-spring-out: 300ms;
   --ui-spring-stagger: 25ms;
 
-  /* New to the kit: reading size for long-form text, larger than the app UI's control sizes. */
-  --ui-text-prose: 1.0625rem;
-  --ui-text-prose-line-height: 1.5;
+  /* New to the kit: reading size for long-form text, larger than the app UI's control sizes:
+     21px on a 34px line, one step down (19px on 30px) on phones (below). */
+  --ui-text-prose: 1.3125rem;
+  --ui-text-prose-line-height: 2.125rem;
+
+  /* New to the kit: the floating island menu's surface, a plain white pill with a soft wide shadow
+     on light pages, and one step above the page with a hairline edge on dark pages. */
+  --ui-island: light-dark(white, color-mix(in oklch, var(--palette-900) 80%, var(--palette-800)));
+  --ui-shadow-island:
+    inset 0 0 0 1px light-dark(transparent, var(--ui-line)),
+    0 8px 24px light-dark(color-mix(in oklch, var(--palette-950) 8%, transparent), oklch(0 0 0 / 0.2));
 
   /* Shape */
   --ui-radius-control: var(--brand-radius);
@@ -148,6 +156,14 @@
     0 0 0 0.5px var(--ui-control-edge),
     0 2px 4px -1px light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), oklch(0 0 0 / 0.3)),
     0 12px 32px -8px light-dark(color-mix(in oklch, var(--palette-950) 16%, transparent), oklch(0 0 0 / 0.5));
+}
+
+/* New to the kit: the reading size's phone step. */
+@media (width < 40rem) {
+  :root {
+    --ui-text-prose: 1.1875rem;
+    --ui-text-prose-line-height: 1.875rem;
+  }
 }
 
 :root[data-theme="light"] {

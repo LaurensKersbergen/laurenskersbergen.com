@@ -5,12 +5,13 @@ import { cn } from "./cn";
 import { type LinkRender, LinkOrAnchor } from "./link";
 
 /*
- * New to the kit (kit/README.md): the floating island menu. A small pill at the bottom centre that
- * names the current section and grows upward, from the same anchor, into a panel with the links
- * stacked above it. It follows the disclosure pattern (a button and a plain list of links), not an
- * ARIA menu: Escape, an outside press, a route change and focus leaving it all close it, and the
- * collapsed list is inert. On mouse and trackpad it also opens on hover, with a short close delay;
- * a click while it is hover-opened pins it open.
+ * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill in the bottom-left
+ * corner that grows upward and wider, from that corner, into a panel with the links stacked above
+ * it, in groups split by hairlines. It follows the disclosure pattern (a button and a plain list of
+ * links), not an ARIA menu: Escape, an outside press, a route change and focus leaving it all close
+ * it, and the collapsed list is inert. On mouse and trackpad it also opens on hover, with a short
+ * close delay; a click while it is hover-opened pins it open. Once a press has opened or pinned it,
+ * the pill itself reads "Close" (its accessible name too), so the panel's last row closes it.
  *
  * CSS can't animate to or from `auto` in Safari, so the component measures the label row and the
  * list with a ResizeObserver and writes the size to --island-w and --island-h; the size moves on
@@ -25,6 +26,8 @@ export type IslandLink = {
   current?: boolean;
   /** The app's router link, e.g. Next.js <Link href="/projects" />, so navigation doesn't reload the page. */
   render?: LinkRender;
+  /** Starts a new group: a hairline above this link. */
+  startsGroup?: boolean;
 };
 
 /** How the island was opened: by hover (closes when the pointer leaves), by a press, or pinned by a press while hover-opened. */
@@ -33,6 +36,10 @@ type OpenedBy = "hover" | "press" | "pinned" | null;
 const CLOSE_DELAY_MS = 200;
 const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+/* Text only, no fills: links other than the current page's, and the pill while it reads "Close", are
+   muted (palette-500 keeps 4.5:1 on white) and turn ink on hover. */
+const mutedText = "text-[color:light-dark(var(--palette-500),var(--palette-400))]";
 
 type Sizes = { pillW: number; pillH: number; listW: number; listH: number };
 
@@ -45,13 +52,16 @@ function writeSize(surface: HTMLElement | null, sizes: Sizes | null, open: boole
 
 export function Island({
   label,
+  closeLabel = "Close",
   links,
   path,
   navLabel = "Site",
   className,
 }: {
-  /** The current section's name, shown in the pill. */
+  /** The pill's text while it is collapsed or hover-opened, e.g. "Menu". */
   label: string;
+  /** The pill's text once a press has opened or pinned it, when pressing it closes the panel. */
+  closeLabel?: string;
   links: IslandLink[];
   /** The current route; the island closes when it changes. */
   path?: string;
@@ -80,12 +90,14 @@ export function Island({
     setOpenedBy(null);
   }
 
-  // When the label changes, the old one stays a moment to cross-fade out.
-  const [shown, setShown] = useState(label);
+  // When the text changes, the old one stays a moment to cross-fade out.
+  const closes = openedBy === "press" || openedBy === "pinned";
+  const text = closes ? closeLabel : label;
+  const [shown, setShown] = useState(text);
   const [leaving, setLeaving] = useState<string | null>(null);
-  if (label !== shown) {
+  if (text !== shown) {
     setLeaving(shown);
-    setShown(label);
+    setShown(text);
   }
 
   function clearCloseTimer() {
@@ -154,7 +166,11 @@ export function Island({
     <nav
       aria-label={navLabel}
       data-ready={ready ? "" : undefined}
-      className={cn("pointer-events-none fixed inset-x-0 bottom-[calc(--spacing(4)_+_env(safe-area-inset-bottom))] z-40 flex justify-center", className)}
+      className={cn(
+        "pointer-events-none fixed bottom-[calc(--spacing(5)_+_env(safe-area-inset-bottom))] left-5 z-40 flex",
+        "sm:bottom-[calc(--spacing(9)_+_env(safe-area-inset-bottom))] sm:left-9",
+        className,
+      )}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpenedBy(null);
       }}
@@ -164,7 +180,7 @@ export function Island({
         className={cn(
           "pointer-events-auto relative flex flex-col justify-end overflow-hidden contain-layout contain-paint",
           "h-(--island-h) w-(--island-w) rounded-[var(--island-r,calc(infinity*1px))]",
-          "bg-popover/90 text-ink shadow-overlay backdrop-blur-xl backdrop-saturate-150",
+          "bg-island/90 text-ink shadow-island backdrop-blur-xl backdrop-saturate-150",
           ready && "transition-[width,height] ease-spring motion-reduce:transition-none",
           open ? "duration-spring" : "duration-spring-out",
         )}
@@ -189,9 +205,12 @@ export function Island({
               clearCloseTimer();
               setOpenedBy((current) => (current === "hover" ? "pinned" : current ? null : "press"));
             }}
-            className="flex w-full cursor-pointer select-none justify-center rounded-(--island-r) focus-visible:-outline-offset-2"
+            className="group/pill flex w-full cursor-pointer select-none justify-start rounded-(--island-r) focus-visible:-outline-offset-2"
           >
-            <span ref={rowRef} className="relative flex h-10 items-center whitespace-nowrap px-4 text-[0.9375rem] font-medium pointer-coarse:h-11 pointer-coarse:px-5">
+            <span
+              ref={rowRef}
+              className={cn("relative flex h-12 items-center whitespace-nowrap px-[1.1875rem] text-[1.0625rem] transition-colors", closes && cn(mutedText, "group-hover/pill:text-ink"))}
+            >
               {labels.map((item) => (
                 <span
                   key={item.text}
@@ -203,7 +222,7 @@ export function Island({
                   className={cn(
                     ready && "transition-[opacity,filter,scale] ease-spring motion-reduce:transition-opacity",
                     item.leaving
-                      ? "absolute inset-0 flex items-center justify-center opacity-0 blur-xs scale-96 duration-spring-out motion-reduce:blur-none motion-reduce:scale-100"
+                      ? "absolute inset-y-0 left-[1.1875rem] flex items-center opacity-0 blur-xs scale-96 duration-spring-out motion-reduce:blur-none motion-reduce:scale-100"
                       : cn("duration-spring", ready && "starting:opacity-0 starting:blur-xs starting:scale-96 motion-reduce:starting:blur-none motion-reduce:starting:scale-100"),
                   )}
                 >
@@ -219,8 +238,8 @@ export function Island({
             onClick={(event) => {
               if ((event.target as Element).closest("a")) setOpenedBy(null);
             }}
-            // The hairline under the links separates them from the label row; collapsed, it is clipped away with them.
-            className="absolute bottom-full left-1/2 flex w-max min-w-[max(100%,--spacing(44))] -translate-x-1/2 flex-col p-1.5 after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-line"
+            // The hairline under the links separates them from the pill's row; collapsed, it is clipped away with them.
+            className="absolute bottom-full left-0 flex w-max min-w-[max(100%,--spacing(36))] flex-col pt-3.5 pb-2.5 after:absolute after:inset-x-[1.1875rem] after:bottom-0 after:h-px after:bg-line"
           >
             {links.map((link, index) => (
               <li
@@ -229,6 +248,9 @@ export function Island({
                 // Links settle in from the label upward and leave from the top down.
                 style={{ "--i": open ? links.length - 1 - index : index } as CSSProperties}
                 className={cn(
+                  "relative",
+                  // A group's hairline sits in the 21px gap above its first link.
+                  link.startsGroup && "mt-[1.3125rem] before:absolute before:inset-x-[1.1875rem] before:-top-[0.6875rem] before:h-px before:bg-line",
                   ready && "transition-[opacity,filter,scale] ease-spring delay-[calc(var(--ui-spring-stagger)*var(--i))] motion-reduce:transition-opacity motion-reduce:delay-0",
                   open ? "duration-spring" : "duration-spring-out opacity-0 blur-xs scale-96 motion-reduce:blur-none motion-reduce:scale-100",
                 )}
@@ -237,9 +259,14 @@ export function Island({
                   href={link.href}
                   render={link.render}
                   aria-current={link.current ? "page" : undefined}
-                  className="group/link block rounded-[calc(var(--island-r)_-_--spacing(1.5))] no-underline!"
+                  className="group/link block rounded-card no-underline! focus-visible:-outline-offset-2"
                 >
-                  <span className="flex h-9 items-center justify-center whitespace-nowrap rounded-[inherit] px-4 text-[0.9375rem] text-ink-2 transition-colors group-hover/link:bg-hover group-hover/link:text-ink group-aria-[current=page]/link:bg-selected group-aria-[current=page]/link:text-ink pointer-coarse:h-11">
+                  <span
+                    className={cn(
+                      "flex h-9 items-center whitespace-nowrap px-[1.1875rem] text-[1.0625rem] transition-colors group-hover/link:text-ink group-aria-[current=page]/link:text-ink",
+                      mutedText,
+                    )}
+                  >
                     {link.label}
                   </span>
                 </LinkOrAnchor>

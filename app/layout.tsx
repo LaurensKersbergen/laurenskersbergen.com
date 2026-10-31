@@ -46,9 +46,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="mx-auto min-h-screen" style={{ maxWidth: 650, padding: "4rem 2rem" }}>
-        {/* Clear space at the bottom for the floating menu: its height, its offset and the safe area. */}
-        <main className="pb-[calc(--spacing(11)_+_--spacing(4)_+_env(safe-area-inset-bottom))]">{children}</main>
+      <body className="min-h-screen">
+        {/* Each page sets its own column: the homepage's two-column block or the 680px page-column. */}
+        <main>{children}</main>
         <SiteIsland />
         <UISounds />
       </body>

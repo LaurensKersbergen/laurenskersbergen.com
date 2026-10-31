@@ -11,42 +11,45 @@ const { meta } = project;
 const published = getProjects("production");
 
 test.describe("project detail page", () => {
-  test("opens with the title, then the intro, the facts and the hero", async ({ page }) => {
+  test("opens with the title, then the intro, one meta line and the hero", async ({ page }) => {
     const response = await page.goto(`/projects/${slug}`);
     expect(response?.status()).toBe(200);
 
     const title = page.getByRole("heading", { level: 1, name: meta.title });
     const intro = page.getByText(meta.intro);
-    const facts = page.locator("dl");
+    const facts = [meta.role, String(meta.year), meta.status, `Built with ${meta.stack.join(", ")}`].join(" · ");
+    const metaLine = page.locator("main p").filter({ hasText: facts });
     const hero = page.getByRole("img", { name: meta.title, exact: true });
     await expect(title).toBeVisible();
     await expect(intro).toBeVisible();
+    await expect(metaLine).toBeVisible();
     await expect(hero).toBeVisible();
 
-    await expect(facts.getByRole("term")).toHaveText(meta.url ? ["Role", "Year", "Status", "Built with", "Live"] : ["Role", "Year", "Status", "Built with"]);
-    await expect(facts.getByRole("definition").first()).toHaveText(meta.role);
-    await expect(facts.getByRole("definition").nth(1)).toHaveText(String(meta.year));
-    await expect(facts.getByRole("definition").nth(2)).toHaveText(meta.status);
     if (meta.url) {
-      const live = facts.getByRole("link");
-      await expect(live).toHaveAttribute("href", meta.url);
-      await expect(live).toHaveAttribute("target", "_blank");
+      await expect(metaLine).toHaveText(`${facts} · Visit ↗`);
+      const visit = metaLine.getByRole("link", { name: "Visit" });
+      await expect(visit).toHaveAttribute("href", meta.url);
+      await expect(visit).toHaveAttribute("target", "_blank");
     } else {
-      await expect(facts.getByRole("link")).toHaveCount(0);
+      await expect(metaLine).toHaveText(facts);
+      await expect(metaLine.getByRole("link")).toHaveCount(0);
     }
 
-    // Document order: h1, intro, facts, hero.
+    // No facts table or status badge any more: the meta line carries them.
+    await expect(page.locator("main dl")).toHaveCount(0);
+
+    // Document order: h1, intro, meta line, hero.
     const order = await page.evaluate(
-      ([titleEl, introEl, factsEl, heroEl]) => {
+      ([titleEl, introEl, metaEl, heroEl]) => {
         const follows = (a: Node, b: Node) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
-        return follows(titleEl, introEl) && follows(introEl, factsEl) && follows(factsEl, heroEl);
+        return follows(titleEl, introEl) && follows(introEl, metaEl) && follows(metaEl, heroEl);
       },
-      [await title.elementHandle(), await intro.elementHandle(), await facts.elementHandle(), await hero.elementHandle()],
+      [await title.elementHandle(), await intro.elementHandle(), await metaLine.elementHandle(), await hero.elementHandle()],
     );
     expect(order).toBe(true);
   });
 
-  test("explains how it was built, then links back to all projects", async ({ page }) => {
+  test("explains how it was built, then links back to the projects", async ({ page }) => {
     await page.goto(`/projects/${slug}`);
 
     const section = page.getByRole("region", { name: "How I built it" });
@@ -54,8 +57,9 @@ test.describe("project detail page", () => {
     await expect(section.getByText(meta.workflow)).toBeVisible();
     await expect(section.getByRole("listitem")).toHaveText(meta.stack);
 
-    const back = page.getByRole("link", { name: "All projects" });
+    const back = page.getByRole("link", { name: "Back to Projects" });
     await expect(back).toHaveAttribute("href", "/projects");
+    await expect(back).toHaveText(/^←\s*Back to Projects$/);
   });
 
   test("shows a next-project link only when there is another published project", async ({ page }) => {
@@ -115,7 +119,7 @@ test.describe("project detail page", () => {
     await expect(trigger).toBeFocused();
   });
 
-  test("clicking All projects plays the navigate sound", async ({ page }, testInfo) => {
+  test("clicking Back to Projects plays the navigate sound", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "desktop", "sounds play only with a mouse or trackpad");
 
     const tones: { type: string; frequency: number }[] = [];
@@ -131,7 +135,7 @@ test.describe("project detail page", () => {
     await page.goto(`/projects/${slug}`);
     // Audio unlocks on the first pointer press; press on empty space first.
     await page.mouse.click(5, 5);
-    await page.getByRole("link", { name: "All projects" }).click();
+    await page.getByRole("link", { name: "Back to Projects" }).click();
 
     await expect.poll(() => tones.filter((t) => t.type === "triangle").map((t) => t.frequency)).toEqual([600, 900]);
   });
@@ -161,16 +165,20 @@ test.describe("/projects overview", () => {
     await expect(page.locator('main a[href="/projects/example-project"]')).toHaveCount(0);
   });
 
-  test("shows the meal-planner entry with its status and year, and opens it", async ({ page }) => {
+  test("shows the meal-planner entry as a text row, title then year then tagline, and opens it", async ({ page }) => {
     await page.goto("/projects");
-    const entry = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: meta.title }) });
-    await expect(entry.getByRole("heading", { level: 2, name: meta.title })).toBeVisible();
-    await expect(entry.getByText(meta.tagline)).toBeVisible();
-    await expect(entry.getByText(meta.status, { exact: true })).toBeVisible();
+    const entry = page.getByRole("main").getByRole("listitem").filter({ hasText: meta.title });
+    const link = entry.getByRole("link", { name: meta.title, exact: true });
+    await expect(link).toBeVisible();
+    await expect(entry).toHaveText([meta.title, String(meta.year), meta.tagline].join(""));
     await expect(entry.getByText(String(meta.year), { exact: true })).toBeVisible();
-    await expect(entry.locator("img")).toBeVisible();
+    await expect(entry.getByText(meta.tagline, { exact: true })).toBeVisible();
+    // Text only: no cover image, card heading or status badge.
+    await expect(entry.locator("img")).toHaveCount(0);
+    await expect(entry.getByRole("heading")).toHaveCount(0);
+    await expect(entry.getByText(meta.status, { exact: true })).toHaveCount(0);
 
-    await entry.getByRole("link").click();
+    await link.click();
     await expect(page).toHaveURL(`/projects/${slug}`);
     await expect(page.getByRole("heading", { level: 1, name: meta.title })).toBeVisible();
   });

@@ -1,6 +1,6 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
-// The floating island menu (U3): a disclosure at the bottom centre of every page.
+// The floating island menu (U3): a disclosure in the bottom-left corner of every page.
 const island = (page: Page) => page.getByRole("navigation", { name: "Site" });
 const pill = (page: Page) => island(page).getByRole("button");
 const menuLink = (page: Page, name: string) => island(page).getByRole("link", { name, exact: true });
@@ -17,13 +17,32 @@ async function press(page: Page, testInfo: TestInfo) {
   else await pill(page).click();
 }
 
-test("the pill names the current section and marks its link as current", async ({ page }) => {
+const currentLink = (page: Page) => island(page).locator('a[aria-current="page"]');
+
+test("the pill reads Menu on every page, and the current section's link is marked as current", async ({ page }) => {
   await open(page, "/");
-  await expect(pill(page)).toHaveAccessibleName("Home");
+  await expect(pill(page)).toHaveAccessibleName("Menu");
+  await expect(currentLink(page)).toHaveText("Home");
 
   await open(page, "/writing/hello-world");
-  await expect(pill(page)).toHaveAccessibleName("Writing");
-  await expect(island(page).locator('a[aria-current="page"]')).toHaveText("Writing");
+  await expect(pill(page)).toHaveAccessibleName("Menu");
+  await expect(currentLink(page)).toHaveText("Writing");
+
+  await open(page, "/listening");
+  await expect(pill(page)).toHaveAccessibleName("Menu");
+  await expect(currentLink(page)).toHaveText("Listening");
+});
+
+test("pressing the pill opens it and the pill becomes the panel's Close row, which collapses it again", async ({ page }, testInfo) => {
+  await open(page, "/");
+  await press(page, testInfo);
+  await expect(pill(page)).toHaveAttribute("aria-expanded", "true");
+  await expect(pill(page)).toHaveAccessibleName("Close");
+  await expect(menuLink(page, "Listening")).toBeVisible();
+
+  await press(page, testInfo);
+  await expect(pill(page)).toHaveAttribute("aria-expanded", "false");
+  await expect(pill(page)).toHaveAccessibleName("Menu");
 });
 
 test.describe("keyboard", () => {
@@ -38,7 +57,7 @@ test.describe("keyboard", () => {
 
     await page.keyboard.press("Enter");
     await expect(pill(page)).toHaveAttribute("aria-expanded", "true");
-    for (const name of ["Home", "Projects", "Writing", "About"]) {
+    for (const name of ["Home", "Projects", "Writing", "About", "Listening"]) {
       await page.keyboard.press("Tab");
       await expect(menuLink(page, name)).toBeFocused();
     }
@@ -49,8 +68,24 @@ test.describe("keyboard", () => {
     await pill(page).focus();
     await page.keyboard.press("Enter");
     await expect(menuLink(page, "Home")).toBeVisible();
-    for (let i = 0; i < 5; i++) await page.keyboard.press("Tab");
+    for (let i = 0; i < 6; i++) await page.keyboard.press("Tab");
     await expect(pill(page)).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("the Close row closes it with the keyboard, and focus stays on the pill", async ({ page }) => {
+    await open(page, "/");
+    await pill(page).focus();
+    await page.keyboard.press("Enter");
+    await expect(pill(page)).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Tab");
+    await expect(menuLink(page, "Home")).toBeFocused();
+
+    await page.keyboard.press("Shift+Tab");
+    await expect(island(page).getByRole("button", { name: "Close" })).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(pill(page)).toHaveAttribute("aria-expanded", "false");
+    await expect(pill(page)).toBeFocused();
+    await expect(pill(page)).toHaveAccessibleName("Menu");
   });
 
   test("Escape collapses it and returns focus to the pill", async ({ page }) => {
@@ -81,6 +116,8 @@ test.describe("mouse and trackpad", () => {
     await open(page, "/");
     await pill(page).hover();
     await expect(pill(page)).toHaveAttribute("aria-expanded", "true");
+    // Hover-opened, a click pins it rather than closing it, so the pill still reads Menu.
+    await expect(pill(page)).toHaveAccessibleName("Menu");
 
     await page.mouse.move(10, 10);
     await expect(pill(page)).toHaveAttribute("aria-expanded", "false");
@@ -125,7 +162,8 @@ test.describe("touch", () => {
     await pill(page).tap();
     await menuLink(page, "Writing").tap();
     await expect(page).toHaveURL(/\/writing$/);
-    await expect(pill(page)).toHaveAccessibleName("Writing");
+    await expect(pill(page)).toHaveAccessibleName("Menu");
+    await expect(currentLink(page)).toHaveText("Writing");
     await expect(pill(page)).toHaveAttribute("aria-expanded", "false");
   });
 });

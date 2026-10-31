@@ -6,9 +6,10 @@ import { Island } from "@kit/ui";
 
 const sections = [
   { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
+  { href: "/projects", label: "Projects", startsGroup: true },
   { href: "/writing", label: "Writing" },
   { href: "/about", label: "About" },
+  { href: "/listening", label: "Listening", startsGroup: true },
 ];
 
 export function SiteIsland() {
@@ -18,7 +19,7 @@ export function SiteIsland() {
 
   return (
     <Island
-      label={current?.label ?? "Menu"}
+      label="Menu"
       path={pathname}
       links={sections.map((section) => ({
         ...section,
