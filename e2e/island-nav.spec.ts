@@ -90,8 +90,10 @@ test("a route change closes it and resets the toggle to Menu", async ({ page }, 
 test.describe("keyboard", () => {
   test.skip(({ isMobile }) => isMobile, "keyboard paths are checked on the desktop profile");
 
-  test("the toggle is the first tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
+  test("after the name, the toggle is the next tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
     await open(page, "/");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "Laurens K", exact: true })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(toggle(page)).toBeFocused();
     await expect(toggle(page)).toHaveAttribute("aria-expanded", "false");
@@ -220,4 +222,39 @@ test("it sits in the top-right corner and opens downward", async ({ page }) => {
   expect(opened.y).toBeLessThanOrEqual(closed.y);
   expect(opened.y + opened.height).toBeGreaterThan(closed.y + closed.height + 100);
   expect(Math.abs(opened.x + opened.width - (closed.x + closed.width))).toBeLessThanOrEqual(5);
+});
+
+test.describe("the name", () => {
+  const name = (page: Page) => page.getByRole("banner").getByRole("link", { name: "Laurens K", exact: true });
+
+  test("links home from every page, marked current on the homepage", async ({ page }, testInfo) => {
+    await open(page, "/about");
+    await expect(name(page)).not.toHaveAttribute("aria-current");
+    if (testInfo.project.name === "iphone") await name(page).tap();
+    else await name(page).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(name(page)).toHaveAttribute("aria-current", "page");
+  });
+
+  test("sits in the top-left corner, level with the collapsed menu and the same height", async ({ page }) => {
+    await open(page, "/");
+    const pill = (await name(page).boundingBox())!;
+    const menu = (await island(page).boundingBox())!;
+    const viewport = page.viewportSize()!;
+    expect(pill.y).toBe(menu.y);
+    expect(pill.height).toBe(menu.height);
+    // As far in from the left edge as the menu is from the right.
+    expect(Math.abs(pill.x - (viewport.width - menu.x - menu.width))).toBeLessThanOrEqual(1);
+    await expect(name(page)).toHaveCSS("border-radius", await island(page).evaluate((nav) => getComputedStyle(nav).borderRadius));
+  });
+
+  test("never covers a page title", async ({ page }) => {
+    for (const path of ["/", "/projects", "/projects/meal-planner", "/writing", "/about"]) {
+      await page.goto(path);
+      const title = (await page.locator("main h1").first().boundingBox())!;
+      const pill = (await name(page).boundingBox())!;
+      const overlaps = title.x < pill.x + pill.width && pill.x < title.x + title.width && title.y < pill.y + pill.height && pill.y < title.y + title.height;
+      expect(overlaps, `${path}: the title overlaps the name`).toBe(false);
+    }
+  });
 });

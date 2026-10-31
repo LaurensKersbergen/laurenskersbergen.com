@@ -3,6 +3,7 @@ import { STIX_Two_Text } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { SiteIsland } from "@/components/site-island";
+import { SiteName } from "@/components/site-name";
 import { UISounds } from "@/components/ui-sounds";
 import "./globals.css";
 
@@ -48,7 +49,10 @@ export default function RootLayout({
     <html lang="en" className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-screen">
         {/* Each page sets its own column: the homepage's two-column block or the 680px page-column. */}
-        <SiteIsland />
+        <header>
+          <SiteName />
+          <SiteIsland />
+        </header>
         <main>{children}</main>
         <UISounds />
       </body>

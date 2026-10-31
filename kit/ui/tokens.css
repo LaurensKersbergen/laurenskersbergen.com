@@ -148,6 +148,8 @@
   --ui-island-text-current: light-dark(rgb(0 0 0 / 0.95), rgb(255 255 255));
   --ui-island-label: light-dark(rgb(0 0 0 / 0.85), rgb(255 255 255 / 0.85));
   --ui-shadow-island: 0 8px 36px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.45)), 0 1px 2px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+  /* The collapsed island's corners, shared with .ui-island-pill. */
+  --ui-radius-island: 25px;
   --ui-shadow-island-open: 0 14px 60px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.55)), 0 2px 4px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
 
   /* Shape */
