@@ -151,9 +151,9 @@
  * New to the kit: the floating island menu (island.tsx). Plain CSS rather than classes, because its
  * open and closed states swap springs and speeds through custom properties.
  *
- * The nav is a clipping window, centred at the bottom of the page, over a panel centred inside it,
- * with the toggle as the panel's last row. Collapsed, only that row ("Menu") shows; opening widens
- * the window evenly to both sides on the x spring and raises it on the y spring, uncovering the links, which fade in from the bottom up.
+ * The nav is a clipping window in the top-right corner over a panel pinned to its top-right corner,
+ * with the toggle as the panel's first row. Collapsed, only that row ("Menu") shows; opening widens
+ * the window leftward on the x spring and lowers it on the y spring, uncovering the links, which fade in from the toggle down.
  * Opening and closing use their own springs and speeds; island.tsx varies the four speeds
  * (--island-duration-*) on every toggle and writes the open height (--island-open-h) and, for
  * phones, the collapsed width that fits the label (--island-collapsed-fit).
@@ -173,16 +173,15 @@
     --island-duration-x: var(--island-duration-close-x);
     --island-duration-y: var(--island-duration-close-y);
     position: fixed;
-    bottom: 32px;
-    left: 50%;
+    top: 32px;
+    right: 32px;
     z-index: 40;
     width: var(--island-collapsed-w);
     height: var(--island-collapsed-h);
-    /* Centred on the page at every width, so it grows evenly to both sides. */
-    transform: translateX(-50%);
+    transform: translateX(-4px);
     overflow: hidden;
     contain: layout paint;
-    will-change: width, height, transform, bottom;
+    will-change: width, height, transform, top;
     border: 1px solid var(--ui-island-edge);
     border-radius: 25px;
     background: var(--ui-island);
@@ -195,7 +194,7 @@
     transition:
       width var(--island-duration-x) var(--island-ease-x),
       height var(--island-duration-y) var(--island-ease-y),
-      bottom var(--island-duration-y) var(--island-ease-y),
+      top var(--island-duration-y) var(--island-ease-y),
       transform var(--island-duration-x) var(--island-ease-x),
       border-radius 216ms cubic-bezier(0.2, 0, 0, 1),
       background 132ms ease,
@@ -210,7 +209,8 @@
     --island-duration-y: var(--island-duration-open-y);
     width: var(--island-open-w);
     height: var(--island-open-h);
-    bottom: 24px;
+    top: 24px;
+    transform: translateX(0);
     border-radius: 26px;
     background: var(--ui-island-open);
     box-shadow: var(--ui-shadow-island-open);
@@ -228,27 +228,28 @@
 
   .ui-island-inner {
     position: absolute;
-    bottom: 0;
-    left: 50%;
+    top: 0;
+    right: 0;
     width: var(--island-open-w);
-    transform: translateX(-50%);
+    transform: translateX(4px);
     display: flex;
     flex-direction: column;
     padding: 6px 22px;
     transition:
       transform var(--island-duration-x) var(--island-ease-x),
-      bottom var(--island-duration-y) var(--island-ease-y);
+      top var(--island-duration-y) var(--island-ease-y);
   }
   .ui-island[data-open] .ui-island-inner {
-    bottom: 8px;
+    transform: translateX(0);
+    top: 8px;
   }
   .ui-island-list {
     display: flex;
     flex-direction: column;
   }
 
-  /* Links and hairlines fade in from the bottom up, each a step after the one below it
-     (--island-i counts up from the toggle), and out from the top down. */
+  /* Links and hairlines fade in from the toggle down, each a step after the one above it
+     (--island-i counts down from the toggle), and out from the bottom up. */
   .ui-island-item {
     opacity: 0;
     transition: opacity 0.2s ease calc((10 - var(--island-i, 0)) * var(--ui-spring-stagger));
@@ -275,7 +276,7 @@
     line-height: 28px;
     font-weight: 400;
     color: var(--ui-island-text);
-    text-align: center;
+    text-align: right;
     text-decoration: none;
     white-space: nowrap;
     transition: color 264ms ease;
@@ -303,15 +304,22 @@
     color: var(--ui-island-label);
   }
 
-  /* Phones (720px and narrower): closer to the bottom edge, above the safe area; the collapsed
-     width fits the label, and scrolling down hides the island until scrolling back up (unless
-     focus is inside it). */
+  /* Phones (720px and narrower): closer to the corner, below the safe area, no sideways drift; the
+     collapsed width fits the label, and scrolling down hides the island until scrolling back up
+     (unless focus is inside it). */
   @media (width <= 45rem) {
     .ui-island {
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      right: calc(20px + env(safe-area-inset-right, 0px));
+      transform: none;
     }
     .ui-island[data-open] {
-      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      transform: none;
+    }
+    .ui-island-inner,
+    .ui-island[data-open] .ui-island-inner {
+      transform: none;
     }
     .ui-island:not([data-open]) {
       width: var(--island-collapsed-fit, var(--island-collapsed-w));

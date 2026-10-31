@@ -9,7 +9,7 @@ export default function Home() {
   return (
     // Phones and tablets: the portrait above the text in the 680px column. From 900px: portrait and
     // text side by side in an 850px block, centred in the window.
-    <div className="mx-auto box-content max-w-[42.5rem] px-6 pt-12 pb-[calc(7.5rem+env(safe-area-inset-bottom))] min-[900px]:flex min-[900px]:min-h-svh min-[900px]:max-w-[53.125rem] min-[900px]:items-center min-[900px]:py-30">
+    <div className="mx-auto box-content max-w-[42.5rem] px-6 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-24 min-[900px]:flex min-[900px]:min-h-svh min-[900px]:max-w-[53.125rem] min-[900px]:items-center min-[900px]:py-30">
       <div className="min-[900px]:flex min-[900px]:items-start min-[900px]:gap-16">
         <Image
           src={PORTRAIT_SRC}

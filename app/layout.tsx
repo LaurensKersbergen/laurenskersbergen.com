@@ -48,8 +48,8 @@ export default function RootLayout({
     <html lang="en" className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-screen">
         {/* Each page sets its own column: the homepage's two-column block or the 680px page-column. */}
-        <main>{children}</main>
         <SiteIsland />
+        <main>{children}</main>
         <UISounds />
       </body>
     </html>

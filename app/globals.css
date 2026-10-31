@@ -182,12 +182,12 @@ html {
 }
 
 /* The 680px reading column inner pages sit in, with 24px gutters on phones, and room at the
-   bottom for the floating menu (its height, its offset and the safe area). */
+   top on phones so the floating menu in the corner never covers a page title. */
 @utility page-column {
   box-sizing: content-box;
   max-width: 42.5rem;
   margin-inline: auto;
-  padding: 2rem 1.5rem calc(7.5rem + env(safe-area-inset-bottom));
+  padding: calc(5.5rem + env(safe-area-inset-top)) 1.5rem 6rem;
   @media (width >= 40rem) {
     padding-top: 5.875rem;
   }

@@ -1,7 +1,7 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
-// The floating island menu: a disclosure centred at the bottom of every page. Only a press on its
-// toggle (the panel's last row) opens it; the toggle reads "Menu" collapsed and "Close" open.
+// The floating island menu: a disclosure in the top-right corner of every page. Only a press on its
+// toggle (the panel's first row) opens it; the toggle reads "Menu" collapsed and "Close" open.
 const island = (page: Page) => page.getByRole("navigation", { name: "Site" });
 const toggle = (page: Page) => island(page).getByRole("button");
 const menuLink = (page: Page, name: string) => island(page).getByRole("link", { name, exact: true });
@@ -90,17 +90,16 @@ test("a route change closes it and resets the toggle to Menu", async ({ page }, 
 test.describe("keyboard", () => {
   test.skip(({ isMobile }) => isMobile, "keyboard paths are checked on the desktop profile");
 
-  test("the toggle is the tab stop after the page; Enter opens it and the links sit just before it in tab order", async ({ page }) => {
+  test("the toggle is the first tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
     await open(page, "/");
-    await page.locator("main a").last().focus();
     await page.keyboard.press("Tab");
     await expect(toggle(page)).toBeFocused();
     await expect(toggle(page)).toHaveAttribute("aria-expanded", "false");
 
     await page.keyboard.press("Enter");
     await expectOpen(page);
-    for (const name of ["Listening", "About", "Writing", "Projects", "Home"]) {
-      await page.keyboard.press("Shift+Tab");
+    for (const name of ["Home", "Projects", "Writing", "About", "Listening"]) {
+      await page.keyboard.press("Tab");
       await expect(menuLink(page, name)).toBeFocused();
     }
   });
@@ -119,8 +118,8 @@ test.describe("keyboard", () => {
     await open(page, "/");
     await toggle(page).focus();
     await page.keyboard.press("Enter");
-    await page.keyboard.press("Shift+Tab");
-    await expect(menuLink(page, "Listening")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(menuLink(page, "Home")).toBeFocused();
 
     await page.keyboard.press("Escape");
     await expectClosed(page);
@@ -131,11 +130,11 @@ test.describe("keyboard", () => {
     await open(page, "/");
     await toggle(page).focus();
     await page.keyboard.press("Enter");
-    await page.keyboard.press("Shift+Tab");
-    await expect(menuLink(page, "Listening")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(menuLink(page, "Home")).toBeFocused();
 
-    // Back past the first link, out of the menu into the page.
-    for (let i = 0; i < 5; i++) await page.keyboard.press("Shift+Tab");
+    // On past the last link, out of the menu into the page.
+    for (let i = 0; i < 5; i++) await page.keyboard.press("Tab");
     expect(await focusInsideList(page)).toBe(false);
     await expectClosed(page);
   });
@@ -143,7 +142,7 @@ test.describe("keyboard", () => {
   test("while collapsed, the hidden links can't be focused", async ({ page }) => {
     await open(page, "/");
     await toggle(page).focus();
-    await page.keyboard.press("Shift+Tab");
+    await page.keyboard.press("Tab");
     await expect(toggle(page)).not.toBeFocused();
     expect(await focusInsideList(page)).toBe(false);
     await expect(island(page).locator("ul")).toHaveAttribute("inert", "");
@@ -196,30 +195,29 @@ test("on phones, scrolling down past 80px hides it and scrolling back up shows i
   await expect(island(page)).toHaveCSS("pointer-events", "auto");
 });
 
-test("scrolled to the bottom, the last paragraph stays clear of the toggle", async ({ page }, testInfo) => {
-  // A short window makes the page scroll on desktop as well.
-  if (testInfo.project.name === "desktop") await page.setViewportSize({ width: 1280, height: 480 });
-  await open(page, "/about");
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-
-  const last = await page.locator("main p").last().boundingBox();
-  const bar = await island(page).boundingBox();
-  expect(last && bar).toBeTruthy();
-  expect(last!.y + last!.height).toBeLessThanOrEqual(bar!.y);
+test("the collapsed toggle never covers a page title", async ({ page }) => {
+  for (const path of ["/", "/projects", "/projects/meal-planner", "/writing", "/about"]) {
+    await open(page, path);
+    const title = (await page.locator("main h1").first().boundingBox())!;
+    const bar = (await island(page).boundingBox())!;
+    const overlaps = title.x < bar.x + bar.width && bar.x < title.x + title.width && title.y < bar.y + bar.height && bar.y < title.y + title.height;
+    expect(overlaps, `${path}: the title overlaps the menu`).toBe(false);
+  }
 });
 
-test("it is centred horizontally, collapsed and open", async ({ page }) => {
+test("it sits in the top-right corner and opens downward", async ({ page }) => {
   await page.goto("/");
   const viewport = page.viewportSize()!;
-  const centreOffset = async () => {
-    const box = (await island(page).boundingBox())!;
-    return Math.abs(box.x + box.width / 2 - viewport.width / 2);
-  };
-  expect(await centreOffset()).toBeLessThanOrEqual(1);
+  const closed = (await island(page).boundingBox())!;
+  expect(viewport.width - (closed.x + closed.width)).toBeLessThanOrEqual(40);
+  expect(closed.y).toBeLessThanOrEqual(40);
 
   await toggle(page).click();
   await expect(toggle(page)).toHaveAttribute("aria-expanded", "true");
   // Let the springs settle before measuring the open panel.
   await page.waitForTimeout(900);
-  expect(await centreOffset()).toBeLessThanOrEqual(1);
+  const opened = (await island(page).boundingBox())!;
+  expect(opened.y).toBeLessThanOrEqual(closed.y);
+  expect(opened.y + opened.height).toBeGreaterThan(closed.y + closed.height + 100);
+  expect(Math.abs(opened.x + opened.width - (closed.x + closed.width))).toBeLessThanOrEqual(5);
 });

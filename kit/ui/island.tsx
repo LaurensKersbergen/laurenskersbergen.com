@@ -5,9 +5,9 @@ import { cn } from "./cn";
 import { type LinkRender, LinkOrAnchor } from "./link";
 
 /*
- * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill centred at the
- * bottom of the page; pressing it grows the pill upward and wider into a panel of links, in groups split by
- * hairlines, with the toggle as the panel's last row, now reading "Close". The look and motion live
+ * New to the kit (kit/README.md): the floating island menu. A small "Menu" pill in the top-right
+ * corner; pressing it grows the pill downward and wider into a panel of links, in groups split by
+ * hairlines, with the toggle as the panel's first row, now reading "Close". The look and motion live
  * in theme.css (.ui-island) and tokens.css (the springs and the surface).
  *
  * It follows the disclosure pattern (a button and a plain list of links), not an ARIA menu. Only a
@@ -67,8 +67,8 @@ function rowsFor(links: IslandLink[]): Row[] {
     if (link.startsGroup && index > 0) rows.push({ kind: "divider", key: `divider-${link.href}` });
     rows.push({ kind: "link", link });
   });
-  // A hairline always separates the links from the toggle below them.
-  rows.push({ kind: "divider", key: "divider-toggle" });
+  // A hairline always separates the toggle from the links below it.
+  rows.unshift({ kind: "divider", key: "divider-toggle" });
   return rows;
 }
 
@@ -237,31 +237,6 @@ export function Island({
       }}
     >
       <div ref={innerRef} className="ui-island-inner">
-        <ul
-          id={listId}
-          inert={!open}
-          className="ui-island-list"
-          onClick={(event) => {
-            // Following a link closes it; a link opened in a new tab or window leaves it open.
-            if (!(event.target as Element).closest("a")) return;
-            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
-            setOpen(false);
-          }}
-        >
-          {rows.map((row, index) => {
-            // Counted up from the toggle, for the stagger.
-            const style = { "--island-i": rows.length - 1 - index } as CSSProperties;
-            if (row.kind === "divider") return <li key={row.key} aria-hidden="true" className="ui-island-item ui-island-divider" style={style} />;
-            const { link } = row;
-            return (
-              <li key={link.href} className="ui-island-item" style={style}>
-                <LinkOrAnchor href={link.href} render={link.render} aria-current={link.current ? "page" : undefined} className="ui-island-link">
-                  {link.label}
-                </LinkOrAnchor>
-              </li>
-            );
-          })}
-        </ul>
         <button
           ref={buttonRef}
           type="button"
@@ -275,6 +250,31 @@ export function Island({
         >
           {open ? closeLabel : label}
         </button>
+        <ul
+          id={listId}
+          inert={!open}
+          className="ui-island-list"
+          onClick={(event) => {
+            // Following a link closes it; a link opened in a new tab or window leaves it open.
+            if (!(event.target as Element).closest("a")) return;
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+            setOpen(false);
+          }}
+        >
+          {rows.map((row, index) => {
+            // Counted down from the toggle, for the stagger.
+            const style = { "--island-i": index } as CSSProperties;
+            if (row.kind === "divider") return <li key={row.key} aria-hidden="true" className="ui-island-item ui-island-divider" style={style} />;
+            const { link } = row;
+            return (
+              <li key={link.href} className="ui-island-item" style={style}>
+                <LinkOrAnchor href={link.href} render={link.render} aria-current={link.current ? "page" : undefined} className="ui-island-link">
+                  {link.label}
+                </LinkOrAnchor>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </nav>
   );
