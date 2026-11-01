@@ -13,6 +13,7 @@
   --muted: #737373;
   --border: #e5e5e5;
   --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");
+  --mail-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cmask id='m'%3E%3Crect width='24' height='24' fill='%23fff'/%3E%3Cpath d='M1 5.8l9.4 7.2a2.6 2.6 0 0 0 3.2 0L23 5.8' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/mask%3E%3Crect x='2' y='4' width='20' height='16' rx='3.5' mask='url(%23m)'/%3E%3C/svg%3E");
   --image-outline: oklch(0 0 0 / 0.1);
 }
 
@@ -114,6 +115,14 @@ a {
   vertical-align: -0.2em;
   outline: 1px solid var(--image-outline);
   outline-offset: -1px;
+}
+
+/* Same slot as a logo, but a glyph drawn in currentColor */
+.mail-icon {
+  outline: none;
+  background-color: currentColor;
+  mask: var(--mail-icon) center / contain no-repeat;
+  forced-color-adjust: none;
 }
 
 h1, h2, h3, h4 {

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { LogoLink } from "@/components/logo-link";
+import { LogoLink, MailIcon } from "@/components/logo-link";
 
 export default function Home() {
   return (
@@ -22,9 +21,9 @@ export default function Home() {
         {"I live in Amsterdam with my partner, our two-year-old daughter, and cat Dries. You'll find me doing CrossFit, competing in HYROX races, cooking for friends, or pulling god-shot double espressos. Weekends: gaming with friends, building side projects (just shipped a hyper-personalized meal planning app), or skiing if it's winter. Also bit of a biohacker."}
       </p>
       <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        <Link href="/about">More about me</Link>
-        {" · "}
-        <a href="mailto:hey@laurenskersbergen.com">Reach out</a>
+        {"You can reach me via "}
+        <LogoLink href="mailto:hey@laurenskersbergen.com" logo={<MailIcon />}>email</LogoLink>
+        {"."}
       </p>
     </div>
   );
