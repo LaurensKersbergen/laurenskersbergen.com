@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { STIX_Two_Text } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { RevealObserver } from "@/components/reveal-observer";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteIsland } from "@/components/site-island";
 import { SiteName } from "@/components/site-name";
 import { UISounds } from "@/components/ui-sounds";
@@ -12,18 +14,18 @@ const stix = STIX_Two_Text({
   variable: "--font-serif",
 });
 
+const description = "Product manager in Amsterdam, working on databases and AI at Miro.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://laurenskersbergen.com"),
   title: {
     default: "Laurens Kersbergen",
-    template: "%s — Laurens Kersbergen",
+    template: "%s | Laurens Kersbergen",
   },
-  description:
-    "Product manager living in Amsterdam. Currently working at Miro.",
+  description,
   openGraph: {
     title: "Laurens Kersbergen",
-    description:
-      "Product manager living in Amsterdam. Currently working at Miro.",
+    description,
     url: "https://laurenskersbergen.com",
     siteName: "Laurens Kersbergen",
     locale: "en_US",
@@ -38,7 +40,11 @@ export const metadata: Metadata = {
 // Lets the floating menu sit above the iPhone home indicator with env(safe-area-inset-bottom).
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: "#ffffff",
 };
+
+/* Set before the first paint: scripts run, so blocks may wait to reveal themselves (site.css). */
+const motionFlag = "document.documentElement.setAttribute('data-motion','')";
 
 export default function RootLayout({
   children,
@@ -46,14 +52,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" data-theme="light" suppressHydrationWarning className={`${stix.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionFlag }} />
+      </head>
       <body className="min-h-screen">
-        {/* Each page sets its own column: the homepage's two-column block or the 680px page-column. */}
         <header>
           <SiteName />
           <SiteIsland />
         </header>
         <main>{children}</main>
+        <SiteFooter />
+        <RevealObserver />
         <UISounds />
       </body>
     </html>

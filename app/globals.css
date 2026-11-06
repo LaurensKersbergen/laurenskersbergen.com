@@ -1,50 +1,61 @@
 @import "tailwindcss";
 /* The starter kit's theme (kit/README.md). Its font-sans is brand.css's Geist Sans. */
 @import "../kit/ui/theme.css";
+/* The site's own parts: header clock, reveal motion, homepage, project template, footer. */
+@import "./site.css";
+/* The vendored Stageshow skill carries its own examples; they are not this site's source. */
+@source not "../.claude";
 
 @theme {
   --font-serif: var(--font-serif), "Georgia", serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
-/* The site's colours, from the kit's palette (light and dark).
-   --ink: headings and link words. --fg: body text and list rows. --muted: intro paragraphs,
-   descriptions and dates; palette-500 is the lightest grey that keeps 4.5:1 on the page. In dark
-   mode ink and muted sit between two palette steps so a link word still stands 3:1 apart from
-   the muted prose around it (WCAG 1.4.1) while muted keeps 4.5:1 on the page. */
+/* The site's colours, from the kit's palette. The site is light only: a white page,
+   so the vivid tags and grounds read as designed.
+   --ink: headings and link words. --fg: body text. --muted: secondary text; palette-500 is the
+   lightest grey that keeps 4.5:1 on white. */
 :root {
-  --bg: light-dark(var(--palette-50), var(--palette-900));
-  --ink: light-dark(var(--palette-950), color-mix(in oklch, var(--palette-100) 50%, var(--palette-200)));
-  --fg: light-dark(var(--palette-800), var(--palette-200));
+  color-scheme: light;
+  --bg: #fff;
+  --ink: var(--palette-950);
+  --fg: var(--palette-800);
   --text-copy: var(--fg);
-  --muted: light-dark(var(--palette-500), color-mix(in oklch, var(--palette-400) 40%, var(--palette-500)));
+  --muted: var(--palette-500);
   --border: var(--ui-line);
+  /* A see-through ink for pills and buttons at rest, and one step up on hover (the ghost pill). */
+  --ghost: rgb(0 0 0 / 0.05);
+  --ghost-hover: rgb(0 0 0 / 0.09);
   /* Corners of images and videos in write-ups and galleries (kit Media). */
   --media-radius: 1rem;
   --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");
   --image-outline: oklch(0 0 0 / 0.1);
+
+  /* The page frame: a 56px gutter, 32px below 992px, 20px on phones. */
+  --page-max: 90rem;
+  --page-gutter: 3.5rem;
+
+  /* Motion. --ease-out is the long, soft stop everything arriving uses;
+     --ease-travel moves things already on screen. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-travel: cubic-bezier(0.45, 0, 0.1, 1);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (width < 62rem) {
   :root {
-    --image-outline: oklch(1 0 0 / 0.1);
+    --page-gutter: 2rem;
   }
 }
 
-html {
-  color-scheme: light dark;
+@media (width < 48rem) {
+  :root {
+    --page-gutter: 1.25rem;
+  }
 }
 
 ::selection {
   color: #0066db;
   background-color: #009afa1a;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::selection {
-    color: #ff6b01;
-    background-color: #f068001a;
-  }
 }
 
 /* Element defaults sit in the base layer, so a utility class on an element (text-(--fg) on a link) wins. */

@@ -1,0 +1,1276 @@
+/*
+ * The site's own parts: the header clock, the reveal motion, the homepage (intro, project
+ * carousel, timeline), the project page template and the footer. The frame and the project page
+ * share one set of measurements (a 56px gutter, a 64px title, 24px media corners, 8px between
+ * media); the motion has its own rules (things arrive out of an 8px blur, 12px below, on a
+ * long soft stop, a step apart). Colours come from the kit's tokens and its vivid hues.
+ */
+
+/* ------------------------------------------------------------------------------------------ */
+/* Frame                                                                                      */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .shell {
+    box-sizing: content-box;
+    max-width: calc(var(--page-max) - 2 * var(--page-gutter));
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* Where the page content starts: below the name pill and the menu, 96px under them. */
+  .page-top {
+    padding-top: calc(5rem + 6rem);
+  }
+
+  @media (width < 48rem) {
+    .page-top {
+      padding-top: calc(4.25rem + env(safe-area-inset-top) + 3rem);
+    }
+  }
+
+  /* A small caps label over a section or a link ("Selected work", "Next"). */
+  .label {
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Header clock: Amsterdam's time beside the name                                               */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .site-clock {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition: opacity 600ms ease;
+  }
+
+  .site-clock:not([data-ready]) {
+    opacity: 0;
+  }
+
+  /* The colon blinks once a second, so the clock reads as running even when you glance. */
+  .site-clock__colon {
+    display: inline-block;
+    animation: clock-blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes clock-blink {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @media (width < 48rem) {
+    .site-clock {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Reveal: blocks arrive as they scroll into view                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+/*
+ * An element with data-reveal waits out of an 8px blur, 12px below, until it comes into view
+ * (components/reveal.tsx sets data-in), then settles over 800ms on --ease-out, after its
+ * --reveal-delay. Only when scripts run (the layout marks <html data-motion>) and the visitor
+ * hasn't asked for less motion, so the content is never hidden from anyone else.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion] [data-reveal] {
+    transition:
+      opacity 800ms var(--ease-out),
+      transform 800ms var(--ease-out),
+      filter 800ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  :root[data-motion] [data-reveal]:not([data-in]) {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(8px);
+  }
+
+  /* Sideways, for cards coming in along the carousel. */
+  :root[data-motion] [data-reveal="x"]:not([data-in]) {
+    transform: translateX(48px);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Homepage intro                                                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .intro {
+    max-width: 66rem;
+    font-size: clamp(1.75rem, 1.2rem + 1.7vw, 2.75rem);
+    line-height: 1.16;
+    font-weight: 500;
+    letter-spacing: -0.028em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  /* Each sentence on its own line, the second quieter. */
+  .intro__line {
+    display: block;
+  }
+
+  .intro__muted {
+    color: var(--muted);
+  }
+
+  /* A company named in the intro: its logo in a slot that opens in the line, then its name. */
+  .intro__company {
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .intro__company:hover {
+      text-decoration: none;
+    }
+  }
+
+  .intro__slot {
+    display: inline-block;
+    width: 1.12em;
+    margin-inline: 0.14em 0.22em;
+    vertical-align: -0.16em;
+  }
+
+  .intro__logo {
+    display: block;
+    width: 1.12em;
+    height: 1.12em;
+    border-radius: 0.26em;
+    outline: 1px solid var(--image-outline);
+    outline-offset: -1px;
+  }
+
+  /* The name keeps the site's hand-drawn wave under it, faint until hovered. */
+  .intro__name {
+    position: relative;
+  }
+
+  .intro__name::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -0.12em;
+    height: 0.14em;
+    background-color: currentColor;
+    mask: var(--link-wave) 0 0 / 0.72em 0.14em repeat-x;
+    opacity: 0.22;
+    transition: opacity 200ms ease;
+  }
+
+  .intro__company:focus-visible .intro__name::after {
+    opacity: 0.7;
+  }
+
+  @media (hover: hover) {
+    .intro__company:hover .intro__name::after {
+      opacity: 0.7;
+    }
+  }
+
+  /*
+   * The entrance: each line comes out of a blur a step after the one
+   * above, then each logo's slot opens in the line (the words beside it make room) and the logo
+   * blooms into it, a touch past full size and back.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .intro__line {
+      animation: intro-line 900ms var(--ease-out) backwards;
+      animation-delay: calc(120ms + var(--i, 0) * 140ms);
+    }
+
+    .intro__slot {
+      animation: intro-slot 520ms var(--ease-out) backwards;
+      animation-delay: calc(760ms + var(--j, 0) * 110ms);
+    }
+
+    .intro__logo {
+      animation: intro-logo 620ms ease-out backwards;
+      animation-delay: calc(860ms + var(--j, 0) * 110ms);
+    }
+  }
+
+  @keyframes intro-line {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+    }
+  }
+
+  @keyframes intro-slot {
+    from {
+      width: 0;
+      margin-inline: 0.07em;
+    }
+  }
+
+  @keyframes intro-logo {
+    0% {
+      opacity: 0;
+      filter: blur(7px);
+      transform: scale(0.72);
+    }
+    45% {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1.04);
+    }
+    70% {
+      transform: scale(0.99);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Pill buttons: a ghost pill and a solid ink one                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 1.125rem;
+    border-radius: 999px;
+    background: var(--ghost);
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 160ms ease,
+      transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pill--strong {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  @media (hover: hover) {
+    .pill:hover {
+      background: var(--ghost-hover);
+      text-decoration: none;
+    }
+
+    .pill--strong:hover {
+      background: var(--palette-800);
+    }
+  }
+
+  .pill:active {
+    transform: scale(0.97);
+  }
+
+  .pill__icon {
+    flex: none;
+    transition: transform 260ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .pill:hover .pill__icon {
+      transform: translateX(2px);
+    }
+  }
+
+  /* A round icon button: the carousel's arrows. */
+  .round-button {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ghost);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      opacity 200ms ease,
+      transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .round-button:hover:not(:disabled) {
+      background: var(--ghost-hover);
+    }
+  }
+
+  .round-button:active:not(:disabled) {
+    transform: scale(0.94);
+  }
+
+  .round-button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project carousel                                                                            */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  @media (width < 48rem) {
+    .section-title {
+      font-size: 1.375rem;
+      line-height: 1.875rem;
+    }
+  }
+
+  .carousel {
+    /* The track runs edge to edge, but its first card lines up with the page column. */
+    --edge: max(var(--page-gutter), calc((100vw - var(--page-max)) / 2 + var(--page-gutter)));
+    position: relative;
+  }
+
+  .carousel__track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    padding: 0.75rem var(--edge) 1.5rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* While a drag or an arrow press moves the track, snapping waits until it settles. */
+  .carousel__track[data-dragging],
+  .carousel__track[data-gliding] {
+    scroll-snap-type: none;
+  }
+
+  .carousel__track[data-dragging] {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .carousel__track[data-dragging] a {
+    pointer-events: none;
+  }
+
+  .carousel__item {
+    flex: none;
+    width: clamp(17.5rem, 29vw, 27.5rem);
+    scroll-snap-align: start;
+  }
+
+  @media (width < 48rem) {
+    .carousel__item {
+      width: min(80vw, 22rem);
+    }
+  }
+
+  .carousel__controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  @media (width < 48rem) {
+    .carousel__controls {
+      display: none;
+    }
+  }
+
+  /* Where the track is: a hairline with a thumb as wide as the share in view. */
+  .carousel__progress {
+    position: relative;
+    height: 2px;
+    margin-top: 0.5rem;
+    border-radius: 2px;
+    background: var(--ui-line);
+    overflow: hidden;
+  }
+
+  .carousel__thumb {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(var(--share, 0.4) * 100%);
+    border-radius: inherit;
+    background: var(--ink);
+    transform: translateX(calc(var(--progress, 0) * (1 / var(--share, 0.4) - 1) * 100%));
+    transition: width 300ms var(--ease-out);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project card                                                                                */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .project-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    border-radius: 1.75rem;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--ground);
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 600ms var(--ease-out);
+  }
+
+  /* A hairline inside the edge, so a pale ground keeps its shape on white. */
+  .project-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.04);
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    .project-card:hover {
+      transform: scale(1.015);
+      text-decoration: none;
+    }
+  }
+
+  .project-card:active {
+    transform: scale(0.99);
+  }
+
+  .project-card:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 3px;
+  }
+
+  .project-card__art {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Phones: a taller card and no line under the title, so the copy stays clear of the art. */
+  @media (width < 48rem) {
+    .project-card {
+      aspect-ratio: 3 / 4;
+    }
+
+    .project-card__tagline {
+      display: none;
+    }
+  }
+
+  /* The copy takes the bottom-left corner, the art hangs from the top-right (Stageshow's opposite corners). */
+  .project-card__copy {
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1;
+    display: grid;
+    gap: 0.75rem;
+    pointer-events: none;
+  }
+
+  .project-card__title {
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .project-card__tagline {
+    margin-top: 0.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    color: color-mix(in oklch, var(--hue-ink) 72%, var(--ink));
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  /* On a tinted ground the tags sit on white, so their tint never vanishes into the card. */
+  .project-card__tags .card-tag {
+    height: 1.625rem;
+    padding-inline: 0.5rem;
+    border-radius: 0.4375rem;
+    background: rgb(255 255 255 / 0.82);
+    font-size: 0.8125rem;
+  }
+
+  /* An arrow that comes in at the top-left corner on hover, telling the card opens. */
+  .project-card__open {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 220ms ease,
+      transform 420ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .project-card:hover .project-card__open {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .project-card:focus-visible .project-card__open {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Timeline                                                                                    */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .timeline {
+    --label-w: minmax(13rem, 1fr);
+    display: grid;
+    grid-template-columns: var(--label-w) minmax(0, 2.4fr);
+    column-gap: 2rem;
+  }
+
+  @media (width < 48rem) {
+    .timeline {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* The years along the top, over the lanes; their lines run down through every row. */
+  .timeline__years {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(var(--years), minmax(0, 1fr));
+    padding-bottom: 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeline__year {
+    padding-left: 0.5rem;
+    border-left: 1px solid var(--ui-line);
+  }
+
+  .timeline__year[data-now] {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  @media (width < 48rem) {
+    .timeline__years {
+      grid-column: 1;
+    }
+  }
+
+  .timeline__rows {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  @media (width < 48rem) {
+    .timeline__rows {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .timeline__row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+    padding-block: 0.875rem;
+    border-top: 1px solid var(--ui-line);
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  @media (width < 48rem) {
+    .timeline__row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0.75rem;
+      padding-block: 1rem;
+    }
+  }
+
+  /* Hovering one row quiets the others, so the one under the pointer stands out. */
+  @media (hover: hover) {
+    .timeline__rows:has(.timeline__row:hover) .timeline__row:not(:hover) {
+      opacity: 0.45;
+    }
+
+    a.timeline__row:hover {
+      text-decoration: none;
+    }
+  }
+
+  .timeline__who {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .timeline__name {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .timeline__role {
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    color: var(--muted);
+  }
+
+  /* On phones the bars are too short for words: the period goes under the role instead. */
+  .timeline__period {
+    display: none;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  @media (width < 48rem) {
+    .timeline__period {
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .timeline__bar-label {
+      display: none;
+    }
+
+    .timeline__lane {
+      height: 1.25rem;
+    }
+
+    .timeline__bar {
+      border-radius: 0.375rem;
+    }
+  }
+
+  /* The lane a bar sits in, with the same year lines as the header behind it. */
+  .timeline__lane {
+    position: relative;
+    height: 2.25rem;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--ui-line) 0 1px,
+      transparent 1px calc(100% / var(--years))
+    );
+  }
+
+  .timeline__bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--from) * 100%);
+    width: calc((var(--to) - var(--from)) * 100%);
+    display: flex;
+    align-items: center;
+    padding-inline: 0.625rem;
+    border-radius: 0.5rem;
+    background: var(--bar);
+    color: var(--bar-ink);
+    font-size: 0.8125rem;
+    line-height: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    transform-origin: left center;
+    transition: filter 200ms ease;
+  }
+
+  .timeline__bar-label--outside {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--to) * 100% + 0.625rem);
+    transform: translateY(-50%);
+    font-size: 0.8125rem;
+    line-height: 1rem;
+    font-weight: 500;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+
+  /* A bar that began before the window fades in from its left edge. */
+  .timeline__bar[data-clipped] {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    mask-image: linear-gradient(to right, transparent, #000 2.5rem);
+    padding-left: 2.5rem;
+  }
+
+  @media (hover: hover) {
+    .timeline__row:hover .timeline__bar {
+      filter: saturate(1.15) brightness(0.97);
+    }
+  }
+
+  /* Still going: a dot at the bar's end that breathes. */
+  .timeline__live {
+    position: absolute;
+    right: 0.625rem;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: -0.25rem;
+    border-radius: 50%;
+    background: var(--bar-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline__live::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: inherit;
+      animation: live 2.4s var(--ease-out) infinite;
+    }
+
+    /* The bars grow from their start, one after another, once the timeline is in view. */
+    :root[data-motion] .timeline:not([data-in]) .timeline__bar {
+      transform: scaleX(0);
+    }
+
+    :root[data-motion] .timeline .timeline__bar {
+      transition:
+        transform 1100ms var(--ease-out),
+        filter 200ms ease;
+      transition-delay: calc(200ms + var(--i, 0) * 110ms), 0ms;
+    }
+
+    :root[data-motion] .timeline:not([data-in]) .timeline__bar-label,
+    :root[data-motion] .timeline:not([data-in]) .timeline__live {
+      opacity: 0;
+    }
+
+    :root[data-motion] .timeline .timeline__bar-label,
+    :root[data-motion] .timeline .timeline__live {
+      transition: opacity 500ms ease calc(700ms + var(--i, 0) * 110ms);
+    }
+  }
+
+  @keyframes live {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project page                                                                                */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6rem;
+    padding-bottom: 3rem;
+  }
+
+  @media (width < 62rem) {
+    .project-header {
+      flex-direction: column;
+      gap: 2rem;
+      padding-bottom: 3rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .project-header {
+      gap: 1.5rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  .project-lead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .display-xl {
+    max-width: 30rem;
+    font-size: 4rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+
+  @media (width < 62rem) {
+    .display-xl {
+      max-width: 100%;
+      font-size: 3rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .display-xl {
+      font-size: 2.25rem;
+      letter-spacing: -0.03em;
+    }
+  }
+
+  /* The meta pills, in the kit's tag shape and the vivid hues. */
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .meta-tag {
+    height: 2.25rem;
+    padding-inline: 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 1.0625rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  @media (width < 48rem) {
+    .meta-tag {
+      height: 2rem;
+      padding-inline: 0.625rem;
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* The year: a quiet ghost pill beside the vivid tags. */
+  .meta-year {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ghost);
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .intro-text {
+    flex: none;
+    width: 40.375rem;
+    max-width: 100%;
+    font-size: 1.5rem;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  @media (width < 62rem) {
+    .intro-text {
+      width: 100%;
+      font-size: 1.375rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .intro-text {
+      font-size: 1.1875rem;
+    }
+  }
+
+  .project-visit {
+    margin-top: 1.5rem;
+  }
+
+  /* The media, one block under the next, 8px apart, 24px corners. */
+  .media-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  @media (width < 48rem) {
+    .media-stack {
+      padding-bottom: 3rem;
+    }
+  }
+
+  .media-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (width < 48rem) {
+    .media-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .media-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: var(--ground);
+    isolation: isolate;
+  }
+
+  /* A write-up section between media, when a project has one: heading left, words right. */
+  .media-stack > h2 {
+    margin-top: 3rem;
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .media-stack > p {
+    max-width: 40.375rem;
+    margin-bottom: 3rem;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+
+  /* Previous and next, with a thumbnail each, at the foot of the page. */
+  .project-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-block: 6rem;
+    border-top: 1px solid var(--ui-line);
+  }
+
+  @media (width < 62rem) {
+    .project-nav {
+      padding-block: 4rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .project-nav {
+      align-items: flex-start;
+      gap: 1rem;
+      padding-block: 3rem;
+    }
+  }
+
+  .pn-side {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .pn-side--next {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+
+  @media (width < 48rem) {
+    .pn-side,
+    .pn-side--next {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .pn-side--next {
+      align-items: flex-end;
+    }
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover {
+      text-decoration: none;
+    }
+  }
+
+  .pn-arrow {
+    flex: none;
+    transition: transform 360ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover .pn-arrow {
+      transform: translateX(-4px);
+    }
+
+    .pn-side--next:hover .pn-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  .pn-thumb {
+    position: relative;
+    flex: none;
+    width: 15rem;
+    height: 10rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: var(--ground);
+    transition: transform 500ms var(--ease-out);
+  }
+
+  @media (width < 62rem) {
+    .pn-thumb {
+      width: 11.25rem;
+      height: 7.5rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .pn-thumb {
+      width: 8.75rem;
+      height: 6rem;
+      border-radius: 1rem;
+    }
+
+    .pn-side .pn-arrow {
+      display: none;
+    }
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover .pn-thumb {
+      transform: scale(1.04);
+    }
+  }
+
+  .pn-col {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .pn-name {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  @media (width < 48rem) {
+    .pn-name {
+      font-size: 1.125rem;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Footer                                                                                      */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .site-footer {
+    display: grid;
+    gap: 3rem;
+    padding-block: 6rem 3rem;
+  }
+
+  @media (width < 48rem) {
+    .site-footer {
+      gap: 2rem;
+      padding-block: 4rem 2rem;
+    }
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    font-size: 1.75rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  @media (width < 62rem) {
+    .footer-links {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .footer-links {
+      flex-direction: column;
+      font-size: 1.25rem;
+    }
+  }
+
+  .footer-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 3rem;
+  }
+
+  @media (width < 30rem) {
+    .footer-social {
+      column-gap: 1.5rem;
+    }
+  }
+
+  .footer-social a,
+  .footer-place > * {
+    color: var(--ink);
+    text-decoration: none;
+    transition: opacity 160ms ease;
+  }
+
+  /* Hovering one link quiets its neighbours. */
+  @media (hover: hover) {
+    .footer-social:has(a:hover) a:not(:hover) {
+      opacity: 0.4;
+    }
+  }
+
+  .footer-social a:focus-visible {
+    border-radius: 0.25rem;
+  }
+
+  .footer-place {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: end;
+    text-align: right;
+  }
+
+  @media (width < 48rem) {
+    .footer-place {
+      justify-items: start;
+      text-align: left;
+    }
+  }
+
+  .footer-place__coords {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer-legal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
+    color: var(--muted);
+  }
+
+  @media (width < 48rem) {
+    .footer-legal {
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: 0.875rem;
+    }
+  }
+
+  .to-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    cursor: pointer;
+    transition: color 160ms ease;
+  }
+
+  @media (hover: hover) {
+    .to-top:hover {
+      color: var(--ink);
+    }
+  }
+
+  .to-top__icon {
+    transition: transform 360ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .to-top:hover .to-top__icon {
+      transform: translateY(-2px);
+    }
+  }
+}
