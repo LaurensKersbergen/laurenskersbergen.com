@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { cn } from "@kit/ui";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon } from "@kit/ui";
+import { ProjectTags } from "@/components/project-tags";
 import { projectMdxComponents } from "@/components/project-mdx";
-import { getNextProject, getProject, getProjects, previewImage } from "@/lib/projects";
+import { ProjectScene } from "@/components/scenes";
+import { getNeighbours, getProject, getProjects, type ProjectMeta } from "@/lib/projects";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -22,7 +25,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project) return {};
 
   const { meta } = project;
-  const image = previewImage(meta);
   return {
     title: meta.title,
     description: meta.tagline,
@@ -30,15 +32,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: meta.title,
       description: meta.tagline,
       url: `/projects/${slug}`,
-      images: image ? [image] : undefined,
     },
   };
 }
 
+const ground = (meta: Pick<ProjectMeta, "color">) => ({ "--ground": `var(--ui-vivid-${meta.color}-subtle)` }) as CSSProperties;
+
 /*
- * The write-up reads top to bottom with nothing beside it: the title, the intro, then the MDX
- * sections (a heading, a paragraph or two and one image each), how it was built, and the links back
- * and on. The cover stays in the frontmatter as the social preview image.
+ * A project page on white: the title with its tags (the kit's Tag in the vivid hues)
+ * on the left and the intro on the right; then the media, full width or two up, each a Stageshow
+ * scene on the project's own ground; then the projects either side, each with a thumbnail.
  */
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
@@ -46,44 +49,56 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
 
   const { meta, content } = project;
-  const next = getNextProject(slug);
+  const { previous, next } = getNeighbours(slug);
 
   return (
-    <article className="page-column enter">
-      <header className="enter">
-        <h1 className="text-title my-6.5">{meta.title}</h1>
-        <p className="mb-9.25 text-(--fg)">{meta.intro}</p>
-        {meta.url ? (
-          <p className="mb-9.25">
-            <a href={meta.url} target="_blank" rel="noopener noreferrer">
-              Open {meta.title}
-              <span aria-hidden="true"> ↗</span>
-            </a>
-          </p>
-        ) : null}
+    <article className="page-top">
+      <header className="shell">
+        <div className="project-header">
+          <div className="project-lead" data-reveal>
+            <h1 className="display-xl">{meta.title}</h1>
+            <ProjectTags tags={meta.tags} period={meta.period} size="lg" />
+          </div>
+          <div data-reveal style={{ "--reveal-delay": "120ms" } as CSSProperties}>
+            <p className="intro-text">{meta.intro}</p>
+            {meta.url ? (
+              <a href={meta.url} target="_blank" rel="noopener noreferrer" className="pill project-visit">
+                Visit {new URL(meta.url).hostname.replace(/^www\./, "")}
+                <ArrowUpRightIcon size={16} className="pill__icon" />
+              </a>
+            ) : null}
+          </div>
+        </div>
       </header>
 
-      <div className={cn("prose enter", meta.url ? "[--enter-start:3]" : "[--enter-start:2]")}>
+      <div className="shell media-stack" style={ground(meta)}>
         <MDXRemote source={content} components={projectMdxComponents} />
-        <section aria-labelledby="how-i-built-it">
-          <h2 id="how-i-built-it">How I built it</h2>
-          <p>{meta.workflow}</p>
-          {meta.stack.length > 0 ? <p>Built with {meta.stack.join(", ")}.</p> : null}
-        </section>
       </div>
 
-      <nav aria-label="Projects" className="mt-9.25 flex items-center justify-between gap-6 font-semibold [--enter-start:7]">
-        <Link href="/projects" className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true">←</span>
-          Back to Projects
-        </Link>
-        {next ? (
-          <Link href={`/projects/${next.slug}`} className="inline-flex items-center gap-1.5">
-            Next<span className="sr-only"> project: {next.title}</span>
-            <span aria-hidden="true">→</span>
-          </Link>
-        ) : null}
-      </nav>
+      {previous && next ? (
+        <nav aria-label="More projects" className="shell">
+          <div className="project-nav" data-reveal>
+            <Neighbour project={previous} side="previous" />
+            <Neighbour project={next} side="next" />
+          </div>
+        </nav>
+      ) : null}
     </article>
+  );
+}
+
+function Neighbour({ project, side }: { project: ProjectMeta; side: "previous" | "next" }) {
+  const Arrow = side === "previous" ? ArrowLeftIcon : ArrowRightIcon;
+  return (
+    <Link href={`/projects/${project.slug}`} className={side === "next" ? "pn-side pn-side--next" : "pn-side"}>
+      <Arrow size={28} strokeWidth={1.5} className="pn-arrow" />
+      <span className="pn-thumb" style={ground(project)} aria-hidden="true">
+        <ProjectScene name={`${project.scene}-cover`} still />
+      </span>
+      <span className="pn-col">
+        <span className="label">{side === "previous" ? "Previous" : "Next"}</span>
+        <span className="pn-name">{project.title}</span>
+      </span>
+    </Link>
   );
 }

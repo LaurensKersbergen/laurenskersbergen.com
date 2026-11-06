@@ -1,45 +1,33 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getProjects, previewImage } from "@/lib/projects";
+import type { CSSProperties } from "react";
+import { ProjectCard } from "@/components/project-card";
+import { getProjects, toCard } from "@/lib/projects";
 
-const description = "Side projects I designed and built, and how I built them.";
+const description = "Work from the last five years, at Miro, Growth Tribe and KPN, and the side projects in between.";
 
-export function generateMetadata(): Metadata {
-  const image = getProjects().map(previewImage).find(Boolean);
-  return {
-    title: "Projects",
-    description,
-    openGraph: {
-      title: "Projects",
-      description,
-      url: "/projects",
-      images: image ? [image] : undefined,
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Projects",
+  description,
+  openGraph: { title: "Projects", description, url: "/projects" },
+};
 
+/** Every project as the homepage's cards, in a grid: three across, two on tablets, one on phones. */
 export default function ProjectsPage() {
-  const projects = getProjects();
+  const projects = getProjects().map(toCard);
 
   return (
-    <div className="page-column enter">
-      <h1 className="text-title my-6.5">Projects</h1>
-      {projects.length === 0 ? (
-        <p className="text-(--muted)">No projects yet.</p>
-      ) : (
-        <ul className="enter text-row flex flex-col gap-4.5 [--enter-start:1]">
-          {projects.map((project) => (
-            // Text only: the title links to the project's page, then its year and tagline.
-            <li key={project.slug} className="flex flex-col items-start">
-              <Link href={`/projects/${project.slug}`} className="text-(--fg)">
-                {project.title}
-              </Link>
-              <span className="text-(--muted) tabular-nums">{project.year}</span>
-              <span className="text-(--muted)">{project.tagline}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="page-top shell">
+      <div className="project-header" data-reveal>
+        <h1 className="display-xl">Projects</h1>
+        <p className="intro-text">{description}</p>
+      </div>
+      <ul className="grid grid-cols-3 gap-4 max-[62rem]:grid-cols-2 max-md:grid-cols-1">
+        {projects.map((project, i) => (
+          <li key={project.slug} data-reveal style={{ "--reveal-delay": `${(i % 3) * 90}ms` } as CSSProperties}>
+            <ProjectCard project={project} />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
