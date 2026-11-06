@@ -1,0 +1,36 @@
+---
+# Reference entry: shows every frontmatter field and project component in use.
+# It stays a draft, so it shows locally but never in production.
+title: "Example Project"
+tagline: "A reference entry that shows every field and component."
+intro: "This draft project exists to show how a project page is put together. It uses a video cover with a poster, a media grid and a live embed."
+role: "Design and build"
+year: 2025
+status: "In progress"
+logo: "/projects/example-project/logo.png"
+cover: "/projects/example-project/cover.mp4"
+poster: "/projects/example-project/poster.png"
+url: "https://example.com"
+stack:
+  - "Claude Code"
+  - "Next.js"
+  - "TypeScript"
+workflow: "A short paragraph on the agentic way the project was built, shown in the How I built it section."
+order: 2
+draft: true
+---
+
+## Overview
+
+Each section is a heading, a paragraph or two, and an image or video at the full media width. More than one stacks, one per row.
+
+<MediaGrid>
+  <Media src="/projects/example-project/screen-1.png" alt="Placeholder screenshot one" />
+  <Media src="/projects/example-project/screen-2.png" alt="Placeholder screenshot two" ratio="4:3" />
+</MediaGrid>
+
+## Try it
+
+A live embed is opt-in: placing an `Embed` block in the body is the only way to add one. A link out always shows beneath it.
+
+<Embed src="https://example.com" title="Example project, live" />

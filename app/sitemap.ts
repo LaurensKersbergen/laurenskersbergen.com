@@ -1,4 +1,5 @@
 import { getPosts } from "@/lib/posts";
+import { getProjects } from "@/lib/projects";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -7,10 +8,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(post.date),
   }));
 
-  const routes = ["", "/about", "/writing"].map((route) => ({
+  const projects = getProjects().map((project) => ({
+    url: `https://laurenskersbergen.com/projects/${project.slug}`,
+    lastModified: new Date(),
+  }));
+
+  const routes = ["", "/about", "/writing", "/projects"].map((route) => ({
     url: `https://laurenskersbergen.com${route}`,
     lastModified: new Date(),
   }));
 
-  return [...routes, ...posts];
+  return [...routes, ...posts, ...projects];
 }
