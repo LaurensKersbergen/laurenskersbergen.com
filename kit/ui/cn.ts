@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
+import { vividColors } from "./vivid";
 
 /**
  * The theme names from theme.css, so tailwind-merge knows `text-control` is a size and
@@ -42,26 +43,7 @@ export const themeColors = [
   "success-tint",
   "info",
   "info-tint",
-  "cat-gray",
-  "cat-gray-tint",
-  "cat-brown",
-  "cat-brown-tint",
-  "cat-orange",
-  "cat-orange-tint",
-  "cat-yellow",
-  "cat-yellow-tint",
-  "cat-green",
-  "cat-green-tint",
-  "cat-teal",
-  "cat-teal-tint",
-  "cat-blue",
-  "cat-blue-tint",
-  "cat-purple",
-  "cat-purple-tint",
-  "cat-pink",
-  "cat-pink-tint",
-  "cat-red",
-  "cat-red-tint",
+  ...vividColors,
 ];
 
 const twMerge = extendTailwindMerge({

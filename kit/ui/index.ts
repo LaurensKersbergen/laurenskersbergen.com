@@ -12,3 +12,4 @@ export { List, ListGroup, ListItem, type ListItemProps } from "./list";
 export * from "./island";
 export * from "./media";
 export * from "./embed";
+export { vividHues, vividTokens, vividColors, type VividHue } from "./vivid";

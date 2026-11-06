@@ -1,6 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "./cn";
 import { CloseIcon } from "./icons";
+import { vividHues } from "./vivid";
 
 /** No "use client": these have no state, so server components render them directly. */
 
@@ -8,48 +9,54 @@ export function Card({ className, ...props }: ComponentProps<"div">) {
   return <div className={cn("rounded-card border border-line bg-surface p-5", className)} {...props} />;
 }
 
-/** The category colours in tokens.css, for kinds rather than states: groups, tags, series. */
-export const categoryColors = ["gray", "brown", "orange", "yellow", "green", "teal", "blue", "purple", "pink", "red"] as const;
+/** The colours for kinds rather than states (groups, tags, series): the vivid hues in tokens.css (from the starter). */
+export const categoryColors = vividHues;
 export type CategoryColor = (typeof categoryColors)[number];
 
 /* Full class names, so Tailwind generates them. */
 const categoryText: Record<CategoryColor, string> = {
-  gray: "bg-cat-gray-tint text-cat-gray",
-  brown: "bg-cat-brown-tint text-cat-brown",
-  orange: "bg-cat-orange-tint text-cat-orange",
-  yellow: "bg-cat-yellow-tint text-cat-yellow",
-  green: "bg-cat-green-tint text-cat-green",
-  teal: "bg-cat-teal-tint text-cat-teal",
-  blue: "bg-cat-blue-tint text-cat-blue",
-  purple: "bg-cat-purple-tint text-cat-purple",
-  pink: "bg-cat-pink-tint text-cat-pink",
-  red: "bg-cat-red-tint text-cat-red",
+  gray: "bg-vivid-gray-subtle text-vivid-gray",
+  brown: "bg-vivid-brown-subtle text-vivid-brown",
+  sage: "bg-vivid-sage-subtle text-vivid-sage",
+  red: "bg-vivid-red-subtle text-vivid-red",
+  orange: "bg-vivid-orange-subtle text-vivid-orange",
+  yellow: "bg-vivid-yellow-subtle text-vivid-yellow",
+  green: "bg-vivid-green-subtle text-vivid-green",
+  teal: "bg-vivid-teal-subtle text-vivid-teal",
+  cyan: "bg-vivid-cyan-subtle text-vivid-cyan",
+  blue: "bg-vivid-blue-subtle text-vivid-blue",
+  purple: "bg-vivid-purple-subtle text-vivid-purple",
+  pink: "bg-vivid-pink-subtle text-vivid-pink",
 };
 /** A category's solid colour, for dots and swatches. */
 export const categoryFill: Record<CategoryColor, string> = {
-  gray: "bg-cat-gray",
-  brown: "bg-cat-brown",
-  orange: "bg-cat-orange",
-  yellow: "bg-cat-yellow",
-  green: "bg-cat-green",
-  teal: "bg-cat-teal",
-  blue: "bg-cat-blue",
-  purple: "bg-cat-purple",
-  pink: "bg-cat-pink",
-  red: "bg-cat-red",
+  gray: "bg-vivid-gray",
+  brown: "bg-vivid-brown",
+  sage: "bg-vivid-sage",
+  red: "bg-vivid-red",
+  orange: "bg-vivid-orange",
+  yellow: "bg-vivid-yellow",
+  green: "bg-vivid-green",
+  teal: "bg-vivid-teal",
+  cyan: "bg-vivid-cyan",
+  blue: "bg-vivid-blue",
+  purple: "bg-vivid-purple",
+  pink: "bg-vivid-pink",
 };
 /** A category's soft tint, for tiles and bars behind content. */
 export const categoryTint: Record<CategoryColor, string> = {
-  gray: "bg-cat-gray-tint",
-  brown: "bg-cat-brown-tint",
-  orange: "bg-cat-orange-tint",
-  yellow: "bg-cat-yellow-tint",
-  green: "bg-cat-green-tint",
-  teal: "bg-cat-teal-tint",
-  blue: "bg-cat-blue-tint",
-  purple: "bg-cat-purple-tint",
-  pink: "bg-cat-pink-tint",
-  red: "bg-cat-red-tint",
+  gray: "bg-vivid-gray-subtle",
+  brown: "bg-vivid-brown-subtle",
+  sage: "bg-vivid-sage-subtle",
+  red: "bg-vivid-red-subtle",
+  orange: "bg-vivid-orange-subtle",
+  yellow: "bg-vivid-yellow-subtle",
+  green: "bg-vivid-green-subtle",
+  teal: "bg-vivid-teal-subtle",
+  cyan: "bg-vivid-cyan-subtle",
+  blue: "bg-vivid-blue-subtle",
+  purple: "bg-vivid-purple-subtle",
+  pink: "bg-vivid-pink-subtle",
 };
 
 const tones = {
@@ -72,16 +79,18 @@ export function Badge({ tone = "neutral", color, className, ...props }: Componen
 
 /* A category's solid colour as text, so an SVG can draw in currentColor. */
 const categoryInk: Record<CategoryColor, string> = {
-  gray: "text-cat-gray",
-  brown: "text-cat-brown",
-  orange: "text-cat-orange",
-  yellow: "text-cat-yellow",
-  green: "text-cat-green",
-  teal: "text-cat-teal",
-  blue: "text-cat-blue",
-  purple: "text-cat-purple",
-  pink: "text-cat-pink",
-  red: "text-cat-red",
+  gray: "text-vivid-gray",
+  brown: "text-vivid-brown",
+  sage: "text-vivid-sage",
+  red: "text-vivid-red",
+  orange: "text-vivid-orange",
+  yellow: "text-vivid-yellow",
+  green: "text-vivid-green",
+  teal: "text-vivid-teal",
+  cyan: "text-vivid-cyan",
+  blue: "text-vivid-blue",
+  purple: "text-vivid-purple",
+  pink: "text-vivid-pink",
 };
 
 /** The slice of the inner disc that shows `value` (0–1), from twelve o'clock, clockwise. */
@@ -119,7 +128,7 @@ export function ProgressRing({ value, color = "gray", label, className }: { valu
 }
 
 /* Tags take their colour from their name. Red stays out: on a tag it reads as an error. */
-const tagColors = categoryColors.filter((color) => color !== "red");
+const tagColors: CategoryColor[] = ["gray", "brown", "orange", "yellow", "green", "teal", "blue", "purple", "pink"];
 
 /** The colour a tag gets from its name: always the same for the same name, whatever its case or spacing. */
 export function tagColor(name: string): CategoryColor {

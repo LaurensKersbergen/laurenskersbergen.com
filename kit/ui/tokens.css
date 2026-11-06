@@ -57,46 +57,188 @@
   --ui-on-accent: light-dark(var(--brand-on-accent), var(--palette-950));
 
   /*
-   * Status: Notion's muted text and background colours, with the text's lightness moved just
-   * enough to reach 4.5:1 on its tint and on surfaces (WCAG AA). Each has a colour for text,
-   * icons and the danger button, and a tint for badge and alert backgrounds. They don't follow
-   * the brand: red means a problem in every product.
+   * Vivid colours: twelve hues for things that differ by kind (groups, tags, timeline bars, chart
+   * series, labels people colour themselves), and the source of the status colours below. Each hue has:
+   *   subtle (+ hover, pressed)    a pale background: badges, tags, cards, rows, callouts
+   *   mild (+ hover, pressed)      a bright fill: chips, selected labels, highlights; the same in light and dark
+   *   line-subtle, -mild, -strong  borders, from barely there to outlined; in dark mode they step the other
+   *                                way (subtle is the darkest), so strong always stands out most
+   *   vivid-<hue>                  text, icons and dots on the page or on subtle
+   *   vivid-<hue>-on-mild          text and icons on mild; it stays dark in dark mode, so only on mild
+   *   vivid-<hue>-chart            a chart series: bars, slices, dots and lines, bright in both modes
+   *                                (line-subtle's colour in light, mild's in dark). Not for text, and a
+   *                                chart's figures come in words too (its card and screen-reader text)
+   * Text keeps 4.5:1 (WCAG AA) wherever it's meant to sit; design-system.test.ts checks it. Hover and
+   * pressed step subtle and mild one notch towards the text: darker in light mode, lighter on subtle in dark.
    */
-  --ui-danger: light-dark(#b54740, #df6f66);
-  --ui-danger-tint: light-dark(#faecec, #332523);
-  --ui-warn: light-dark(#916400, #c19138);
-  --ui-warn-tint: light-dark(#faf3dd, #372e20);
-  --ui-success: light-dark(#497559, #58a071);
-  --ui-success-tint: light-dark(#eef3ed, #242b26);
-  --ui-info: light-dark(#3c7098, #5990e3);
-  --ui-info-tint: light-dark(#e9f3f7, #1f282d);
+  --ui-vivid-gray-subtle: light-dark(#efefea, #2c2c28);
+  --ui-vivid-gray-subtle-hover: light-dark(#e3e3de, #383834);
+  --ui-vivid-gray-subtle-pressed: light-dark(#d8d8d3, #444440);
+  --ui-vivid-gray-mild: #ddddd8;
+  --ui-vivid-gray-mild-hover: #d2d2cd;
+  --ui-vivid-gray-mild-pressed: #c6c6c1;
+  --ui-vivid-gray-line-subtle: light-dark(#babab0, #626256);
+  --ui-vivid-gray-line-mild: #a8a8a0;
+  --ui-vivid-gray-line-strong: light-dark(#626256, #bcbcb7);
+  --ui-vivid-gray: light-dark(#585753, #bcbcb7);
+  --ui-vivid-gray-chart: light-dark(#babab0, #ddddd8);
+  --ui-vivid-gray-on-mild: #434339;
+
+  --ui-vivid-brown-subtle: light-dark(#f9ebe4, #392920);
+  --ui-vivid-brown-subtle-hover: light-dark(#eddfd9, #45352c);
+  --ui-vivid-brown-subtle-pressed: light-dark(#e2d4cd, #514138);
+  --ui-vivid-brown-mild: #e1b299;
+  --ui-vivid-brown-mild-hover: #d5a78e;
+  --ui-vivid-brown-mild-pressed: #ca9c84;
+  --ui-vivid-brown-line-subtle: light-dark(#efa984, #6a422c);
+  --ui-vivid-brown-line-mild: #a57962;
+  --ui-vivid-brown-line-strong: light-dark(#6a422c, #e1b299);
+  --ui-vivid-brown: light-dark(#764e37, #e1b299);
+  --ui-vivid-brown-chart: light-dark(#efa984, #e1b299);
+  --ui-vivid-brown-on-mild: #48230d;
+
+  --ui-vivid-sage-subtle: light-dark(#ebf0e9, #282f26);
+  --ui-vivid-sage-subtle-hover: light-dark(#dfe4dd, #343b32);
+  --ui-vivid-sage-subtle-pressed: light-dark(#d4d9d2, #40473e);
+  --ui-vivid-sage-mild: #bdd1b9;
+  --ui-vivid-sage-mild-hover: #b2c6ae;
+  --ui-vivid-sage-mild-pressed: #a7bba3;
+  --ui-vivid-sage-line-subtle: light-dark(#a4c19e, #41543b);
+  --ui-vivid-sage-line-mild: #879983;
+  --ui-vivid-sage-line-strong: light-dark(#41543b, #bdd1b9);
+  --ui-vivid-sage: light-dark(#4a5c47, #bdd1b9);
+  --ui-vivid-sage-chart: light-dark(#a4c19e, #bdd1b9);
+  --ui-vivid-sage-on-mild: #273920;
+
+  --ui-vivid-red-subtle: light-dark(#fee9e8, #422424);
+  --ui-vivid-red-subtle-hover: light-dark(#f2dddc, #4e3030);
+  --ui-vivid-red-subtle-pressed: light-dark(#e7d2d1, #5a3c3c);
+  --ui-vivid-red-mild: #ff8c8c;
+  --ui-vivid-red-mild-hover: #f38181;
+  --ui-vivid-red-mild-pressed: #e67677;
+  --ui-vivid-red-line-subtle: light-dark(#ff8b8d, #990000);
+  --ui-vivid-red-line-mild: #d45353;
+  --ui-vivid-red-line-strong: light-dark(#990000, #ff9e9c);
+  --ui-vivid-red: light-dark(#9b3239, #ff9e9c);
+  --ui-vivid-red-chart: light-dark(#ff8b8d, #ff8c8c);
+  --ui-vivid-red-on-mild: #4b0008;
+
+  --ui-vivid-orange-subtle: light-dark(#ffead9, #3c2817);
+  --ui-vivid-orange-subtle-hover: light-dark(#f3dece, #483423);
+  --ui-vivid-orange-subtle-pressed: light-dark(#e8d3c2, #54402f);
+  --ui-vivid-orange-mild: #ffb575;
+  --ui-vivid-orange-mild-hover: #f3aa6a;
+  --ui-vivid-orange-mild-pressed: #e79f5f;
+  --ui-vivid-orange-line-subtle: light-dark(#ffa455, #853d00);
+  --ui-vivid-orange-line-mild: #ca7933;
+  --ui-vivid-orange-line-strong: light-dark(#853d00, #ffb575);
+  --ui-vivid-orange: light-dark(#844800, #ffb575);
+  --ui-vivid-orange-chart: light-dark(#ffa455, #ffb575);
+  --ui-vivid-orange-on-mild: #542700;
+
+  --ui-vivid-yellow-subtle: light-dark(#fff8d0, #322d13);
+  --ui-vivid-yellow-subtle-hover: light-dark(#f3ecc5, #3e391f);
+  --ui-vivid-yellow-subtle-pressed: light-dark(#e8e1b9, #4a452b);
+  --ui-vivid-yellow-mild: #ffe86d;
+  --ui-vivid-yellow-mild-hover: #f3dc61;
+  --ui-vivid-yellow-mild-pressed: #e8d154;
+  --ui-vivid-yellow-line-subtle: light-dark(#feca00, #7a6700);
+  --ui-vivid-yellow-line-mild: #cbb333;
+  --ui-vivid-yellow-line-strong: light-dark(#7a6700, #dac65f);
+  --ui-vivid-yellow: light-dark(#655700, #dac65f);
+  --ui-vivid-yellow-chart: light-dark(#feca00, #ffe86d);
+  --ui-vivid-yellow-on-mild: #574900;
+
+  --ui-vivid-green-subtle: light-dark(#e7f4d9, #253012);
+  --ui-vivid-green-subtle-hover: light-dark(#dce8ce, #313c1e);
+  --ui-vivid-green-subtle-pressed: light-dark(#d0ddc2, #3d482a);
+  --ui-vivid-green-mild: #b3e65f;
+  --ui-vivid-green-mild-hover: #a8da53;
+  --ui-vivid-green-mild-pressed: #9dcf46;
+  --ui-vivid-green-line-subtle: light-dark(#8bcb20, #466610);
+  --ui-vivid-green-line-mild: #84ac43;
+  --ui-vivid-green-line-strong: light-dark(#466610, #a5ca6f);
+  --ui-vivid-green: light-dark(#436000, #a5ca6f);
+  --ui-vivid-green-chart: light-dark(#8bcb20, #b3e65f);
+  --ui-vivid-green-on-mild: #2f440b;
+
+  --ui-vivid-teal-subtle: light-dark(#e1fbf9, #13312e);
+  --ui-vivid-teal-subtle-hover: light-dark(#d6efed, #1f3d3a);
+  --ui-vivid-teal-subtle-pressed: light-dark(#cae4e2, #2b4946);
+  --ui-vivid-teal-mild: #81e7de;
+  --ui-vivid-teal-mild-hover: #75dbd3;
+  --ui-vivid-teal-mild-pressed: #69d0c7;
+  --ui-vivid-teal-line-subtle: light-dark(#39c9bc, #146a69);
+  --ui-vivid-teal-line-mild: #25b6a9;
+  --ui-vivid-teal-line-strong: light-dark(#146a69, #6ed4cc);
+  --ui-vivid-teal: light-dark(#00625d, #6ed4cc);
+  --ui-vivid-teal-chart: light-dark(#39c9bc, #81e7de);
+  --ui-vivid-teal-on-mild: #0e4343;
+
+  --ui-vivid-cyan-subtle: light-dark(#d7f4ff, #163039);
+  --ui-vivid-cyan-subtle-hover: light-dark(#cce8f3, #223c45);
+  --ui-vivid-cyan-subtle-pressed: light-dark(#c0dde8, #2e4851);
+  --ui-vivid-cyan-mild: #9ce6ff;
+  --ui-vivid-cyan-mild-hover: #91daf3;
+  --ui-vivid-cyan-mild-pressed: #86cfe8;
+  --ui-vivid-cyan-line-subtle: light-dark(#20c7ff, #00688b);
+  --ui-vivid-cyan-line-mild: #4fb1d3;
+  --ui-vivid-cyan-line-strong: light-dark(#00688b, #8cd6ee);
+  --ui-vivid-cyan: light-dark(#075f75, #8cd6ee);
+  --ui-vivid-cyan-chart: light-dark(#20c7ff, #9ce6ff);
+  --ui-vivid-cyan-on-mild: #1c4657;
+
+  --ui-vivid-blue-subtle: light-dark(#e5efff, #202d40);
+  --ui-vivid-blue-subtle-hover: light-dark(#dae3f3, #2c394c);
+  --ui-vivid-blue-subtle-pressed: light-dark(#ced8e8, #384558);
+  --ui-vivid-blue-mild: #a0c4fb;
+  --ui-vivid-blue-mild-hover: #95b9ef;
+  --ui-vivid-blue-mild-pressed: #8aaee3;
+  --ui-vivid-blue-line-subtle: light-dark(#8fbbff, #325080);
+  --ui-vivid-blue-line-mild: #6a8bbf;
+  --ui-vivid-blue-line-strong: light-dark(#325080, #a0c4fb);
+  --ui-vivid-blue: light-dark(#385788, #a0c4fb);
+  --ui-vivid-blue-chart: light-dark(#8fbbff, #a0c4fb);
+  --ui-vivid-blue-on-mild: #14315e;
+
+  --ui-vivid-purple-subtle: light-dark(#eeecff, #2d2a3e);
+  --ui-vivid-purple-subtle-hover: light-dark(#e2e0f3, #39364a);
+  --ui-vivid-purple-subtle-pressed: light-dark(#d7d5e8, #454256);
+  --ui-vivid-purple-mild: #b8acfb;
+  --ui-vivid-purple-mild-hover: #ada1ef;
+  --ui-vivid-purple-mild-pressed: #a296e3;
+  --ui-vivid-purple-line-subtle: light-dark(#af9dff, #4636a1);
+  --ui-vivid-purple-line-mild: #7d6dd4;
+  --ui-vivid-purple-line-strong: light-dark(#4636a1, #baaffe);
+  --ui-vivid-purple: light-dark(#5b4c93, #baaffe);
+  --ui-vivid-purple-chart: light-dark(#af9dff, #b8acfb);
+  --ui-vivid-purple-on-mild: #231266;
+
+  --ui-vivid-pink-subtle: light-dark(#ffe6f8, #43203b);
+  --ui-vivid-pink-subtle-hover: light-dark(#f3dbec, #4f2c47);
+  --ui-vivid-pink-subtle-pressed: light-dark(#e8cfe1, #5b3853);
+  --ui-vivid-pink-mild: #fd9ae7;
+  --ui-vivid-pink-mild-hover: #f18fdb;
+  --ui-vivid-pink-mild-pressed: #e584d0;
+  --ui-vivid-pink-line-subtle: light-dark(#fd96e6, #8e036f);
+  --ui-vivid-pink-line-mild: #d04eb3;
+  --ui-vivid-pink-line-strong: light-dark(#8e036f, #f3a0e0);
+  --ui-vivid-pink: light-dark(#8d337d, #f3a0e0);
+  --ui-vivid-pink-chart: light-dark(#fd96e6, #fd9ae7);
+  --ui-vivid-pink-on-mild: #511341;
 
   /*
-   * Category colours, for things that differ by kind rather than by state: groups, tags, timeline
-   * bars, chart series. The same Notion family as the status colours and the same AA rule (text on
-   * its tint and on cards); yellow, green, blue and red are the status colours themselves, so the
-   * two sets never drift apart. Teal is ours, in the same muted range, for a tenth distinct hue.
+   * Status: four vivid hues by meaning (copied from the starter, 02d3f76). Red means a problem in
+   * every product.
    */
-  --ui-cat-gray: light-dark(#6c6b68, #9b9b9b);
-  --ui-cat-gray-tint: light-dark(#f1f1ef, #252525);
-  --ui-cat-brown: light-dark(#8b614c, #b28772);
-  --ui-cat-brown-tint: light-dark(#f3eeee, #2e2724);
-  --ui-cat-orange: light-dark(#a65500, #d2813e);
-  --ui-cat-orange-tint: light-dark(#f8ecdf, #36291f);
-  --ui-cat-yellow: var(--ui-warn);
-  --ui-cat-yellow-tint: var(--ui-warn-tint);
-  --ui-cat-green: var(--ui-success);
-  --ui-cat-green-tint: var(--ui-success-tint);
-  --ui-cat-teal: light-dark(#377571, #529c95);
-  --ui-cat-teal-tint: light-dark(#e8f2f1, #1f2a29);
-  --ui-cat-blue: var(--ui-info);
-  --ui-cat-blue-tint: var(--ui-info-tint);
-  --ui-cat-purple: light-dark(#825fa2, #a47bdc);
-  --ui-cat-purple-tint: light-dark(#f6f3f8, #2a2430);
-  --ui-cat-pink: light-dark(#ab4d81, #db6895);
-  --ui-cat-pink-tint: light-dark(#f9f2f5, #2e2328);
-  --ui-cat-red: var(--ui-danger);
-  --ui-cat-red-tint: var(--ui-danger-tint);
+  --ui-danger: var(--ui-vivid-red);
+  --ui-danger-tint: var(--ui-vivid-red-subtle);
+  --ui-warn: var(--ui-vivid-yellow);
+  --ui-warn-tint: var(--ui-vivid-yellow-subtle);
+  --ui-success: var(--ui-vivid-green);
+  --ui-success-tint: var(--ui-vivid-green-subtle);
+  --ui-info: var(--ui-vivid-blue);
+  --ui-info-tint: var(--ui-vivid-blue-subtle);
 
   /*
    * Motion, after Hori and Notion: one soft ease-out curve (fast start, long gentle stop) and
