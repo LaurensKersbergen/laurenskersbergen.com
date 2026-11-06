@@ -1,0 +1,35 @@
+/*
+ * What every project scene shares: the site's Geist in the faux UI, a transparent stage so the
+ * project's vivid ground (the card or media frame behind it) is the ground, and one figure
+ * language across the page (Stageshow's craft.md, A page of demos).
+ */
+.scene {
+  height: 100%;
+}
+
+.scene .ss-stage {
+  overflow: hidden;
+  --ss-font: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ss-mono: var(--font-geist-mono), ui-monospace, monospace;
+  background: transparent;
+  /* The kit's light inks are tuned for white cards on a grey canvas; these scenes sit on white and
+     on pale vivid grounds, so they step up a tone (Stageshow, craft.md) to keep 4.5:1. */
+  --ss-text: #69696c;
+  --ss-text-faint: #6c6c6f;
+}
+
+/* A theme chip: a vivid tag in the product, its colour from --hue. */
+.scene .chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--chip-bg);
+  color: var(--chip-ink);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
+}

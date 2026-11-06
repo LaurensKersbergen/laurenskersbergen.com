@@ -1,0 +1,243 @@
+/* The meal planner: a warm, quiet iOS app. Sizes inside the phone are iOS points. */
+.mp .ss-stage {
+  --ss-accent: #e8590c;
+  --ss-accent-soft: rgba(232, 89, 12, 0.12);
+}
+
+/* ---- the week screen ---- */
+
+.mp .mp-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 6px 20px 0;
+  background: #fff;
+}
+
+.mp .mp-head {
+  display: grid;
+  gap: 2px;
+  padding: 6px 0 14px;
+}
+
+.mp .mp-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.mp .mp-title {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ss-text-strong);
+}
+
+.mp .mp-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  height: 68px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.mp .mp-day {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.mp .mp-text {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mp .mp-name {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ss-text-strong);
+}
+
+.mp .mp-time {
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--ss-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp .mp-swap {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  background: var(--ss-accent-soft);
+  color: var(--ss-accent);
+  transition: transform 140ms ease, background-color 140ms ease;
+}
+
+.mp .mp-swap[data-pressed] {
+  transform: scale(0.88);
+  background: rgba(232, 89, 12, 0.2);
+}
+
+.mp .mp-tabs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 10px 24px 38px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.mp .mp-tab {
+  justify-self: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--ss-ink-3);
+}
+
+.mp .mp-tab[data-on] {
+  background: var(--ss-accent);
+}
+
+/* ---- cards beside the phone ---- */
+
+.mp .mp-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mp .mp-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.mp .mp-count {
+  font-size: 13px;
+  color: var(--ss-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp .mp-checks {
+  display: grid;
+  gap: 12px;
+}
+
+.mp .mp-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ss-text-strong);
+}
+
+.mp .mp-check[data-done] > span:last-child {
+  color: var(--ss-text);
+  text-decoration: line-through;
+  text-decoration-color: rgba(0, 0, 0, 0.25);
+}
+
+.mp .mp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mp .mp-section {
+  display: grid;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ss-line);
+}
+
+.mp .mp-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.mp .mp-value {
+  font-size: 14px;
+  color: var(--ss-text-strong);
+}
+
+.mp .mp-list-card,
+.mp .mp-taste-card {
+  box-shadow: var(--ss-shadow-satellite);
+}
+
+/* ---- compositions ---- */
+
+/* The hero: the phone in the middle, off the bottom; the tastes and the list straddle its sides,
+   over the bezel and margin, never its words. */
+.mp .mp-phone--hero {
+  position: absolute;
+  left: 390px;
+  top: 64px;
+}
+
+.mp .mp-hero-tastes {
+  position: absolute;
+  left: 142px;
+  top: 236px;
+  width: 272px;
+}
+
+.mp .mp-hero-list {
+  position: absolute;
+  left: 718px;
+  top: 344px;
+  width: 268px;
+}
+
+.mp .mp-phone--compact {
+  position: absolute;
+  left: 29px;
+  top: 28px;
+}
+
+/* The card: the phone hung from the top-right, its top cropped between the header and the list,
+   its foot clear of the card's copy. */
+.mp .mp-phone--cover {
+  position: absolute;
+  left: 90px;
+  top: -146px;
+}
+
+/* Close-ups: one card at 1.5x, whole across, off the bottom. */
+.mp .mp-close {
+  position: absolute;
+  left: 64px;
+  top: 56px;
+  width: 341px;
+  transform: scale(1.5);
+  transform-origin: 0 0;
+}
+
+.mp .mp-close > .ss-card {
+  min-height: 340px;
+  align-content: start;
+}
+
+/* A lasting layer, so text inside never snaps to whole pixels while the stage scales. */
+.mp .mp-phone,
+.mp .mp-hero-tastes,
+.mp .mp-hero-list,
+.mp .mp-close {
+  will-change: transform;
+}

@@ -1,0 +1,368 @@
+/* Growth Tribe's learning platform: a light web app, a lesson list beside the lesson. */
+.gt .ss-stage {
+  --ss-accent: #5146d8;
+  --ss-accent-soft: rgba(81, 70, 216, 0.12);
+}
+
+.gt .gt-window {
+  position: absolute;
+  left: 80px;
+  top: 80px;
+  width: 1180px;
+  height: 760px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.gt .gt-app {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  height: 100%;
+  background: #fff;
+}
+
+/* ---- the lesson list ---- */
+
+.gt .gt-lessons {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 24px 20px;
+  border-right: 1px solid var(--ss-line);
+  background: #fafafa;
+}
+
+.gt .gt-course {
+  display: grid;
+  gap: 4px;
+}
+
+.gt .gt-course__eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.gt .gt-course__title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-course__meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.gt .gt-course__count {
+  font-size: 13px;
+  color: var(--ss-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.gt .gt-list {
+  display: grid;
+  gap: 2px;
+}
+
+.gt .gt-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 10px;
+  margin: 0 -10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-lesson[data-current] {
+  background: var(--ss-accent-soft);
+  font-weight: 500;
+}
+
+/* ---- the lesson ---- */
+
+.gt .gt-main {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 28px 32px;
+  max-width: 640px;
+}
+
+.gt .gt-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-accent);
+}
+
+.gt .gt-title {
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-video {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  margin-top: 16px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 10%, #3b3480 0%, transparent 60%),
+    radial-gradient(90% 80% at 90% 100%, #1d6f86 0%, transparent 55%),
+    #17152b;
+  overflow: hidden;
+}
+
+.gt .gt-play {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding-left: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #17152b;
+}
+
+.gt .gt-scrub {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.gt .gt-scrub > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+}
+
+.gt .gt-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Phones: the lesson alone, off the bottom. */
+.gt .gt-compact {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  right: 16px;
+  bottom: -40px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.gt .gt-compact .gt-main {
+  padding: 22px 20px;
+}
+
+.gt .gt-compact .gt-title {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.gt .gt-compact .gt-next,
+.gt .gt-compact .gt-upnext {
+  display: none;
+}
+
+/* ---- the card ---- */
+
+.gt .gt-cover {
+  position: absolute;
+  top: -32px;
+  right: -32px;
+  width: 372px;
+  height: 372px;
+  padding-top: 32px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--ss-shadow-card);
+}
+
+.gt .gt-cover .gt-lessons {
+  height: 100%;
+  padding: 28px 56px 24px 24px;
+  border: 0;
+  background: #fff;
+}
+
+/* ---- progress ---- */
+
+.gt .gt-progress {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  top: 64px;
+  bottom: -48px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 36px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--ss-shadow-ground);
+}
+
+.gt .gt-progress__label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-progress__value {
+  display: flex;
+  align-items: baseline;
+  font-size: 96px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-progress__unit {
+  margin-left: 4px;
+  font-size: 48px;
+  color: var(--ss-text);
+}
+
+.gt .gt-progress__line {
+  font-size: 15px;
+  color: var(--ss-text);
+}
+
+.gt .gt-progress__cohort {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ss-line);
+  font-size: 14px;
+  color: var(--ss-text);
+}
+
+/* ---- the player ---- */
+
+.gt .gt-player {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  top: 48px;
+  bottom: -40px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--ss-shadow-ground);
+}
+
+.gt .gt-video--close {
+  margin-top: 0;
+}
+
+.gt .gt-chapters {
+  display: grid;
+  padding: 4px 8px;
+}
+
+.gt .gt-chapter {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  border-top: 1px solid var(--ss-line);
+  font-size: 15px;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-chapter:first-child {
+  border-top: 0;
+}
+
+.gt .gt-chapter__time {
+  font-size: 13px;
+  color: var(--ss-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.gt .gt-upnext {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+}
+
+.gt .gt-upnext__thumb {
+  height: 54px;
+  border-radius: 8px;
+  background: radial-gradient(90% 90% at 80% 100%, #1d6f86 0%, transparent 60%), #2a2552;
+}
+
+.gt .gt-upnext__text,
+.gt .gt-progress__next {
+  display: grid;
+  gap: 4px;
+}
+
+.gt .gt-upnext__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.gt .gt-upnext__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.gt .gt-module {
+  display: grid;
+  gap: 2px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ss-line);
+}
+
+.gt .gt-module > .ss-bar {
+  margin-bottom: 10px;
+}
+
+.gt .gt-progress__next {
+  margin-top: 6px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ss-line);
+}
+
+/* A lasting layer, so text inside never snaps to whole pixels while the stage scales. */
+.gt .gt-window,
+.gt .gt-cover,
+.gt .gt-compact {
+  will-change: transform;
+}
