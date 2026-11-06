@@ -26,4 +26,6 @@ Kit code keeps the kit's style (named function exports, `cn()`, tokens, Base UI 
 | Addition: `Embed`, a lazy live embed with a link out beneath it. | `embed.tsx` | done |
 | Fix to consider: `groupLabelClass` uses `text-ink-3`, which fails WCAG AA contrast at its 12px size on a white background (axe `color-contrast`). This site no longer uses it (the homepage's projects list is gone). | `group-label.ts` | to decide |
 
+| From the starter (02d3f76): the twelve vivid hues for kinds (tags, timeline bars, grounds), replacing the earlier Notion category colours; status colours alias vivid red, yellow, green and blue. Nothing to copy back. | `tokens.css`, `theme.css`, `vivid.ts`, `display.tsx`, `cn.ts` | done |
+
 Update a row to "done" when the change lands in `kit/ui/`.

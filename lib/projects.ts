@@ -1,33 +1,39 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { vividHues, type VividHue } from "@/kit/ui/vivid";
 
 const projectsDirectory = path.join(process.cwd(), "content", "projects");
 
 export interface ProjectMeta {
   title: string;
-  /** One line, for lists. */
+  /** One line, for the card and the social preview. */
   tagline: string;
-  /** Two or three sentences, for the detail page. */
+  /** A short paragraph beside the title on the detail page. */
   intro: string;
+  /** What Laurens did, as a tag ("Product management"). */
   role: string;
+  /** For sorting: the year the work started, or the year it shipped. */
   year: number;
-  /** For example "Live" or "In progress". */
-  status: string;
-  logo: string;
-  /** Image or MP4 path under /projects/<slug>/. */
-  cover: string;
-  /** Tools used, for "How I built it". */
-  stack: string[];
-  /** A short paragraph on the agentic way it was built. */
-  workflow: string;
-  /** Still image for a video cover. */
-  poster?: string;
+  /** The time it covers as words, shown as a tag: "2026", "Since 2022", "2021 to 2022". */
+  period: string;
+  /** Words about the work, each a vivid tag that takes its colour from its name. */
+  tags: string[];
+  /** The vivid hue of the card and media grounds. */
+  color: VividHue;
+  /** The Stageshow scenes for this project: components/scenes/<scene>.tsx. */
+  scene: string;
   url?: string;
   order?: number;
   draft?: boolean;
   slug: string;
 }
+
+/** What a project card shows. */
+export type Card = Pick<ProjectMeta, "slug" | "title" | "tagline" | "tags" | "period" | "color" | "scene">;
+
+/** The fields a card needs, so a page hands no more than that to the client. */
+export const toCard = ({ slug, title, tagline, tags, period, color, scene }: ProjectMeta): Card => ({ slug, title, tagline, tags, period, color, scene });
 
 /** By `order` ascending; projects without `order` follow, newest `year` first. */
 export function sortProjects(projects: ProjectMeta[]): ProjectMeta[] {
@@ -60,9 +66,19 @@ export function pickNextProject(
   return projects[(index + 1) % projects.length];
 }
 
-/** The still that stands for the project: the cover, or its poster when the cover is a video. */
-export function previewImage(meta: ProjectMeta) {
-  return meta.cover.endsWith(".mp4") ? meta.poster : meta.cover;
+/** The project before `slug`, wrapping to the last; null when there is no other project. */
+export function pickPreviousProject(
+  projects: ProjectMeta[],
+  slug: string
+): ProjectMeta | null {
+  if (projects.length < 2) return null;
+  const index = projects.findIndex((p) => p.slug === slug);
+  if (index === -1) return null;
+  return projects[(index - 1 + projects.length) % projects.length];
+}
+
+function asHue(value: unknown): VividHue {
+  return vividHues.includes(value as VividHue) ? (value as VividHue) : "gray";
 }
 
 function readProjectFile(
@@ -80,12 +96,10 @@ function readProjectFile(
       intro: data.intro ?? "",
       role: data.role ?? "",
       year: Number(data.year ?? 0),
-      status: data.status ?? "",
-      logo: data.logo ?? "",
-      cover: data.cover ?? "",
-      stack: data.stack ?? [],
-      workflow: data.workflow ?? "",
-      poster: data.poster,
+      period: String(data.period ?? data.year ?? ""),
+      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+      color: asHue(data.color),
+      scene: data.scene ?? slug,
       url: data.url,
       order: data.order,
       draft: data.draft === true,
@@ -124,9 +138,11 @@ export function getProject(
   return project;
 }
 
-export function getNextProject(
+/** The projects either side of `slug`, for the links at the foot of its page. */
+export function getNeighbours(
   slug: string,
   env: string | undefined = process.env.NODE_ENV
-): ProjectMeta | null {
-  return pickNextProject(getProjects(env), slug);
+): { previous: ProjectMeta | null; next: ProjectMeta | null } {
+  const projects = getProjects(env);
+  return { previous: pickPreviousProject(projects, slug), next: pickNextProject(projects, slug) };
 }

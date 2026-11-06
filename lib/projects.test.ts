@@ -4,6 +4,7 @@ import {
   getProject,
   getProjects,
   pickNextProject,
+  pickPreviousProject,
   sortProjects,
   type ProjectMeta,
 } from "./projects";
@@ -15,11 +16,10 @@ function project(overrides: Partial<ProjectMeta> & { slug: string }): ProjectMet
     intro: "",
     role: "",
     year: 2026,
-    status: "Live",
-    logo: "",
-    cover: "",
-    stack: [],
-    workflow: "",
+    period: "2026",
+    tags: [],
+    color: "gray",
+    scene: overrides.slug,
     ...overrides,
   };
 }
@@ -84,33 +84,35 @@ describe("pickNextProject", () => {
 });
 
 describe("content/projects files", () => {
-  it("lists meal-planner but not the example draft in production", () => {
-    const projects = getProjects("production");
-    expect(slugs(projects)).toContain("meal-planner");
-    expect(slugs(projects)).not.toContain("example-project");
+  it("lists every project in its order", () => {
+    expect(slugs(getProjects("production"))).toEqual(["miro", "meal-planner", "this-site", "growth-tribe", "kpn"]);
   });
 
-  it("lists the example draft outside production", () => {
-    const projects = getProjects("development");
-    expect(slugs(projects)).toEqual(["meal-planner", "example-project"]);
-    const meal = projects[0];
-    expect(meal.order).toBe(1);
-    expect(meal.stack.length).toBeGreaterThan(0);
-    expect(meal.draft).toBeFalsy();
-  });
-
-  it("returns nothing when reading a draft in production", () => {
-    expect(getProject("example-project", "production")).toBeNull();
-  });
-
-  it("reads a draft with its content outside production", () => {
-    const result = getProject("example-project", "development");
-    expect(result?.meta.draft).toBe(true);
-    expect(result?.meta.poster).toBe("/projects/example-project/poster.png");
-    expect(result?.content).toContain("<Embed");
+  it("reads tags, a vivid colour, a period and the body", () => {
+    const result = getProject("miro", "production");
+    expect(result?.meta.tags).toContain("Databases");
+    expect(result?.meta.color).toBe("yellow");
+    expect(result?.meta.period).toBe("Since 2022");
+    expect(result?.content).toContain("<Scene");
   });
 
   it("returns nothing for a missing slug", () => {
     expect(getProject("does-not-exist", "development")).toBeNull();
+  });
+});
+
+describe("pickPreviousProject", () => {
+  const projects = [project({ slug: "a" }), project({ slug: "b" }), project({ slug: "c" })];
+
+  it("returns the project before", () => {
+    expect(pickPreviousProject(projects, "b")?.slug).toBe("a");
+  });
+
+  it("wraps from the first project to the last", () => {
+    expect(pickPreviousProject(projects, "a")?.slug).toBe("c");
+  });
+
+  it("returns null when there is no other project", () => {
+    expect(pickPreviousProject([project({ slug: "a" })], "a")).toBeNull();
   });
 });
