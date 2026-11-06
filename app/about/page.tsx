@@ -4,7 +4,7 @@ import { ImageGallery } from "@/components/image-gallery";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About Laurens Kersbergen — product manager in Amsterdam.",
+    "About Laurens Kersbergen, product manager in Amsterdam.",
 };
 
 export default function AboutPage() {

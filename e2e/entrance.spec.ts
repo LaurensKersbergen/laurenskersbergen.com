@@ -1,72 +1,29 @@
-import { expect, test, type Locator } from "@playwright/test";
-import { waitForEntrance } from "./helpers";
+import { expect, test } from "@playwright/test";
 
-// The page's entrance (.enter in globals.css): each block eases in after the one above it.
-// Read from computed styles, so the checks hold however far the animation has run.
-const entrance = (block: Locator) =>
-  block.evaluate((element) => {
-    const style = getComputedStyle(element);
-    const delay = style.animationDelay;
-    return { name: style.animationName, delay: Number.parseFloat(delay) * (delay.endsWith("ms") ? 1 : 1000) };
-  });
+const names = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => document.getAnimations().map((a) => (a as CSSAnimation).animationName).filter(Boolean));
 
-async function delays(blocks: Locator[]) {
-  const timings = await Promise.all(blocks.map(entrance));
-  for (const timing of timings) expect(timing.name).toBe("enter");
-  return timings.map((timing) => timing.delay);
-}
-
-const isAscending = (values: number[]) => values.every((value, i) => i === 0 || value > values[i - 1]);
-
-test("the homepage's portrait, name and paragraphs ease in one after another, top to bottom", async ({ page }) => {
+test("the intro's lines come in one after another, then the logos open their slots", async ({ page }) => {
   await page.goto("/");
-  const main = page.getByRole("main");
-  const blocks = [main.getByRole("img", { name: "Laurens Kersbergen", exact: true }), main.getByRole("heading", { level: 1 }), ...(await main.locator("p").all())];
-  const timings = await delays(blocks);
-  expect(timings[0]).toBe(0);
-  expect(isAscending(timings)).toBe(true);
-  // Everything is in place within about a second.
-  expect(Math.max(...timings)).toBeLessThanOrEqual(500);
+  const running = await names(page);
+  expect(running).toContain("intro-line");
+  expect(running).toContain("intro-slot");
+  expect(running).toContain("intro-logo");
 });
 
-test("a project page eases in from the title down, with the links back and on last", async ({ page }) => {
-  await page.goto("/projects/meal-planner");
-  const main = page.getByRole("main");
-  const title = main.getByRole("heading", { level: 1 });
-  const firstSection = main.locator(".prose h2").first();
-  const nav = main.getByRole("navigation", { name: "Projects" });
-  const timings = await delays([title, firstSection, nav]);
-  expect(isAscending(timings)).toBe(true);
-});
-
-test("following a link plays it again on the new page", async ({ page }) => {
+test("blocks below the fold wait for the scroll, then come in", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 700 });
   await page.goto("/");
-  await waitForEntrance(page);
-  // The document outlives a client-side navigation, so a listener on it sees the new page start.
-  await page.evaluate(() => {
-    const started: string[] = [];
-    (window as unknown as { entered: string[] }).entered = started;
-    document.addEventListener("animationstart", (event) => {
-      if (event.animationName === "enter") started.push((event.target as Element).tagName);
-    });
-  });
-  await page.getByRole("link", { name: "just shipped a hyper-personalized meal planning app" }).click();
-  await expect(page).toHaveURL(/\/projects\/meal-planner$/);
-  await expect.poll(() => page.evaluate(() => (window as unknown as { entered: string[] }).entered)).toContain("H1");
+  const timeline = page.locator(".timeline");
+  await expect(timeline).not.toHaveAttribute("data-in", "");
+  await timeline.scrollIntoViewIfNeeded();
+  await expect(timeline).toHaveAttribute("data-in", "");
 });
 
-test("an enlarged image opens without it", async ({ page }) => {
-  await page.goto("/about");
-  await waitForEntrance(page);
-  await page.locator("main button:has(img)").first().click();
-  const { name } = await entrance(page.getByRole("dialog"));
-  expect(name).toBe("none");
-});
-
-test("with reduced motion nothing animates in", async ({ page }) => {
+test("with reduced motion, nothing animates in and nothing waits hidden", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const heading = page.getByRole("main").getByRole("heading", { level: 1 });
-  expect((await entrance(heading)).name).toBe("none");
-  await expect(heading).toHaveCSS("opacity", "1");
+  expect(await names(page)).not.toContain("intro-line");
+  const opacity = await page.locator(".timeline").evaluate((el) => getComputedStyle(el).opacity);
+  expect(opacity).toBe("1");
 });

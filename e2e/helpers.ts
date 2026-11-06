@@ -1,14 +1,25 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page } from "@playwright/test";
 
-/** Waits until every block on the page has finished easing in (.enter in globals.css). */
+/**
+ * Scrolls through the page so every block revealed on scroll (data-reveal) has come in, then
+ * waits until every finite animation and transition has finished, back at the top.
+ */
 export async function waitForEntrance(page: Page) {
+  await page.evaluate(async () => {
+    const step = window.innerHeight * 0.6;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+    }
+    window.scrollTo(0, 0);
+  });
   await page.evaluate(() =>
     Promise.all(
       document
         .getAnimations()
-        .filter((animation) => (animation as CSSAnimation).animationName === "enter")
-        .map((animation) => animation.finished),
+        .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+        .map((animation) => animation.finished.catch(() => undefined)),
     ),
   );
 }
