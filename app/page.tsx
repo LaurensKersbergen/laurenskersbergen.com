@@ -1,30 +1,39 @@
-import { LogoLink, MailIcon } from "@/components/logo-link";
+import { Approach } from "@/components/home/approach";
+import { Contact } from "@/components/home/contact";
+import { Intro } from "@/components/home/intro";
+import { ProjectCarousel } from "@/components/home/project-carousel";
+import { Timeline } from "@/components/home/timeline";
+import type { Metadata } from "next";
+import { JsonLd } from "@/components/json-ld";
+import { getProjects, toCard } from "@/lib/projects";
+import { pageMetadata, person, website } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({ path: "/" });
 
 export default function Home() {
+  const projects = getProjects().map(toCard);
+
   return (
-    <div className="mt-16">
-      <h1 className="text-xl md:text-2xl font-medium mb-1" style={{ lineHeight: "3.25rem" }}>Laurens Kersbergen</h1>
-      <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        {"I'm a product manager in Amsterdam, currently working at "}
-        <LogoLink href="https://miro.com/" logo="/logos/miro.png">Miro</LogoLink>
-        {" on databases and AI for visual collaboration."}
-      </p>
-      <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        {"Before Miro, I founded a B2B SaaS company (learned to build with zero resources), then scaled products to millions at "}
-        <LogoLink href="https://www.kpn.com/" logo="/logos/kpn.png">KPN</LogoLink>
-        {" (learned enterprise quality). That combination of founder speed and enterprise discipline defines how I work."}
-      </p>
-      <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        {"I get energy from technically complex problems that create simple experiences. I believe in craft, sweating details that make products feel right, while moving fast enough to learn. I thrive on small, convicted teams that move fast and think big."}
-      </p>
-      <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        {"I live in Amsterdam with my partner, our two-year-old daughter, and cat Dries. You'll find me doing CrossFit, competing in HYROX races, cooking for friends, or pulling god-shot double espressos. Weekends: gaming with friends, building side projects (just shipped a hyper-personalized meal planning app), or skiing if it's winter. Also bit of a biohacker."}
-      </p>
-      <p className="my-5" style={{ color: "var(--text-copy)" }}>
-        {"You can reach me via "}
-        <LogoLink href="mailto:hey@laurenskersbergen.com" logo={<MailIcon />}>email</LogoLink>
-        {"."}
-      </p>
+    <div className="page-top">
+      <JsonLd data={{ "@graph": [person, website] }} />
+      <Intro />
+      {/* One rhythm, measured on what you see (a line's baseline or a card's or button's edge, to
+          the capitals of what comes next): 144px between sections, 96px on phones, the footer
+          included. The intro sits a step closer to the work it opens (120px, 80px on phones). Each
+          margin is that gap less the room the section above keeps under its last line or box; the
+          footer keeps the same gap itself (site.css). */}
+      <div className="mt-[101px] max-md:mt-[66px]">
+        <ProjectCarousel projects={projects} />
+      </div>
+      <div className="mt-[112px] max-md:mt-[65px]">
+        <Timeline />
+      </div>
+      <div className="mt-[118px] max-md:mt-[75px]">
+        <Approach />
+      </div>
+      <div className="mt-[129px] max-md:mt-[84px]">
+        <Contact />
+      </div>
     </div>
   );
 }

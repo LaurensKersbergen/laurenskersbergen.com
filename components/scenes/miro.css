@@ -1,0 +1,334 @@
+/* Miro: a board with a table on it. Miro's own look, approximated: a white board with a dot grid,
+   white floating panels on a hairline and a soft drop, its blue for what is selected. */
+.mr .ss-stage {
+  --ss-accent: #4262ff;
+  --ss-accent-soft: rgba(66, 98, 255, 0.12);
+  --mr-panel-shadow: 0 0 0 1px light-dark(rgba(5, 0, 56, 0.06), rgba(255, 255, 255, 0.084)), 0 2px 6px light-dark(rgba(5, 0, 56, 0.08), rgba(0, 0, 0, 0.24));
+}
+
+/* ---- the board ---- */
+
+.mr .mr-window,
+.mr .mr-cover,
+.mr .mr-compact {
+  will-change: transform;
+}
+
+.mr .mr-window {
+  position: absolute;
+  left: 80px;
+  top: 80px;
+  width: 1180px;
+  height: 760px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.mr .mr-board {
+  position: relative;
+  height: 100%;
+  background-color: light-dark(#fbfbfb, #141416);
+  background-image: radial-gradient(circle, light-dark(#d6d6db, #2f2f34) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+
+.mr .mr-name {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px 0 9px;
+  border-radius: 10px;
+  background: var(--ss-surface);
+  box-shadow: var(--mr-panel-shadow);
+  color: var(--ss-text-strong);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mr .mr-name img {
+  border-radius: 5px;
+}
+
+.mr .mr-tools {
+  position: absolute;
+  left: 14px;
+  top: 68px;
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--ss-surface);
+  box-shadow: var(--mr-panel-shadow);
+}
+
+.mr .mr-tool {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: linear-gradient(var(--ss-ink-3), var(--ss-ink-3)) center / 14px 14px no-repeat;
+  background-clip: content-box;
+  padding: 7px;
+}
+
+.mr .mr-tool[data-on] {
+  background-color: var(--ss-accent-soft);
+}
+
+.mr .mr-stickies {
+  position: absolute;
+  left: 70px;
+  top: 150px;
+}
+
+/* Paper stays paper: in dark mode the notes keep their colour and their dark ink, as Miro's do. */
+.mr .mr-sticky {
+  color-scheme: light;
+  position: absolute;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  width: 104px;
+  height: 104px;
+  padding: 14px 12px;
+  background: #fff6b0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 14px -6px rgba(0, 0, 0, 0.14);
+}
+
+.mr .mr-sticky--blue {
+  background: #d3e7ff;
+}
+
+.mr .mr-place {
+  position: absolute;
+  left: 316px;
+  top: 112px;
+}
+
+/* ---- the table ---- */
+
+.mr .mr-table {
+  width: 596px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: var(--mr-panel-shadow);
+  font-size: 13px;
+  color: var(--ss-text-strong);
+}
+
+.mr .mr-table[data-columns="short"] {
+  width: 316px;
+}
+
+.mr .mr-table__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 50px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mr .mr-table__views {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: light-dark(#f3f3f5, #111113);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.mr .mr-table__views > span {
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.mr .mr-table__views > span[data-on] {
+  background: var(--ss-surface);
+  color: var(--ss-text-strong);
+  box-shadow: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.112)), 0 1px 2px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.18));
+}
+
+.mr .mr-row {
+  display: grid;
+  grid-template-columns: 196px 128px 120px 92px;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 12px;
+  border-top: 1px solid light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.072));
+}
+
+.mr .mr-table[data-columns="short"] .mr-row {
+  grid-template-columns: minmax(0, 1fr) 92px;
+}
+
+/* The Theme column sits against the table's right inset, so every row keeps one inset at both ends. */
+.mr .mr-row > :last-child {
+  justify-self: end;
+}
+
+.mr .mr-row--head {
+  height: 36px;
+  background: light-dark(#fafafb, #202023);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.mr .mr-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mr .mr-owner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ss-text);
+}
+
+.mr .mr-theme-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -6px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.mr .mr-theme-head[data-hover],
+.mr .mr-theme-head[data-open] {
+  background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.06));
+  color: var(--ss-text-strong);
+}
+
+.mr .mr-empty {
+  display: block;
+  width: 64px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px dashed light-dark(rgba(0, 0, 0, 0.13), rgba(255, 255, 255, 0.156));
+}
+
+.mr .mr-row .ss-spinner {
+  color: var(--ss-accent);
+  margin-left: 2px;
+}
+
+.mr .mr-menu {
+  position: absolute;
+  left: 448px;
+  top: 92px;
+  width: 172px;
+  padding: 4px;
+  font-size: 13px;
+}
+
+/* In a short table the menu hangs from the column's right edge, so it stays in frame. */
+.mr .mr-cover .mr-menu,
+.mr .mr-close .mr-menu,
+.mr .mr-compact .mr-menu {
+  left: auto;
+  right: 8px;
+  width: 148px;
+}
+
+/* ---- compositions ---- */
+
+/* The card: a piece of board hung from the top-right corner, off both edges, the table on it. */
+.mr .mr-cover {
+  position: absolute;
+  top: -32px;
+  right: -32px;
+  width: 360px;
+  height: 344px;
+  overflow: hidden;
+  padding: 56px 0 0 24px;
+  border-radius: 18px;
+  background-color: light-dark(#fbfbfb, #141416);
+  background-image: radial-gradient(circle, light-dark(#d6d6db, #2f2f34) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  box-shadow: var(--ss-shadow-card);
+}
+
+.mr .mr-cover .mr-table {
+  width: 280px;
+}
+
+/* The close-up: the table at 1.5x, whole across, off the bottom. */
+.mr .mr-close {
+  position: absolute;
+  left: 36px;
+  top: 40px;
+  width: 316px;
+  transform: scale(1.5);
+  transform-origin: 0 0;
+}
+
+.mr .mr-close .mr-table {
+  box-shadow: var(--mr-panel-shadow), 0 24px 48px -24px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
+}
+
+/* Phones: the table alone, whole across, off the bottom. */
+.mr .mr-compact {
+  position: absolute;
+  left: 21px;
+  top: 24px;
+}
+
+/* The board view: three columns of cards, one per theme, running off the bottom. */
+.mr .mr-kanban {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 36px;
+  bottom: -40px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mr .mr-lane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  background: light-dark(rgba(255, 255, 255, 0.6), rgba(30, 30, 33, 0.6));
+  box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.056));
+}
+
+.mr .mr-lane__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 6px;
+}
+
+.mr .mr-lane__count {
+  font-size: 12px;
+  color: var(--ss-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.mr .mr-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--ss-surface);
+  box-shadow: var(--mr-panel-shadow);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}

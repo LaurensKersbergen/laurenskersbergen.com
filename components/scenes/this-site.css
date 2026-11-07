@@ -1,0 +1,414 @@
+/* This site, in miniature: Geist on white, the vivid card grounds, and the island menu on the
+   kit's springs (tokens.css: --ui-ease-spring-x and -y, their speeds and the stagger). */
+.ts .ss-stage {
+  --ss-accent: #0066db;
+}
+
+/* ---- the island ---- */
+
+.ts .ts-island {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  width: 80px;
+  height: 58px;
+  overflow: hidden;
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
+  border-radius: 29px;
+  background: light-dark(rgba(255, 255, 255, 0.82), rgba(30, 30, 33, 0.82));
+  box-shadow: 0 8px 36px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.36)), 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  transition:
+    width var(--ui-duration-spring-x-out) var(--ui-ease-spring-x-out),
+    height var(--ui-duration-spring-y-out) var(--ui-ease-spring-y-out),
+    border-radius 216ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 132ms ease,
+    box-shadow 216ms ease;
+}
+
+.ts .ts-island[data-open] {
+  width: 148px;
+  height: 242px;
+  border-radius: 29px;
+  background: light-dark(rgba(246, 246, 246, 0.9), rgba(38, 38, 42, 0.9));
+  box-shadow: 0 14px 60px light-dark(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.48)), 0 2px 4px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
+  transition:
+    width var(--ui-duration-spring-x) var(--ui-ease-spring-x),
+    height var(--ui-duration-spring-y) var(--ui-ease-spring-y),
+    border-radius 216ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 132ms ease,
+    box-shadow 216ms ease;
+}
+
+.ts .ts-island__inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 148px;
+  display: flex;
+  flex-direction: column;
+  padding: 11px 22px 11px 22px;
+}
+
+/* The links sit out of the inner's flow, so the inner is only as tall as the toggle row. */
+.ts .ts-island__list {
+  position: absolute;
+  top: 48px;
+  left: 22px;
+}
+
+.ts .ts-island__trigger,
+.ts .ts-island__link {
+  display: block;
+  padding: 4px 0;
+  font-size: 16px;
+  line-height: 26px;
+  white-space: nowrap;
+}
+
+.ts .ts-island__trigger {
+  align-self: flex-end;
+  color: light-dark(rgba(0, 0, 0, 0.85), rgba(255, 255, 255, 0.85));
+}
+
+.ts .ts-island__link {
+  position: relative;
+  color: light-dark(rgba(0, 0, 0, 0.55), rgba(255, 255, 255, 0.61));
+  opacity: 0;
+  transition:
+    opacity 0.1s ease,
+    color 200ms ease;
+}
+
+/* Closing, the links are gone before the edge reaches them. */
+.ts .ts-island:not([data-open]) {
+  transition-delay: 90ms, 90ms, 0ms, 0ms, 0ms;
+}
+
+.ts .ts-island[data-open] .ts-island__link {
+  opacity: 1;
+  transition:
+    opacity 0.24s ease calc(var(--i) * var(--ui-spring-stagger) + 240ms),
+    color 200ms ease;
+}
+
+.ts .ts-island__link[data-on] {
+  color: light-dark(rgba(0, 0, 0, 0.82), rgba(255, 255, 255, 0.92));
+}
+
+.ts .ts-island__link[data-current] {
+  color: light-dark(rgba(0, 0, 0, 0.95), #fff);
+}
+
+.ts .ts-island__link[data-current]::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ---- the page ---- */
+
+.ts .ts-window {
+  position: absolute;
+  left: 80px;
+  top: 80px;
+  width: 1180px;
+  height: 760px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.ts .ts-window .ss-window__body,
+.ts .ts-page {
+  background: var(--ss-surface);
+}
+
+.ts .ts-page {
+  position: relative;
+  height: 100%;
+  padding: 18px 0 0 24px;
+}
+
+.ts .ts-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
+  border-radius: 25px;
+  background: var(--ss-surface);
+  box-shadow: 0 8px 36px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.36)), 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
+  font-size: 16px;
+  color: light-dark(rgba(0, 0, 0, 0.85), rgba(255, 255, 255, 0.85));
+}
+
+/* The island's right edge sits a gutter in from the window's visible edge, not the page's. */
+.ts .ts-window .ts-island {
+  right: 196px;
+}
+
+.ts .ts-intro {
+  display: grid;
+  gap: 12px;
+  margin-top: 64px;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--ss-text-strong);
+}
+
+.ts .ts-intro__bars {
+  display: flex;
+  gap: 10px;
+}
+
+.ts .ts-cards {
+  display: flex;
+  gap: 12px;
+  margin-top: 72px;
+}
+
+.ts .ts-card {
+  position: relative;
+  flex: none;
+  width: 248px;
+  height: 310px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ts .ts-card__art {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 168px;
+  height: 150px;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 34px 0 0 18px;
+  border-radius: 14px;
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.056)), 0 6px 18px -8px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
+}
+
+.ts .ts-card__copy {
+  position: absolute;
+  left: 16px;
+  bottom: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.ts .ts-card__title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+/* Phones: the same page, the window's chrome dropped, cards off the right. */
+.ts .ts-compact {
+  position: absolute;
+  inset: 16px -40px -40px 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.ts .ts-compact .ts-island {
+  right: 58px;
+}
+
+.ts .ts-compact .ts-intro {
+  font-size: 22px;
+  line-height: 28px;
+  margin-top: 40px;
+  padding-right: 64px;
+}
+
+.ts .ts-compact .ts-intro__bars {
+  display: none;
+}
+
+.ts .ts-compact .ts-card {
+  width: 190px;
+  height: 236px;
+}
+
+/* ---- the card ---- */
+
+.ts .ts-cover {
+  position: absolute;
+  top: -32px;
+  right: -32px;
+  width: 372px;
+  height: 352px;
+  border-radius: 18px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card);
+}
+
+.ts .ts-cover {
+  overflow: hidden;
+}
+
+.ts .ts-cover__pill {
+  position: absolute;
+  top: 56px;
+  left: 24px;
+}
+
+/* The cards run off the panel's foot and right edge: filler, no words. */
+.ts .ts-cover__tiles {
+  position: absolute;
+  top: 132px;
+  left: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 168px);
+  gap: 12px;
+}
+
+.ts .ts-cover__tile {
+  position: relative;
+  height: 196px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.ts .ts-cover__art {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 104px;
+  height: 92px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.056)), 0 6px 18px -8px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
+}
+
+.ts .ts-cover .ts-island {
+  top: 56px;
+  right: 56px;
+}
+
+/* ---- tags ---- */
+
+.ts .ts-tags {
+  position: absolute;
+  left: 56px;
+  right: 56px;
+  top: 56px;
+  bottom: -40px;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-ground);
+}
+
+.ts .ts-tags__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.ts .ts-tags__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ts .ts-tag {
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.ts .ts-bars {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ts .ts-bar-lane {
+  position: relative;
+  height: 22px;
+  background-image: repeating-linear-gradient(to right, var(--ss-line) 0 1px, transparent 1px calc(100% / 6));
+}
+
+.ts .ts-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--from) * 100%);
+  width: calc((var(--to) - var(--from)) * 100%);
+  border-radius: 6px;
+}
+
+.ts .ts-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.ts .ts-swatch {
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--a) 0 55%, var(--b) 55% 100%);
+}
+
+/* ---- the island, close up ---- */
+
+.ts .ts-island-close {
+  position: absolute;
+  left: 56px;
+  top: 56px;
+  right: -60px;
+  bottom: -60px;
+  border-radius: 22px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-ground);
+  overflow: hidden;
+}
+
+.ts .ts-island-close__page {
+  position: absolute;
+  left: 32px;
+  top: 64px;
+  display: grid;
+  gap: 12px;
+}
+
+.ts .ts-island-close__tile {
+  width: 230px;
+  height: 230px;
+  margin-top: 20px;
+  border-radius: 20px;
+  background: var(--ui-vivid-yellow-subtle);
+}
+
+.ts .ts-island-close .ts-island {
+  top: 32px;
+  right: 92px;
+  transform: scale(1.5);
+  transform-origin: top right;
+}
+
+/* A lasting layer, so text inside never snaps to whole pixels while the stage scales. */
+.ts .ts-window,
+.ts .ts-cover,
+.ts .ts-compact {
+  will-change: transform;
+}

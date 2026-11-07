@@ -1,0 +1,526 @@
+/*
+ * The Tailwind theme for every app. Import after `@import "tailwindcss";` in an app's global CSS,
+ * and point Tailwind at this package with `@source` so its classes are generated.
+ * The values come from tokens.css, which derives them from brand.css: a product changes its
+ * look in brand.css, never here.
+ */
+/* New to the kit: no font import here; brand.css chooses the font and the app loads it. */
+@import "./brand.css";
+@import "./tokens.css";
+
+@theme inline {
+  /* Only these colours exist: Tailwind's default palette (red-500, white, …) is switched off,
+     so every colour in the apps comes from the brand and follows dark mode. */
+  --color-*: initial;
+  --color-bg: var(--ui-bg);
+  --color-canvas: var(--ui-canvas);
+  --color-surface: var(--ui-surface);
+  --color-popover: var(--ui-popover);
+  --color-fill: var(--ui-fill);
+  --color-hover: var(--ui-hover);
+  --color-selected: var(--ui-selected);
+  --color-scrim: var(--ui-scrim);
+  --color-sidebar: var(--ui-sidebar);
+  --color-sidebar-hover: var(--ui-sidebar-hover);
+  --color-line: var(--ui-line);
+  --color-line-2: var(--ui-line-2);
+  --color-ink: var(--ui-ink);
+  --color-ink-2: var(--ui-ink-2);
+  --color-ink-3: var(--ui-ink-3);
+  --color-raised: var(--ui-raised);
+  --color-raised-hover: var(--ui-raised-hover);
+  --color-strong: var(--ui-strong);
+  --color-strong-hover: var(--ui-strong-hover);
+  --color-on-strong: var(--ui-on-strong);
+  --color-tooltip: var(--ui-tooltip);
+  --color-on-tooltip: var(--ui-on-tooltip);
+  --color-accent: var(--ui-accent);
+  --color-on-accent: var(--ui-on-accent);
+  --color-danger: var(--ui-danger);
+  --color-danger-tint: var(--ui-danger-tint);
+  --color-warn: var(--ui-warn);
+  --color-warn-tint: var(--ui-warn-tint);
+  --color-success: var(--ui-success);
+  --color-success-tint: var(--ui-success-tint);
+  --color-info: var(--ui-info);
+  --color-info-tint: var(--ui-info-tint);
+  --color-vivid-gray-subtle: var(--ui-vivid-gray-subtle);
+  --color-vivid-gray-subtle-hover: var(--ui-vivid-gray-subtle-hover);
+  --color-vivid-gray-subtle-pressed: var(--ui-vivid-gray-subtle-pressed);
+  --color-vivid-gray-mild: var(--ui-vivid-gray-mild);
+  --color-vivid-gray-mild-hover: var(--ui-vivid-gray-mild-hover);
+  --color-vivid-gray-mild-pressed: var(--ui-vivid-gray-mild-pressed);
+  --color-vivid-gray-line-subtle: var(--ui-vivid-gray-line-subtle);
+  --color-vivid-gray-line-mild: var(--ui-vivid-gray-line-mild);
+  --color-vivid-gray-line-strong: var(--ui-vivid-gray-line-strong);
+  --color-vivid-gray: var(--ui-vivid-gray);
+  --color-vivid-gray-chart: var(--ui-vivid-gray-chart);
+  --color-vivid-gray-on-mild: var(--ui-vivid-gray-on-mild);
+  --color-vivid-brown-subtle: var(--ui-vivid-brown-subtle);
+  --color-vivid-brown-subtle-hover: var(--ui-vivid-brown-subtle-hover);
+  --color-vivid-brown-subtle-pressed: var(--ui-vivid-brown-subtle-pressed);
+  --color-vivid-brown-mild: var(--ui-vivid-brown-mild);
+  --color-vivid-brown-mild-hover: var(--ui-vivid-brown-mild-hover);
+  --color-vivid-brown-mild-pressed: var(--ui-vivid-brown-mild-pressed);
+  --color-vivid-brown-line-subtle: var(--ui-vivid-brown-line-subtle);
+  --color-vivid-brown-line-mild: var(--ui-vivid-brown-line-mild);
+  --color-vivid-brown-line-strong: var(--ui-vivid-brown-line-strong);
+  --color-vivid-brown: var(--ui-vivid-brown);
+  --color-vivid-brown-chart: var(--ui-vivid-brown-chart);
+  --color-vivid-brown-on-mild: var(--ui-vivid-brown-on-mild);
+  --color-vivid-sage-subtle: var(--ui-vivid-sage-subtle);
+  --color-vivid-sage-subtle-hover: var(--ui-vivid-sage-subtle-hover);
+  --color-vivid-sage-subtle-pressed: var(--ui-vivid-sage-subtle-pressed);
+  --color-vivid-sage-mild: var(--ui-vivid-sage-mild);
+  --color-vivid-sage-mild-hover: var(--ui-vivid-sage-mild-hover);
+  --color-vivid-sage-mild-pressed: var(--ui-vivid-sage-mild-pressed);
+  --color-vivid-sage-line-subtle: var(--ui-vivid-sage-line-subtle);
+  --color-vivid-sage-line-mild: var(--ui-vivid-sage-line-mild);
+  --color-vivid-sage-line-strong: var(--ui-vivid-sage-line-strong);
+  --color-vivid-sage: var(--ui-vivid-sage);
+  --color-vivid-sage-chart: var(--ui-vivid-sage-chart);
+  --color-vivid-sage-on-mild: var(--ui-vivid-sage-on-mild);
+  --color-vivid-red-subtle: var(--ui-vivid-red-subtle);
+  --color-vivid-red-subtle-hover: var(--ui-vivid-red-subtle-hover);
+  --color-vivid-red-subtle-pressed: var(--ui-vivid-red-subtle-pressed);
+  --color-vivid-red-mild: var(--ui-vivid-red-mild);
+  --color-vivid-red-mild-hover: var(--ui-vivid-red-mild-hover);
+  --color-vivid-red-mild-pressed: var(--ui-vivid-red-mild-pressed);
+  --color-vivid-red-line-subtle: var(--ui-vivid-red-line-subtle);
+  --color-vivid-red-line-mild: var(--ui-vivid-red-line-mild);
+  --color-vivid-red-line-strong: var(--ui-vivid-red-line-strong);
+  --color-vivid-red: var(--ui-vivid-red);
+  --color-vivid-red-chart: var(--ui-vivid-red-chart);
+  --color-vivid-red-on-mild: var(--ui-vivid-red-on-mild);
+  --color-vivid-orange-subtle: var(--ui-vivid-orange-subtle);
+  --color-vivid-orange-subtle-hover: var(--ui-vivid-orange-subtle-hover);
+  --color-vivid-orange-subtle-pressed: var(--ui-vivid-orange-subtle-pressed);
+  --color-vivid-orange-mild: var(--ui-vivid-orange-mild);
+  --color-vivid-orange-mild-hover: var(--ui-vivid-orange-mild-hover);
+  --color-vivid-orange-mild-pressed: var(--ui-vivid-orange-mild-pressed);
+  --color-vivid-orange-line-subtle: var(--ui-vivid-orange-line-subtle);
+  --color-vivid-orange-line-mild: var(--ui-vivid-orange-line-mild);
+  --color-vivid-orange-line-strong: var(--ui-vivid-orange-line-strong);
+  --color-vivid-orange: var(--ui-vivid-orange);
+  --color-vivid-orange-chart: var(--ui-vivid-orange-chart);
+  --color-vivid-orange-on-mild: var(--ui-vivid-orange-on-mild);
+  --color-vivid-yellow-subtle: var(--ui-vivid-yellow-subtle);
+  --color-vivid-yellow-subtle-hover: var(--ui-vivid-yellow-subtle-hover);
+  --color-vivid-yellow-subtle-pressed: var(--ui-vivid-yellow-subtle-pressed);
+  --color-vivid-yellow-mild: var(--ui-vivid-yellow-mild);
+  --color-vivid-yellow-mild-hover: var(--ui-vivid-yellow-mild-hover);
+  --color-vivid-yellow-mild-pressed: var(--ui-vivid-yellow-mild-pressed);
+  --color-vivid-yellow-line-subtle: var(--ui-vivid-yellow-line-subtle);
+  --color-vivid-yellow-line-mild: var(--ui-vivid-yellow-line-mild);
+  --color-vivid-yellow-line-strong: var(--ui-vivid-yellow-line-strong);
+  --color-vivid-yellow: var(--ui-vivid-yellow);
+  --color-vivid-yellow-chart: var(--ui-vivid-yellow-chart);
+  --color-vivid-yellow-on-mild: var(--ui-vivid-yellow-on-mild);
+  --color-vivid-green-subtle: var(--ui-vivid-green-subtle);
+  --color-vivid-green-subtle-hover: var(--ui-vivid-green-subtle-hover);
+  --color-vivid-green-subtle-pressed: var(--ui-vivid-green-subtle-pressed);
+  --color-vivid-green-mild: var(--ui-vivid-green-mild);
+  --color-vivid-green-mild-hover: var(--ui-vivid-green-mild-hover);
+  --color-vivid-green-mild-pressed: var(--ui-vivid-green-mild-pressed);
+  --color-vivid-green-line-subtle: var(--ui-vivid-green-line-subtle);
+  --color-vivid-green-line-mild: var(--ui-vivid-green-line-mild);
+  --color-vivid-green-line-strong: var(--ui-vivid-green-line-strong);
+  --color-vivid-green: var(--ui-vivid-green);
+  --color-vivid-green-chart: var(--ui-vivid-green-chart);
+  --color-vivid-green-on-mild: var(--ui-vivid-green-on-mild);
+  --color-vivid-teal-subtle: var(--ui-vivid-teal-subtle);
+  --color-vivid-teal-subtle-hover: var(--ui-vivid-teal-subtle-hover);
+  --color-vivid-teal-subtle-pressed: var(--ui-vivid-teal-subtle-pressed);
+  --color-vivid-teal-mild: var(--ui-vivid-teal-mild);
+  --color-vivid-teal-mild-hover: var(--ui-vivid-teal-mild-hover);
+  --color-vivid-teal-mild-pressed: var(--ui-vivid-teal-mild-pressed);
+  --color-vivid-teal-line-subtle: var(--ui-vivid-teal-line-subtle);
+  --color-vivid-teal-line-mild: var(--ui-vivid-teal-line-mild);
+  --color-vivid-teal-line-strong: var(--ui-vivid-teal-line-strong);
+  --color-vivid-teal: var(--ui-vivid-teal);
+  --color-vivid-teal-chart: var(--ui-vivid-teal-chart);
+  --color-vivid-teal-on-mild: var(--ui-vivid-teal-on-mild);
+  --color-vivid-cyan-subtle: var(--ui-vivid-cyan-subtle);
+  --color-vivid-cyan-subtle-hover: var(--ui-vivid-cyan-subtle-hover);
+  --color-vivid-cyan-subtle-pressed: var(--ui-vivid-cyan-subtle-pressed);
+  --color-vivid-cyan-mild: var(--ui-vivid-cyan-mild);
+  --color-vivid-cyan-mild-hover: var(--ui-vivid-cyan-mild-hover);
+  --color-vivid-cyan-mild-pressed: var(--ui-vivid-cyan-mild-pressed);
+  --color-vivid-cyan-line-subtle: var(--ui-vivid-cyan-line-subtle);
+  --color-vivid-cyan-line-mild: var(--ui-vivid-cyan-line-mild);
+  --color-vivid-cyan-line-strong: var(--ui-vivid-cyan-line-strong);
+  --color-vivid-cyan: var(--ui-vivid-cyan);
+  --color-vivid-cyan-chart: var(--ui-vivid-cyan-chart);
+  --color-vivid-cyan-on-mild: var(--ui-vivid-cyan-on-mild);
+  --color-vivid-blue-subtle: var(--ui-vivid-blue-subtle);
+  --color-vivid-blue-subtle-hover: var(--ui-vivid-blue-subtle-hover);
+  --color-vivid-blue-subtle-pressed: var(--ui-vivid-blue-subtle-pressed);
+  --color-vivid-blue-mild: var(--ui-vivid-blue-mild);
+  --color-vivid-blue-mild-hover: var(--ui-vivid-blue-mild-hover);
+  --color-vivid-blue-mild-pressed: var(--ui-vivid-blue-mild-pressed);
+  --color-vivid-blue-line-subtle: var(--ui-vivid-blue-line-subtle);
+  --color-vivid-blue-line-mild: var(--ui-vivid-blue-line-mild);
+  --color-vivid-blue-line-strong: var(--ui-vivid-blue-line-strong);
+  --color-vivid-blue: var(--ui-vivid-blue);
+  --color-vivid-blue-chart: var(--ui-vivid-blue-chart);
+  --color-vivid-blue-on-mild: var(--ui-vivid-blue-on-mild);
+  --color-vivid-purple-subtle: var(--ui-vivid-purple-subtle);
+  --color-vivid-purple-subtle-hover: var(--ui-vivid-purple-subtle-hover);
+  --color-vivid-purple-subtle-pressed: var(--ui-vivid-purple-subtle-pressed);
+  --color-vivid-purple-mild: var(--ui-vivid-purple-mild);
+  --color-vivid-purple-mild-hover: var(--ui-vivid-purple-mild-hover);
+  --color-vivid-purple-mild-pressed: var(--ui-vivid-purple-mild-pressed);
+  --color-vivid-purple-line-subtle: var(--ui-vivid-purple-line-subtle);
+  --color-vivid-purple-line-mild: var(--ui-vivid-purple-line-mild);
+  --color-vivid-purple-line-strong: var(--ui-vivid-purple-line-strong);
+  --color-vivid-purple: var(--ui-vivid-purple);
+  --color-vivid-purple-chart: var(--ui-vivid-purple-chart);
+  --color-vivid-purple-on-mild: var(--ui-vivid-purple-on-mild);
+  --color-vivid-pink-subtle: var(--ui-vivid-pink-subtle);
+  --color-vivid-pink-subtle-hover: var(--ui-vivid-pink-subtle-hover);
+  --color-vivid-pink-subtle-pressed: var(--ui-vivid-pink-subtle-pressed);
+  --color-vivid-pink-mild: var(--ui-vivid-pink-mild);
+  --color-vivid-pink-mild-hover: var(--ui-vivid-pink-mild-hover);
+  --color-vivid-pink-mild-pressed: var(--ui-vivid-pink-mild-pressed);
+  --color-vivid-pink-line-subtle: var(--ui-vivid-pink-line-subtle);
+  --color-vivid-pink-line-mild: var(--ui-vivid-pink-line-mild);
+  --color-vivid-pink-line-strong: var(--ui-vivid-pink-line-strong);
+  --color-vivid-pink: var(--ui-vivid-pink);
+  --color-vivid-pink-chart: var(--ui-vivid-pink-chart);
+  --color-vivid-pink-on-mild: var(--ui-vivid-pink-on-mild);
+
+  --font-sans: var(--brand-font);
+
+  --radius-control: var(--ui-radius-control);
+  --radius-card: var(--ui-radius-card);
+  --radius-small: var(--ui-radius-small);
+  --radius-inner: var(--ui-radius-inner);
+  --radius-tiny: var(--ui-radius-tiny);
+
+  --shadow-control: var(--ui-shadow-control);
+  --shadow-control-filled: var(--ui-shadow-control-filled);
+  --shadow-overlay: var(--ui-shadow-overlay);
+
+  /* Motion: plain `transition` classes use the fast speed and the brand curve; `ease-out` is that curve too. */
+  --ease-out: var(--ui-ease);
+  --default-transition-duration: var(--ui-duration-fast);
+  --default-transition-timing-function: var(--ui-ease);
+
+  /* Control sizes, matched to shiori.sh: 40px / 14px and 32px / 13px. */
+  --spacing-control: 2.5rem;
+  --spacing-control-sm: 2rem;
+  --text-control: 0.875rem;
+  --text-control--line-height: 1.25rem;
+  --text-control-sm: 0.8125rem;
+  --text-control-sm--line-height: 1.25rem;
+
+  /* New to the kit: reading size for long-form text (articles, project write-ups), as text-prose. */
+  --text-prose: var(--ui-text-prose);
+  --text-prose--line-height: var(--ui-text-prose-line-height);
+}
+
+/* The three speeds as classes: duration-fast, duration-base, duration-slow. Never a number of milliseconds. */
+@utility duration-fast {
+  --tw-duration: var(--ui-duration-fast);
+  transition-duration: var(--ui-duration-fast);
+}
+@utility duration-base {
+  --tw-duration: var(--ui-duration-base);
+  transition-duration: var(--ui-duration-base);
+}
+@utility duration-slow {
+  --tw-duration: var(--ui-duration-slow);
+  transition-duration: var(--ui-duration-slow);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    /* Lets dialog backdrops use position: absolute, which covers Safari's see-through toolbars (iOS 26). */
+    position: relative;
+    background: var(--ui-bg);
+    color: var(--ui-ink);
+    font-family: var(--brand-font);
+  }
+  /*
+   * The app's own stacking context, as Base UI recommends: popups, menus and dialogs render in
+   * portals next to it, so they always sit above the page and no z-index in the app can cover them.
+   */
+  #root {
+    isolation: isolate;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  /* People who asked their system for less motion get changes without slides, zooms or pulses.
+     New to the kit: a part marked data-motion="own" (the island menu) sets its own reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    :where(:not([data-motion="own"], [data-motion="own"] *)),
+    :where(:not([data-motion="own"], [data-motion="own"] *))::before,
+    :where(:not([data-motion="own"], [data-motion="own"] *))::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * New to the kit: the floating island menu (island.tsx). Plain CSS rather than classes, because its
+ * open and closed states swap springs and speeds through custom properties.
+ *
+ * The nav is a clipping window in the top-right corner over a panel pinned to its top-right corner,
+ * with the toggle (right-aligned, so it stays put) as the panel's first row. Collapsed, only that row ("Menu") shows; opening widens
+ * the window leftward on the x spring and lowers it on the y spring, uncovering the links, which fade in from the toggle down.
+ * Opening and closing use their own springs and speeds; island.tsx varies the four speeds
+ * (--island-duration-*) on every toggle and writes the open height (--island-open-h) and, for
+ * phones, the collapsed width that fits the label (--island-collapsed-fit).
+ */
+@layer components {
+  .ui-island {
+    --island-open-w: 149px;
+    --island-collapsed-w: 82px;
+    --island-collapsed-h: 48px;
+    --island-duration-open-x: var(--ui-duration-spring-x);
+    --island-duration-open-y: var(--ui-duration-spring-y);
+    --island-duration-close-x: var(--ui-duration-spring-x-out);
+    --island-duration-close-y: var(--ui-duration-spring-y-out);
+    /* Closing (and at rest): the settling springs. */
+    --island-ease-x: var(--ui-ease-spring-x-out);
+    --island-ease-y: var(--ui-ease-spring-y-out);
+    --island-duration-x: var(--island-duration-close-x);
+    --island-duration-y: var(--island-duration-close-y);
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    z-index: 40;
+    width: var(--island-collapsed-w);
+    height: var(--island-collapsed-h);
+    transform: translateX(-4px);
+    overflow: hidden;
+    contain: layout paint;
+    will-change: width, height, transform, top;
+    border: 1px solid var(--ui-island-edge);
+    border-radius: var(--ui-radius-island);
+    background: var(--ui-island);
+    box-shadow: var(--ui-shadow-island);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      width var(--island-duration-x) var(--island-ease-x),
+      height var(--island-duration-y) var(--island-ease-y),
+      top var(--island-duration-y) var(--island-ease-y),
+      transform var(--island-duration-x) var(--island-ease-x),
+      border-radius 216ms cubic-bezier(0.2, 0, 0, 1),
+      background 132ms ease,
+      border-color 132ms ease,
+      box-shadow 216ms ease,
+      opacity 216ms ease;
+  }
+  .ui-island[data-open] {
+    --island-ease-x: var(--ui-ease-spring-x);
+    --island-ease-y: var(--ui-ease-spring-y);
+    --island-duration-x: var(--island-duration-open-x);
+    --island-duration-y: var(--island-duration-open-y);
+    width: var(--island-open-w);
+    height: var(--island-open-h);
+    top: 24px;
+    transform: translateX(0);
+    border-radius: 26px;
+    background: var(--ui-island-open);
+    box-shadow: var(--ui-shadow-island-open);
+  }
+  /* While the window resizes, and while the collapsed width is first measured, nothing animates. */
+  .ui-island[data-no-anim],
+  .ui-island[data-no-anim] * {
+    transition: none !important;
+  }
+  /* The keyboard ring for the toggle goes round the whole island, which would clip it. */
+  .ui-island:has(.ui-island-trigger:focus-visible) {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  .ui-island-inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--island-open-w);
+    transform: translateX(4px);
+    display: flex;
+    flex-direction: column;
+    padding: 6px 22px 6px 36px;
+    transition:
+      transform var(--island-duration-x) var(--island-ease-x),
+      top var(--island-duration-y) var(--island-ease-y);
+  }
+  .ui-island[data-open] .ui-island-inner {
+    transform: translateX(0);
+    top: 8px;
+  }
+  .ui-island-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Links and hairlines fade in from the toggle down, each a step after the one above it
+     (--island-i counts down from the toggle), and out from the bottom up. */
+  .ui-island-item {
+    opacity: 0;
+    transition: opacity 0.2s ease calc((10 - var(--island-i, 0)) * var(--ui-spring-stagger));
+  }
+  .ui-island[data-open] .ui-island-item {
+    opacity: 1;
+    transition: opacity 0.2s ease calc(var(--island-i, 0) * var(--ui-spring-stagger));
+  }
+  .ui-island:not([data-open]) .ui-island-item {
+    pointer-events: none;
+  }
+  .ui-island-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: var(--ui-island-divider);
+  }
+
+  .ui-island-link,
+  .ui-island-trigger {
+    display: block;
+    margin: 0;
+    padding: 4px 0;
+    font-size: 17px;
+    line-height: 28px;
+    font-weight: 400;
+    color: var(--ui-island-text);
+    text-align: right;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 264ms ease;
+  }
+  .ui-island-link {
+    position: relative;
+    text-align: left;
+    border-radius: var(--ui-radius-small);
+  }
+  .ui-island-link:hover,
+  .ui-island-link:focus-visible {
+    color: var(--ui-island-text-hover);
+  }
+  .ui-island-link[aria-current="page"] {
+    color: var(--ui-island-text-current);
+  }
+  /* The current link's dot, in the gutter left of the links, 9px before its first letter. */
+  .ui-island-link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -15px;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .ui-island-trigger {
+    border: none;
+    background: transparent;
+    font-style: normal;
+    cursor: pointer;
+  }
+  .ui-island-trigger:focus-visible {
+    outline: none;
+  }
+  .ui-island:not([data-open]) .ui-island-trigger {
+    color: var(--ui-island-label);
+  }
+
+  /* Phones (720px and narrower): closer to the corner, below the safe area, no sideways drift; the
+     collapsed width fits the label, and scrolling down hides the island until scrolling back up
+     (unless focus is inside it). */
+  @media (width <= 45rem) {
+    .ui-island {
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      right: calc(20px + env(safe-area-inset-right, 0px));
+      transform: none;
+    }
+    .ui-island[data-open] {
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      transform: none;
+    }
+    .ui-island-inner,
+    .ui-island[data-open] .ui-island-inner {
+      transform: none;
+    }
+    .ui-island:not([data-open]) {
+      width: var(--island-collapsed-fit, var(--island-collapsed-w));
+    }
+    .ui-island[data-scroll-hidden]:not(:focus-within) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* Reduced motion: the size, corners and surface change on a short ease, the items just fade. */
+  @media (prefers-reduced-motion: reduce) {
+    .ui-island {
+      transition:
+        width 216ms ease,
+        height 216ms ease,
+        border-radius 216ms ease,
+        background 216ms ease;
+    }
+    .ui-island-item,
+    .ui-island[data-open] .ui-island-item {
+      transition: opacity 0.15s ease;
+    }
+    .ui-island-link {
+      transition: color 0.15s ease;
+    }
+  }
+}
+
+/*
+ * New to the kit: a link or button dressed as the collapsed island, for a name or logo in the corner
+ * opposite the menu. Same height, corners, frosted surface, edge, shadow and label as the "Menu" pill,
+ * its width set by the text. It sits in the page (position it where it goes); it doesn't float.
+ */
+@layer components {
+  .ui-island-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 21px;
+    border: 1px solid var(--ui-island-edge);
+    border-radius: var(--ui-radius-island);
+    background: var(--ui-island);
+    box-shadow: var(--ui-shadow-island);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    font-size: 17px;
+    line-height: 28px;
+    font-weight: 400;
+    color: var(--ui-island-label);
+    text-decoration: none;
+    white-space: nowrap;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background 132ms ease,
+      box-shadow 216ms ease;
+  }
+  @media (hover: hover) {
+    .ui-island-pill:hover {
+      background: var(--ui-island-open);
+      box-shadow: var(--ui-shadow-island-open);
+    }
+  }
+}

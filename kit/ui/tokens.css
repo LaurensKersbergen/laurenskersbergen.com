@@ -1,0 +1,345 @@
+/*
+ * Design tokens, all derived from brand.css. Change brand.css per product, not this file.
+ * Colours use light-dark(): pages follow the system setting, and data-theme="light" or "dark"
+ * on <html> overrides it. Plain CSS, so the landing page (no build) reads the same tokens.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Neutral scale from the brand's hue and chroma; lightness steps follow Tailwind's neutral. */
+  --palette-50: oklch(0.985 calc(var(--brand-neutral-chroma) * 0.4) var(--brand-neutral-hue));
+  --palette-100: oklch(0.97 calc(var(--brand-neutral-chroma) * 0.6) var(--brand-neutral-hue));
+  --palette-200: oklch(0.922 calc(var(--brand-neutral-chroma) * 0.8) var(--brand-neutral-hue));
+  --palette-300: oklch(0.87 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-400: oklch(0.708 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-500: oklch(0.556 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-600: oklch(0.439 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-700: oklch(0.371 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-800: oklch(0.269 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-900: oklch(0.205 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+  --palette-950: oklch(0.145 var(--brand-neutral-chroma) var(--brand-neutral-hue));
+
+  /* Surfaces */
+  --ui-bg: light-dark(color-mix(in oklch, var(--palette-50) 40%, white), var(--palette-950));
+  --ui-canvas: light-dark(var(--palette-100), oklch(0.115 var(--brand-neutral-chroma) var(--brand-neutral-hue)));
+  --ui-surface: light-dark(white, var(--palette-900));
+  --ui-popover: light-dark(white, var(--palette-900));
+  --ui-fill: light-dark(var(--palette-100), var(--palette-800));
+  /* Hover: a see-through tint of the text colour, so it shows on white, the sidebar and coloured alerts alike. */
+  --ui-hover: light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), color-mix(in oklch, var(--palette-50) 8%, transparent));
+  /* Selected: the row that's open, one step stronger than hover so the two never look alike. */
+  --ui-selected: light-dark(color-mix(in oklch, var(--palette-950) 9%, transparent), color-mix(in oklch, var(--palette-50) 12%, transparent));
+  --ui-sidebar: light-dark(var(--brand-sidebar), color-mix(in oklch, var(--palette-900) 50%, var(--palette-950)));
+  --ui-sidebar-hover: light-dark(var(--brand-sidebar-hover), var(--palette-800));
+  --ui-scrim: light-dark(oklch(0.145 0 0 / 0.2), oklch(0 0 0 / 0.55));
+
+  /* Lines and text */
+  --ui-line: light-dark(var(--palette-200), var(--palette-800));
+  --ui-line-2: light-dark(var(--palette-300), var(--palette-700));
+  --ui-ink: light-dark(var(--palette-950), var(--palette-100));
+  --ui-ink-2: light-dark(var(--palette-600), var(--palette-400));
+  --ui-ink-3: light-dark(var(--palette-400), var(--palette-500));
+
+  /* Controls: the secondary button and other raised parts */
+  --ui-raised: light-dark(color-mix(in oklch, var(--palette-50) 50%, white), var(--palette-800));
+  --ui-raised-hover: light-dark(var(--palette-100), var(--palette-700));
+  --ui-control-edge: light-dark(color-mix(in oklch, var(--palette-600) 20%, transparent), color-mix(in oklch, var(--palette-950) 70%, transparent));
+
+  /* The strong (primary) button and tooltips: dark on light pages, light on dark pages */
+  --ui-strong: light-dark(var(--palette-800), var(--palette-200));
+  --ui-strong-hover: light-dark(var(--palette-700), var(--palette-300));
+  --ui-on-strong: light-dark(var(--palette-50), var(--palette-900));
+  --ui-tooltip: light-dark(var(--palette-900), var(--palette-200));
+  --ui-on-tooltip: light-dark(var(--palette-50), var(--palette-900));
+
+  /* Accent */
+  --ui-accent: light-dark(var(--brand-accent), var(--brand-accent-dark));
+  --ui-on-accent: light-dark(var(--brand-on-accent), var(--palette-950));
+
+  /*
+   * Vivid colours: twelve hues for things that differ by kind (groups, tags, timeline bars, chart
+   * series, labels people colour themselves), and the source of the status colours below. Each hue has:
+   *   subtle (+ hover, pressed)    a pale background: badges, tags, cards, rows, callouts
+   *   mild (+ hover, pressed)      a bright fill: chips, selected labels, highlights; the same in light and dark
+   *   line-subtle, -mild, -strong  borders, from barely there to outlined; in dark mode they step the other
+   *                                way (subtle is the darkest), so strong always stands out most
+   *   vivid-<hue>                  text, icons and dots on the page or on subtle
+   *   vivid-<hue>-on-mild          text and icons on mild; it stays dark in dark mode, so only on mild
+   *   vivid-<hue>-chart            a chart series: bars, slices, dots and lines, bright in both modes
+   *                                (line-subtle's colour in light, mild's in dark). Not for text, and a
+   *                                chart's figures come in words too (its card and screen-reader text)
+   * Text keeps 4.5:1 (WCAG AA) wherever it's meant to sit; design-system.test.ts checks it. Hover and
+   * pressed step subtle and mild one notch towards the text: darker in light mode, lighter on subtle in dark.
+   */
+  --ui-vivid-gray-subtle: light-dark(#efefea, #2c2c28);
+  --ui-vivid-gray-subtle-hover: light-dark(#e3e3de, #383834);
+  --ui-vivid-gray-subtle-pressed: light-dark(#d8d8d3, #444440);
+  --ui-vivid-gray-mild: #ddddd8;
+  --ui-vivid-gray-mild-hover: #d2d2cd;
+  --ui-vivid-gray-mild-pressed: #c6c6c1;
+  --ui-vivid-gray-line-subtle: light-dark(#babab0, #626256);
+  --ui-vivid-gray-line-mild: #a8a8a0;
+  --ui-vivid-gray-line-strong: light-dark(#626256, #bcbcb7);
+  --ui-vivid-gray: light-dark(#585753, #bcbcb7);
+  --ui-vivid-gray-chart: light-dark(#babab0, #ddddd8);
+  --ui-vivid-gray-on-mild: #434339;
+
+  --ui-vivid-brown-subtle: light-dark(#f9ebe4, #392920);
+  --ui-vivid-brown-subtle-hover: light-dark(#eddfd9, #45352c);
+  --ui-vivid-brown-subtle-pressed: light-dark(#e2d4cd, #514138);
+  --ui-vivid-brown-mild: #e1b299;
+  --ui-vivid-brown-mild-hover: #d5a78e;
+  --ui-vivid-brown-mild-pressed: #ca9c84;
+  --ui-vivid-brown-line-subtle: light-dark(#efa984, #6a422c);
+  --ui-vivid-brown-line-mild: #a57962;
+  --ui-vivid-brown-line-strong: light-dark(#6a422c, #e1b299);
+  --ui-vivid-brown: light-dark(#764e37, #e1b299);
+  --ui-vivid-brown-chart: light-dark(#efa984, #e1b299);
+  --ui-vivid-brown-on-mild: #48230d;
+
+  --ui-vivid-sage-subtle: light-dark(#ebf0e9, #282f26);
+  --ui-vivid-sage-subtle-hover: light-dark(#dfe4dd, #343b32);
+  --ui-vivid-sage-subtle-pressed: light-dark(#d4d9d2, #40473e);
+  --ui-vivid-sage-mild: #bdd1b9;
+  --ui-vivid-sage-mild-hover: #b2c6ae;
+  --ui-vivid-sage-mild-pressed: #a7bba3;
+  --ui-vivid-sage-line-subtle: light-dark(#a4c19e, #41543b);
+  --ui-vivid-sage-line-mild: #879983;
+  --ui-vivid-sage-line-strong: light-dark(#41543b, #bdd1b9);
+  --ui-vivid-sage: light-dark(#4a5c47, #bdd1b9);
+  --ui-vivid-sage-chart: light-dark(#a4c19e, #bdd1b9);
+  --ui-vivid-sage-on-mild: #273920;
+
+  --ui-vivid-red-subtle: light-dark(#fee9e8, #422424);
+  --ui-vivid-red-subtle-hover: light-dark(#f2dddc, #4e3030);
+  --ui-vivid-red-subtle-pressed: light-dark(#e7d2d1, #5a3c3c);
+  --ui-vivid-red-mild: #ff8c8c;
+  --ui-vivid-red-mild-hover: #f38181;
+  --ui-vivid-red-mild-pressed: #e67677;
+  --ui-vivid-red-line-subtle: light-dark(#ff8b8d, #990000);
+  --ui-vivid-red-line-mild: #d45353;
+  --ui-vivid-red-line-strong: light-dark(#990000, #ff9e9c);
+  --ui-vivid-red: light-dark(#9b3239, #ff9e9c);
+  --ui-vivid-red-chart: light-dark(#ff8b8d, #ff8c8c);
+  --ui-vivid-red-on-mild: #4b0008;
+
+  --ui-vivid-orange-subtle: light-dark(#ffead9, #3c2817);
+  --ui-vivid-orange-subtle-hover: light-dark(#f3dece, #483423);
+  --ui-vivid-orange-subtle-pressed: light-dark(#e8d3c2, #54402f);
+  --ui-vivid-orange-mild: #ffb575;
+  --ui-vivid-orange-mild-hover: #f3aa6a;
+  --ui-vivid-orange-mild-pressed: #e79f5f;
+  --ui-vivid-orange-line-subtle: light-dark(#ffa455, #853d00);
+  --ui-vivid-orange-line-mild: #ca7933;
+  --ui-vivid-orange-line-strong: light-dark(#853d00, #ffb575);
+  --ui-vivid-orange: light-dark(#844800, #ffb575);
+  --ui-vivid-orange-chart: light-dark(#ffa455, #ffb575);
+  --ui-vivid-orange-on-mild: #542700;
+
+  --ui-vivid-yellow-subtle: light-dark(#fff8d0, #322d13);
+  --ui-vivid-yellow-subtle-hover: light-dark(#f3ecc5, #3e391f);
+  --ui-vivid-yellow-subtle-pressed: light-dark(#e8e1b9, #4a452b);
+  --ui-vivid-yellow-mild: #ffe86d;
+  --ui-vivid-yellow-mild-hover: #f3dc61;
+  --ui-vivid-yellow-mild-pressed: #e8d154;
+  --ui-vivid-yellow-line-subtle: light-dark(#feca00, #7a6700);
+  --ui-vivid-yellow-line-mild: #cbb333;
+  --ui-vivid-yellow-line-strong: light-dark(#7a6700, #dac65f);
+  --ui-vivid-yellow: light-dark(#655700, #dac65f);
+  --ui-vivid-yellow-chart: light-dark(#feca00, #ffe86d);
+  --ui-vivid-yellow-on-mild: #574900;
+
+  --ui-vivid-green-subtle: light-dark(#e7f4d9, #253012);
+  --ui-vivid-green-subtle-hover: light-dark(#dce8ce, #313c1e);
+  --ui-vivid-green-subtle-pressed: light-dark(#d0ddc2, #3d482a);
+  --ui-vivid-green-mild: #b3e65f;
+  --ui-vivid-green-mild-hover: #a8da53;
+  --ui-vivid-green-mild-pressed: #9dcf46;
+  --ui-vivid-green-line-subtle: light-dark(#8bcb20, #466610);
+  --ui-vivid-green-line-mild: #84ac43;
+  --ui-vivid-green-line-strong: light-dark(#466610, #a5ca6f);
+  --ui-vivid-green: light-dark(#436000, #a5ca6f);
+  --ui-vivid-green-chart: light-dark(#8bcb20, #b3e65f);
+  --ui-vivid-green-on-mild: #2f440b;
+
+  --ui-vivid-teal-subtle: light-dark(#e1fbf9, #13312e);
+  --ui-vivid-teal-subtle-hover: light-dark(#d6efed, #1f3d3a);
+  --ui-vivid-teal-subtle-pressed: light-dark(#cae4e2, #2b4946);
+  --ui-vivid-teal-mild: #81e7de;
+  --ui-vivid-teal-mild-hover: #75dbd3;
+  --ui-vivid-teal-mild-pressed: #69d0c7;
+  --ui-vivid-teal-line-subtle: light-dark(#39c9bc, #146a69);
+  --ui-vivid-teal-line-mild: #25b6a9;
+  --ui-vivid-teal-line-strong: light-dark(#146a69, #6ed4cc);
+  --ui-vivid-teal: light-dark(#00625d, #6ed4cc);
+  --ui-vivid-teal-chart: light-dark(#39c9bc, #81e7de);
+  --ui-vivid-teal-on-mild: #0e4343;
+
+  --ui-vivid-cyan-subtle: light-dark(#d7f4ff, #163039);
+  --ui-vivid-cyan-subtle-hover: light-dark(#cce8f3, #223c45);
+  --ui-vivid-cyan-subtle-pressed: light-dark(#c0dde8, #2e4851);
+  --ui-vivid-cyan-mild: #9ce6ff;
+  --ui-vivid-cyan-mild-hover: #91daf3;
+  --ui-vivid-cyan-mild-pressed: #86cfe8;
+  --ui-vivid-cyan-line-subtle: light-dark(#20c7ff, #00688b);
+  --ui-vivid-cyan-line-mild: #4fb1d3;
+  --ui-vivid-cyan-line-strong: light-dark(#00688b, #8cd6ee);
+  --ui-vivid-cyan: light-dark(#075f75, #8cd6ee);
+  --ui-vivid-cyan-chart: light-dark(#20c7ff, #9ce6ff);
+  --ui-vivid-cyan-on-mild: #1c4657;
+
+  --ui-vivid-blue-subtle: light-dark(#e5efff, #202d40);
+  --ui-vivid-blue-subtle-hover: light-dark(#dae3f3, #2c394c);
+  --ui-vivid-blue-subtle-pressed: light-dark(#ced8e8, #384558);
+  --ui-vivid-blue-mild: #a0c4fb;
+  --ui-vivid-blue-mild-hover: #95b9ef;
+  --ui-vivid-blue-mild-pressed: #8aaee3;
+  --ui-vivid-blue-line-subtle: light-dark(#8fbbff, #325080);
+  --ui-vivid-blue-line-mild: #6a8bbf;
+  --ui-vivid-blue-line-strong: light-dark(#325080, #a0c4fb);
+  --ui-vivid-blue: light-dark(#385788, #a0c4fb);
+  --ui-vivid-blue-chart: light-dark(#8fbbff, #a0c4fb);
+  --ui-vivid-blue-on-mild: #14315e;
+
+  --ui-vivid-purple-subtle: light-dark(#eeecff, #2d2a3e);
+  --ui-vivid-purple-subtle-hover: light-dark(#e2e0f3, #39364a);
+  --ui-vivid-purple-subtle-pressed: light-dark(#d7d5e8, #454256);
+  --ui-vivid-purple-mild: #b8acfb;
+  --ui-vivid-purple-mild-hover: #ada1ef;
+  --ui-vivid-purple-mild-pressed: #a296e3;
+  --ui-vivid-purple-line-subtle: light-dark(#af9dff, #4636a1);
+  --ui-vivid-purple-line-mild: #7d6dd4;
+  --ui-vivid-purple-line-strong: light-dark(#4636a1, #baaffe);
+  --ui-vivid-purple: light-dark(#5b4c93, #baaffe);
+  --ui-vivid-purple-chart: light-dark(#af9dff, #b8acfb);
+  --ui-vivid-purple-on-mild: #231266;
+
+  --ui-vivid-pink-subtle: light-dark(#ffe6f8, #43203b);
+  --ui-vivid-pink-subtle-hover: light-dark(#f3dbec, #4f2c47);
+  --ui-vivid-pink-subtle-pressed: light-dark(#e8cfe1, #5b3853);
+  --ui-vivid-pink-mild: #fd9ae7;
+  --ui-vivid-pink-mild-hover: #f18fdb;
+  --ui-vivid-pink-mild-pressed: #e584d0;
+  --ui-vivid-pink-line-subtle: light-dark(#fd96e6, #8e036f);
+  --ui-vivid-pink-line-mild: #d04eb3;
+  --ui-vivid-pink-line-strong: light-dark(#8e036f, #f3a0e0);
+  --ui-vivid-pink: light-dark(#8d337d, #f3a0e0);
+  --ui-vivid-pink-chart: light-dark(#fd96e6, #fd9ae7);
+  --ui-vivid-pink-on-mild: #511341;
+
+  /*
+   * Status: four vivid hues by meaning (copied from the starter, 02d3f76). Red means a problem in
+   * every product.
+   */
+  --ui-danger: var(--ui-vivid-red);
+  --ui-danger-tint: var(--ui-vivid-red-subtle);
+  --ui-warn: var(--ui-vivid-yellow);
+  --ui-warn-tint: var(--ui-vivid-yellow-subtle);
+  --ui-success: var(--ui-vivid-green);
+  --ui-success-tint: var(--ui-vivid-green-subtle);
+  --ui-info: var(--ui-vivid-blue);
+  --ui-info-tint: var(--ui-vivid-blue-subtle);
+
+  /*
+   * Motion: one soft ease-out curve (fast start, long gentle stop) and
+   * three speeds. Fast for colour and tooltips, base for popups appearing, slow for things that
+   * move or change size (indicators, sidebar, a tab label sliding open). Reduced motion turns it
+   * all off (theme.css).
+   */
+  --ui-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-duration-fast: 120ms;
+  --ui-duration-base: 180ms;
+  --ui-duration-slow: 260ms;
+
+  /*
+   * New to the kit: springs for things that grow and shrink in place, such as the floating island
+   * menu, as linear() curves. Two of them: x for width and sideways movement, a lively one that
+   * overshoots by about 16% opening and 6% closing; y for height and vertical movement, steadier
+   * (4% and 3%). Each has an opening and a closing speed; the island varies all four by up to 15%
+   * either way on every toggle, so it never feels mechanical. Items inside stagger by a step.
+   */
+  --ui-ease-spring-x: linear(0, 0.0238 4.43%, 0.0917 8.86%, 0.3441 17.71%, 0.6533 26.57%, 0.9054 35.43%, 1.0638 41.51%, 1.1471 47.59%, 1.1629 50.92%, 1.1595 54.43%, 1.1389 60.69%, 1.0914 67.69%, 1.0452 73.96%, 1.0135 80.22%, 0.9975 87.04%, 0.9953 93.85%, 1);
+  --ui-ease-spring-x-out: linear(0, 0.0238 4.43%, 0.0917 8.86%, 0.3441 17.71%, 0.6533 26.57%, 0.9054 35.43%, 1.024 41.51%, 1.0551 47.59%, 1.0611 50.92%, 1.0599 54.43%, 1.0521 60.69%, 1.0343 67.69%, 1.017 73.96%, 1.0051 80.22%, 0.999 87.04%, 0.9983 93.85%, 1);
+  --ui-ease-spring-y: linear(0, 0.0089 2.95%, 0.0349 5.91%, 0.1366 11.81%, 0.2941 17.72%, 0.4884 23.62%, 0.685 29.53%, 0.8503 35.43%, 0.9683 41.34%, 1.0223 47.24%, 1.0402 53.15%, 1.0428 59.05%, 1.0366 64.96%, 1.0269 70.86%, 1.0174 76.77%, 1.0097 82.67%, 1.0046 88.58%, 1.0015 94.48%, 1);
+  --ui-ease-spring-y-out: linear(0, 0.0089 2.95%, 0.0349 5.91%, 0.1366 11.81%, 0.2941 17.72%, 0.4884 23.62%, 0.685 29.53%, 0.8503 35.43%, 0.9683 41.34%, 1.0167 47.24%, 1.0302 53.15%, 1.0321 59.05%, 1.0275 64.96%, 1.0202 70.86%, 1.0131 76.77%, 1.0073 82.67%, 1.0035 88.58%, 1.0011 94.48%, 1);
+  --ui-duration-spring-x: 590ms;
+  --ui-duration-spring-y: 428ms;
+  --ui-duration-spring-x-out: 655ms;
+  --ui-duration-spring-y-out: 475ms;
+  --ui-spring-stagger: 25ms;
+
+  /* New to the kit: reading size for long-form text, larger than the app UI's control sizes:
+     21px on a 34px line, one step down (19px on 30px) on phones (below). */
+  --ui-text-prose: 1.3125rem;
+  --ui-text-prose-line-height: 2.125rem;
+
+  /*
+   * New to the kit: the floating island menu's surface, frosted glass (theme.css blurs what is
+   * behind it): see-through white with a matching edge on light pages, near-black with a faint edge
+   * on dark ones, a little greyer and deeper-shadowed once open. Its text is grey: the lightest
+   * alpha that keeps 4.5:1 on the open surface, measured over the busiest page behind it (a blurred
+   * photo lifts the dark surface), darker on hover and darkest for the current page;
+   * the "Menu" label is near-black while collapsed. The phone shadows are below.
+   */
+  --ui-island: light-dark(rgb(255 255 255 / 0.75), rgb(28 28 28 / 0.85));
+  --ui-island-open: light-dark(rgb(244 244 244 / 0.78), rgb(28 28 28 / 0.78));
+  --ui-island-edge: light-dark(rgb(255 255 255 / 0.75), rgb(180 180 180 / 0.1));
+  --ui-island-divider: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.1));
+  --ui-island-text: light-dark(rgb(0 0 0 / 0.55), rgb(255 255 255 / 0.61));
+  --ui-island-text-hover: light-dark(rgb(0 0 0 / 0.78), rgb(255 255 255 / 0.92));
+  --ui-island-text-current: light-dark(rgb(0 0 0 / 0.95), rgb(255 255 255));
+  --ui-island-label: light-dark(rgb(0 0 0 / 0.85), rgb(255 255 255 / 0.85));
+  --ui-shadow-island: 0 8px 36px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.45)), 0 1px 2px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+  /* The collapsed island's corners, shared with .ui-island-pill. */
+  --ui-radius-island: 25px;
+  --ui-shadow-island-open: 0 14px 60px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.55)), 0 2px 4px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+
+  /* Shape */
+  --ui-radius-control: var(--brand-radius);
+  --ui-radius-card: calc(var(--brand-radius) * 1.5);
+  --ui-radius-small: calc(var(--brand-radius) * 0.75);
+  /* Inside a control with 2px padding (tabs, segmented control, toolbar), so the corners stay parallel. */
+  --ui-radius-inner: max(calc(var(--brand-radius) - 2px), 0px);
+  /* 16px parts such as the checkbox. */
+  --ui-radius-tiny: calc(var(--brand-radius) * 0.45);
+
+  /* Depth: a hairline edge, a soft drop and a highlight on top, like a physical key */
+  --ui-shadow-control:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 1px 2px -0.5px light-dark(color-mix(in oklch, var(--palette-700) 12%, transparent), color-mix(in oklch, var(--palette-950) 30%, transparent)),
+    0 2px 2px -1px light-dark(color-mix(in oklch, var(--palette-700) 6%, transparent), transparent),
+    inset 0 1px 0 light-dark(color-mix(in oklch, var(--palette-50) 70%, transparent), color-mix(in oklch, var(--palette-200) 10%, transparent)),
+    inset 0 0 0 0.5px light-dark(transparent, color-mix(in oklch, var(--palette-200) 5%, transparent));
+  --ui-shadow-control-filled:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 1px 2px light-dark(color-mix(in oklch, var(--palette-700) 10%, transparent), color-mix(in oklch, var(--palette-950) 30%, transparent)),
+    inset 0 0.5px 0 light-dark(color-mix(in oklch, var(--palette-50) 16%, transparent), color-mix(in oklch, var(--palette-200) 20%, transparent));
+  --ui-shadow-overlay:
+    0 0 0 0.5px var(--ui-control-edge),
+    0 2px 4px -1px light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), oklch(0 0 0 / 0.3)),
+    0 12px 32px -8px light-dark(color-mix(in oklch, var(--palette-950) 16%, transparent), oklch(0 0 0 / 0.5));
+}
+
+/* New to the kit: the reading size's phone step. */
+@media (width < 40rem) {
+  :root {
+    --ui-text-prose: 1.1875rem;
+    --ui-text-prose-line-height: 1.875rem;
+  }
+}
+
+/* New to the kit: on phones (720px and narrower) the floating island menu casts one tighter shadow. */
+@media (width <= 45rem) {
+  :root {
+    --ui-shadow-island: 0 4px 24px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.45));
+    --ui-shadow-island-open: 0 4px 24px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.55));
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
