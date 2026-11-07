@@ -16,14 +16,12 @@ const FLING = 260;
 export function ProjectCarousel({ projects }: { projects: Card[] }) {
   const track = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
-  const [position, setPosition] = useState({ progress: 0, share: 1 });
 
   const measure = useCallback(() => {
     const el = track.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setEdges({ start: el.scrollLeft <= 2, end: el.scrollLeft >= max - 2 });
-    setPosition({ progress: max > 0 ? el.scrollLeft / max : 0, share: Math.min(1, el.clientWidth / el.scrollWidth) });
   }, []);
 
   useEffect(() => {
@@ -151,10 +149,10 @@ export function ProjectCarousel({ projects }: { projects: Card[] }) {
         </h2>
         <div className="carousel__controls">
           <button type="button" className="round-button" aria-label="Previous projects" disabled={edges.start} onClick={() => step(-1)}>
-            <ArrowLeftIcon size={18} />
+            <ArrowLeftIcon size={16} />
           </button>
           <button type="button" className="round-button" aria-label="Next projects" disabled={edges.end} onClick={() => step(1)}>
-            <ArrowRightIcon size={18} />
+            <ArrowRightIcon size={16} />
           </button>
         </div>
       </div>
@@ -173,12 +171,6 @@ export function ProjectCarousel({ projects }: { projects: Card[] }) {
             <ProjectCard project={project} />
           </div>
         ))}
-      </div>
-
-      <div className="shell" aria-hidden="true">
-        <div className="carousel__progress" style={{ "--progress": position.progress, "--share": position.share } as CSSProperties}>
-          <span className="carousel__thumb" />
-        </div>
       </div>
     </section>
   );

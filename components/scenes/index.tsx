@@ -3,6 +3,7 @@
 import type { ComponentType } from "react";
 import "./scenes.css";
 import { growthTribeScenes } from "./growth-tribe";
+import { horiScenes } from "./hori";
 import { kpnScenes } from "./kpn";
 import { mealPlannerScenes } from "./meal-planner";
 import { miroScenes } from "./miro";
@@ -17,6 +18,7 @@ const scenes: Record<string, ComponentType<SceneProps>> = {
   ...thisSiteScenes,
   ...growthTribeScenes,
   ...kpnScenes,
+  ...horiScenes,
 };
 
 /**

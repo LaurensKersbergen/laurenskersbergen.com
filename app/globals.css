@@ -7,29 +7,39 @@
 @source not "../.claude";
 
 @theme {
-  --font-serif: var(--font-serif), "Georgia", serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
-/* The site's colours, from the kit's palette. The site is light only: a white page,
-   so the vivid tags and grounds read as designed.
+/* The site's colours, from the kit's palette. The page follows the system: white in light mode,
+   so the project grounds carry the colour, and near black in dark mode, where the kit's vivid grounds and
+   tags switch to their dark values (kit/ui/tokens.css). light-dark() picks by color-scheme.
    --ink: headings and link words. --fg: body text. --muted: secondary text; palette-500 is the
-   lightest grey that keeps 4.5:1 on white. */
+   lightest grey that keeps 4.5:1 on white.
+   Dark mode is not light mode inverted. Nothing is pure white: headings are an off-white (#ededed)
+   and body text a step below it, so large type doesn't glow (halation) on near black. The muted
+   grey sits well above the 4.5:1 floor, since thin grey text reads weaker on dark. Raised things
+   get lighter rather than casting shadows, which barely show on black. */
 :root {
-  color-scheme: light;
-  --bg: #fff;
-  --ink: var(--palette-950);
-  --fg: var(--palette-800);
+  color-scheme: light dark;
+  --bg: light-dark(#fff, var(--palette-950));
+  --ink: light-dark(var(--palette-950), oklch(0.94 0 0));
+  --fg: light-dark(var(--palette-800), oklch(0.84 0 0));
   --text-copy: var(--fg);
-  --muted: var(--palette-500);
+  --muted: light-dark(var(--palette-500), oklch(0.66 var(--brand-neutral-chroma) var(--brand-neutral-hue)));
   --border: var(--ui-line);
   /* A see-through ink for pills and buttons at rest, and one step up on hover (the ghost pill). */
-  --ghost: rgb(0 0 0 / 0.05);
-  --ghost-hover: rgb(0 0 0 / 0.09);
+  --ghost: light-dark(rgb(0 0 0 / 0.05), rgb(255 255 255 / 0.08));
+  --ghost-hover: light-dark(rgb(0 0 0 / 0.09), rgb(255 255 255 / 0.13));
+  /* The solid ink button's hover: a step toward the page, in either mode (dark grey on white,
+     light grey on black), so its words keep their contrast. */
+  --ink-hover: color-mix(in oklab, var(--ink) 84%, var(--bg));
+  /* The header pills' hover and the open menu: in dark mode a lighter surface (elevation shows as
+     lightness on black), where the kit's dark value is barely different from the resting pill. */
+  --ui-island-open: light-dark(rgb(244 244 244 / 0.78), rgb(44 44 44 / 0.88));
   /* Corners of images and videos in write-ups and galleries (kit Media). */
   --media-radius: 1rem;
   --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");
-  --image-outline: oklch(0 0 0 / 0.1);
+  --image-outline: light-dark(oklch(0 0 0 / 0.1), oklch(1 0 0 / 0.1));
 
   /* The page frame: a 56px gutter, 32px below 992px, 20px on phones. */
   --page-max: 90rem;
@@ -54,8 +64,8 @@
 }
 
 ::selection {
-  color: #0066db;
-  background-color: #009afa1a;
+  color: light-dark(#0066db, #6cb4ff);
+  background-color: light-dark(#009afa1a, #009afa38);
 }
 
 /* Element defaults sit in the base layer, so a utility class on an element (text-(--fg) on a link) wins. */
@@ -149,58 +159,76 @@
   outline-offset: -1px;
 }
 
-/* The type scale. Reading text (body) is the kit's text-prose: 21px on 34px, 19px on 30px on phones. */
-@utility text-name {
-  /* The homepage's name. */
-  font-size: 2rem;
-  line-height: 2.5rem;
-  font-weight: 700;
-  color: var(--ink);
-  @media (width >= 40rem) {
-    font-size: 2.25rem;
-    line-height: 2.625rem;
+/* The type scale. Reading text (body) is the kit's text-prose: 21px on 34px, and on phones 17px on
+   28px (below), about 40 characters to a line in a phone's column. Headings are the site's one
+   voice, weight 500 with slightly tightened tracking, in whole pixels. */
+@media (width < 40rem) {
+  :root:root {
+    --ui-text-prose: 1.0625rem;
+    --ui-text-prose-line-height: 1.75rem;
   }
 }
 
 @utility text-title {
-  /* A page's title. */
-  font-size: 1.96875rem;
-  line-height: 2.3625rem;
-  font-weight: 700;
+  /* A post's title: 40px, 32px on phones. (Pages' own titles are .display-xl, as Projects.) */
+  font-size: 2.5rem;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.028em;
   color: var(--ink);
+  @media (width < 48rem) {
+    font-size: 2rem;
+  }
 }
 
 @utility text-section {
-  /* A section heading in a write-up. */
-  font-size: 1.53125rem;
-  line-height: 1.91875rem;
-  font-weight: 700;
+  /* A section heading in a write-up: 24px. */
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
 @utility text-subheading {
-  /* A year over a list, or a heading inside a section. */
-  font-size: 1.3125rem;
-  line-height: 1.70625rem;
-  font-weight: 700;
+  /* A year over a list, or a heading inside a section: 20px. */
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
 @utility text-row {
-  /* Rows in the projects and writing lists. */
+  /* Rows in the writing list: 19px, 17px on phones. */
   font-size: 1.1875rem;
   line-height: 2rem;
+  @media (width < 40rem) {
+    font-size: 1.0625rem;
+    line-height: 1.75rem;
+  }
 }
 
-/* The 680px reading column inner pages sit in, with 24px gutters on phones, and room at the
-   top on phones so the floating menu in the corner never covers a page title. */
+/* The 680px reading column inner pages sit in, with 24px gutters on phones. It starts where every
+   page does, 96px under the header pills (48px on phones; .page-top in site.css), and leaves the
+   space before the footer to the footer, as the homepage does. */
 @utility page-column {
   box-sizing: content-box;
   max-width: 42.5rem;
   margin-inline: auto;
-  padding: calc(5.5rem + env(safe-area-inset-top)) 1.5rem 6rem;
-  @media (width >= 40rem) {
-    padding-top: 5.875rem;
+  padding: calc(20px + 36px + env(safe-area-inset-top) + 3rem) 1.5rem 0;
+  @media (width >= 48rem) {
+    padding-top: calc(32px + 36px + 6rem);
+  }
+  /* The first block's top margin and the last's bottom one (a title's my-6.5, a list's mb-9, a
+     post's last paragraph) would add to those spaces; the column's edges are the page's. */
+  & > :first-child,
+  & > :first-child > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child,
+  & > :last-child > :last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -321,6 +349,8 @@
 
   .prose pre {
     background: #16161e;
+    /* On a near-black page the block needs an edge to stay a block. */
+    box-shadow: inset 0 0 0 1px light-dark(transparent, rgb(255 255 255 / 0.08));
     border-radius: 0.5rem;
     padding: 1rem;
     overflow-x: auto;

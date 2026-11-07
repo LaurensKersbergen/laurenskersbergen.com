@@ -11,7 +11,7 @@
   flex-direction: column;
   height: 100%;
   padding: 6px 20px 0;
-  background: #fff;
+  background: var(--ss-surface);
 }
 
 .mp .mp-head {
@@ -40,7 +40,7 @@
   align-items: center;
   gap: 12px;
   height: 68px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+  border-top: 0.5px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12));
 }
 
 .mp .mp-day {
@@ -85,7 +85,7 @@
 
 .mp .mp-swap[data-pressed] {
   transform: scale(0.88);
-  background: rgba(232, 89, 12, 0.2);
+  background: light-dark(rgba(232, 89, 12, 0.2), rgba(232, 89, 12, 0.32));
 }
 
 .mp .mp-tabs {
@@ -96,8 +96,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 10px 24px 38px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.94);
+  border-top: 0.5px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12));
+  background: light-dark(rgba(255, 255, 255, 0.94), rgba(30, 30, 33, 0.94));
 }
 
 .mp .mp-tab {
@@ -149,7 +149,7 @@
 .mp .mp-check[data-done] > span:last-child {
   color: var(--ss-text);
   text-decoration: line-through;
-  text-decoration-color: rgba(0, 0, 0, 0.25);
+  text-decoration-color: light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.3));
 }
 
 .mp .mp-chips {

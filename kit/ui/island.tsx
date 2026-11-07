@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "./cn";
 import { type LinkRender, LinkOrAnchor } from "./link";
 
@@ -74,6 +74,8 @@ function rowsFor(links: IslandLink[]): Row[] {
 export function Island({
   label,
   closeLabel = "Close",
+  shortcut,
+  hint,
   links,
   path,
   navLabel = "Site",
@@ -81,6 +83,11 @@ export function Island({
 }: {
   /** The toggle's text while the island is collapsed, e.g. "Menu". */
   label: string;
+  /** A key that toggles it, e.g. "m": announced with aria-keyshortcuts and marked data-shortcut
+      for the app's own key handling (the island doesn't listen for it). */
+  shortcut?: string;
+  /** Shown after the toggle's text in both states, e.g. the app's key hint for `shortcut`. */
+  hint?: ReactNode;
   /** The toggle's text while the island is open, when pressing it closes the panel. */
   closeLabel?: string;
   links: IslandLink[];
@@ -242,12 +249,15 @@ export function Island({
           aria-expanded={open}
           aria-controls={listId}
           className="ui-island-trigger"
+          aria-keyshortcuts={shortcut?.toUpperCase()}
+          data-shortcut={shortcut}
           onClick={(event) => {
             event.preventDefault();
             toggle(!open);
           }}
         >
           {open ? closeLabel : label}
+          {hint}
         </button>
         <ul
           id={listId}

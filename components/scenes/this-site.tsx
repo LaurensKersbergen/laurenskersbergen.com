@@ -5,6 +5,7 @@ import { vividHues } from "@/kit/ui/vivid";
 import { Bar, Stage, Window, type Act } from "@/components/stageshow/kit";
 import type { SceneProps } from "./index";
 import "./this-site.css";
+import { ground } from "@/lib/ground";
 
 /*
  * This site: its homepage in a browser, and the floating island menu in the corner opening on the
@@ -13,7 +14,7 @@ import "./this-site.css";
  * first line, the cards' titles and the menu.
  */
 
-const LINKS = ["Home", "Projects", "Writing", "About", "Listening"];
+const LINKS = ["home", "projects", "writing", "about", "listening"];
 type S = { open: boolean; hovered: number };
 const CLOSED: S = { open: false, hovered: -1 };
 const OPEN: S = { open: true, hovered: 1 };
@@ -23,7 +24,7 @@ function Island({ s }: { s: S }) {
     <div className="ts-island" data-open={s.open || undefined}>
       <div className="ts-island__inner">
         <span className="ts-island__trigger" data-target="toggle" data-cursor="pointer">
-          {s.open ? "Close" : "Menu"}
+          {s.open ? "close" : "menu"}
         </span>
         <div className="ts-island__list">
           {LINKS.map((link, i) => (
@@ -55,7 +56,7 @@ const CARDS: { title: string; hue: string; w: number }[] = [
 function Home({ s }: { s: S }) {
   return (
     <div className="ts-page">
-      <span className="ts-pill">Laurens K</span>
+      <span className="ts-pill">laurens</span>
       <Island s={s} />
       <div className="ts-intro">
         <span>Laurens Kersbergen, product manager in Amsterdam.</span>
@@ -66,7 +67,7 @@ function Home({ s }: { s: S }) {
       </div>
       <div className="ts-cards">
         {CARDS.map((card) => (
-          <div key={card.title} className="ts-card" style={{ background: `var(--ui-vivid-${card.hue}-subtle)` }}>
+          <div key={card.title} className="ts-card" style={{ background: ground(card.hue) }}>
             <span className="ts-card__art">
               <Bar w={92} h={6} r={3} tone={3} />
               <Bar w={64} h={6} r={3} tone={2} />
@@ -144,10 +145,10 @@ function Cover({ still }: SceneProps) {
     <Stage<S> width={440} height={550} initial={CLOSED} poster={CLOSED} script={still ? undefined : coverScript} play="hover" className="scene ts">
       {(s) => (
         <div className="ts-cover">
-          <span className="ts-pill ts-cover__pill">Laurens K</span>
+          <span className="ts-pill ts-cover__pill">laurens</span>
           <div className="ts-cover__tiles" aria-hidden>
             {["yellow", "orange", "blue", "purple"].map((hue) => (
-              <span key={hue} className="ts-cover__tile" style={{ background: `var(--ui-vivid-${hue}-subtle)` }}>
+              <span key={hue} className="ts-cover__tile" style={{ background: ground(hue) }}>
                 <span className="ts-cover__art" />
               </span>
             ))}

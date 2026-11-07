@@ -14,10 +14,10 @@
   width: 80px;
   height: 58px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
   border-radius: 29px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: light-dark(rgba(255, 255, 255, 0.82), rgba(30, 30, 33, 0.82));
+  box-shadow: 0 8px 36px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.36)), 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   backdrop-filter: blur(20px) saturate(140%);
   transition:
@@ -32,8 +32,8 @@
   width: 148px;
   height: 242px;
   border-radius: 29px;
-  background: rgba(246, 246, 246, 0.9);
-  box-shadow: 0 14px 60px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.04);
+  background: light-dark(rgba(246, 246, 246, 0.9), rgba(38, 38, 42, 0.9));
+  box-shadow: 0 14px 60px light-dark(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.48)), 0 2px 4px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
   transition:
     width var(--ui-duration-spring-x) var(--ui-ease-spring-x),
     height var(--ui-duration-spring-y) var(--ui-ease-spring-y),
@@ -70,12 +70,12 @@
 
 .ts .ts-island__trigger {
   align-self: flex-end;
-  color: rgba(0, 0, 0, 0.85);
+  color: light-dark(rgba(0, 0, 0, 0.85), rgba(255, 255, 255, 0.85));
 }
 
 .ts .ts-island__link {
   position: relative;
-  color: rgba(0, 0, 0, 0.55);
+  color: light-dark(rgba(0, 0, 0, 0.55), rgba(255, 255, 255, 0.61));
   opacity: 0;
   transition:
     opacity 0.1s ease,
@@ -95,11 +95,11 @@
 }
 
 .ts .ts-island__link[data-on] {
-  color: rgba(0, 0, 0, 0.82);
+  color: light-dark(rgba(0, 0, 0, 0.82), rgba(255, 255, 255, 0.92));
 }
 
 .ts .ts-island__link[data-current] {
-  color: rgba(0, 0, 0, 0.95);
+  color: light-dark(rgba(0, 0, 0, 0.95), #fff);
 }
 
 .ts .ts-island__link[data-current]::before {
@@ -127,7 +127,7 @@
 
 .ts .ts-window .ss-window__body,
 .ts .ts-page {
-  background: #fff;
+  background: var(--ss-surface);
 }
 
 .ts .ts-page {
@@ -141,12 +141,12 @@
   align-items: center;
   height: 48px;
   padding: 0 20px;
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
   border-radius: 25px;
-  background: #fff;
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: var(--ss-surface);
+  box-shadow: 0 8px 36px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.36)), 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.85);
+  color: light-dark(rgba(0, 0, 0, 0.85), rgba(255, 255, 255, 0.85));
 }
 
 /* The island's right edge sits a gutter in from the window's visible edge, not the page's. */
@@ -196,8 +196,8 @@
   gap: 9px;
   padding: 34px 0 0 18px;
   border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 6px 18px -8px rgba(0, 0, 0, 0.18);
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.056)), 0 6px 18px -8px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
 }
 
 .ts .ts-card__copy {
@@ -252,7 +252,7 @@
   width: 372px;
   height: 352px;
   border-radius: 18px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-card);
 }
 
@@ -290,8 +290,8 @@
   width: 104px;
   height: 92px;
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 6px 18px -8px rgba(0, 0, 0, 0.18);
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.056)), 0 6px 18px -8px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.54));
 }
 
 .ts .ts-cover .ts-island {
@@ -312,7 +312,7 @@
   gap: 16px;
   padding: 28px;
   border-radius: 20px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-ground);
 }
 
@@ -378,7 +378,7 @@
   right: -60px;
   bottom: -60px;
   border-radius: 22px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-ground);
   overflow: hidden;
 }

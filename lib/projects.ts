@@ -118,7 +118,8 @@ export function getProjects(
 
   const projects = fs
     .readdirSync(projectsDirectory)
-    .filter((file) => file.endsWith(".mdx"))
+    // iCloud saves conflicting copies as "name 2.mdx"; a file name with a space is never a project.
+    .filter((file) => file.endsWith(".mdx") && !/\s/.test(file))
     .map((file) => readProjectFile(file.replace(/\.mdx$/, "")))
     .filter((project) => project !== null)
     .map((project) => project.meta);

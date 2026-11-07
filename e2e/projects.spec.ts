@@ -13,7 +13,7 @@ test.describe("a project page", () => {
 
       await expect(page.getByRole("heading", { level: 1, name: project.title })).toBeVisible();
       const tags = page.getByRole("main").getByRole("list", { name: "Tags" }).first();
-      for (const tag of [...project.tags, project.period]) await expect(tags).toContainText(tag);
+      for (const tag of project.tags) await expect(tags).toContainText(tag);
       await expect(page.getByText(project.intro)).toBeVisible();
 
       await expect(page.locator(".media-stack .ss-stage")).toHaveCount(3);

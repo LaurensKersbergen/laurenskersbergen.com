@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { position, timeline, timelineYears } from "@/lib/timeline";
 
 /**
- * The last five years as a row per role, each a bar in its project's vivid hue across the years,
+ * The last ten years as a row per role, each a bar in its project's vivid hue across the years,
  * laid out on a time axis. The bars grow from their start, one after
  * another, as the timeline comes into view; one that is still going ends in a breathing dot.
  */
@@ -16,7 +16,7 @@ export function Timeline() {
     <section aria-labelledby="timeline-title" className="shell">
       <div className="section-head" data-reveal>
         <h2 id="timeline-title" className="section-title">
-          The last five years
+          The last ten years
         </h2>
       </div>
 
@@ -37,8 +37,10 @@ export function Timeline() {
               "--from": from,
               "--to": to,
               "--i": i,
-              "--bar": `var(--ui-vivid-${entry.color}-mild)`,
-              "--bar-ink": `var(--ui-vivid-${entry.color}-on-mild)`,
+              /* Mild bars with dark words in light mode. The kit's mild tints stay pale in dark mode,
+                 where they glare, so there the bar is a deep step of the hue with its light ink. */
+              "--bar": `light-dark(var(--ui-vivid-${entry.color}-mild), color-mix(in oklab, var(--ui-vivid-${entry.color}-chart) 38%, oklch(0.06 0 0)))`,
+              "--bar-ink": `light-dark(var(--ui-vivid-${entry.color}-on-mild), var(--ui-vivid-${entry.color}))`,
             } as CSSProperties;
             /* A bar too short for its words says them just past its end instead. */
             const outside = to - from < 0.12 && to < 0.8;

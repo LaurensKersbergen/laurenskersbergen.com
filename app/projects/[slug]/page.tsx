@@ -7,7 +7,9 @@ import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon } from "@kit/ui";
 import { ProjectTags } from "@/components/project-tags";
 import { projectMdxComponents } from "@/components/project-mdx";
 import { ProjectScene } from "@/components/scenes";
+import { ground } from "@/lib/ground";
 import { getNeighbours, getProject, getProjects, type ProjectMeta } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -25,18 +27,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project) return {};
 
   const { meta } = project;
-  return {
-    title: meta.title,
-    description: meta.tagline,
-    openGraph: {
-      title: meta.title,
-      description: meta.tagline,
-      url: `/projects/${slug}`,
-    },
-  };
+  return pageMetadata({ title: meta.title, description: meta.intro || meta.tagline, path: `/projects/${slug}`, image: `/projects/${slug}/opengraph-image` });
 }
 
-const ground = (meta: Pick<ProjectMeta, "color">) => ({ "--ground": `var(--ui-vivid-${meta.color}-subtle)` }) as CSSProperties;
+const groundStyle = (meta: Pick<ProjectMeta, "color">) => ({ "--ground": ground(meta.color) }) as CSSProperties;
 
 /*
  * A project page on white: the title with its tags (the kit's Tag in the vivid hues)
@@ -57,21 +51,21 @@ export default async function ProjectPage({ params }: Props) {
         <div className="project-header">
           <div className="project-lead" data-reveal>
             <h1 className="display-xl">{meta.title}</h1>
-            <ProjectTags tags={meta.tags} period={meta.period} size="lg" />
+            <ProjectTags tags={meta.tags} size="lg" />
           </div>
           <div data-reveal style={{ "--reveal-delay": "120ms" } as CSSProperties}>
             <p className="intro-text">{meta.intro}</p>
             {meta.url ? (
               <a href={meta.url} target="_blank" rel="noopener noreferrer" className="pill project-visit">
                 Visit {new URL(meta.url).hostname.replace(/^www\./, "")}
-                <ArrowUpRightIcon size={16} className="pill__icon" />
+                <ArrowUpRightIcon size={14} className="pill__icon" />
               </a>
             ) : null}
           </div>
         </div>
       </header>
 
-      <div className="shell media-stack" style={ground(meta)}>
+      <div className="shell media-stack" style={groundStyle(meta)}>
         <MDXRemote source={content} components={projectMdxComponents} />
       </div>
 
@@ -92,7 +86,7 @@ function Neighbour({ project, side }: { project: ProjectMeta; side: "previous" |
   return (
     <Link href={`/projects/${project.slug}`} className={side === "next" ? "pn-side pn-side--next" : "pn-side"}>
       <Arrow size={28} strokeWidth={1.5} className="pn-arrow" />
-      <span className="pn-thumb" style={ground(project)} aria-hidden="true">
+      <span className="pn-thumb" style={groundStyle(project)} aria-hidden="true">
         <ProjectScene name={`${project.scene}-cover`} still />
       </span>
       <span className="pn-col">

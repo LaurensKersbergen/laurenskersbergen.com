@@ -2,10 +2,16 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPosts, getPost } from "@/lib/posts";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/json-ld";
+import { clip, pageMetadata, personId } from "@/lib/seo";
+import { siteName, siteUrl } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+/* Only the posts that exist: any other address under /writing is a 404, not an empty page. */
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const posts = getPosts();
@@ -17,10 +23,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     const { meta } = getPost(slug);
-    return {
+    return pageMetadata({
       title: meta.title,
       description: meta.summary,
-    };
+      path: `/writing/${slug}`,
+      article: { publishedTime: meta.date },
+      image: `/writing/${slug}/opengraph-image`,
+    });
   } catch {
     return {};
   }
@@ -37,9 +46,24 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <article className="page-column enter">
-      <header className="mb-7">
-        <h1 className="text-title mt-6.5 mb-1">{post.meta.title}</h1>
+    <article className="page-column ends-on-text enter">
+      <JsonLd
+        data={{
+          "@type": "BlogPosting",
+          headline: post.meta.title,
+          description: clip(post.meta.summary),
+          datePublished: post.meta.date,
+          dateModified: post.meta.date,
+          url: `${siteUrl}/writing/${slug}`,
+          mainEntityOfPage: `${siteUrl}/writing/${slug}`,
+          image: `${siteUrl}/writing/${slug}/opengraph-image`,
+          inLanguage: "en",
+          author: { "@type": "Person", "@id": personId, name: siteName, url: siteUrl },
+          publisher: { "@id": personId },
+        }}
+      />
+      <header className="mb-[45px] max-md:mb-6">
+        <h1 className="text-title mb-2">{post.meta.title}</h1>
         <time dateTime={post.meta.date} className="text-(--muted)">
           {formatDate(post.meta.date)}
         </time>

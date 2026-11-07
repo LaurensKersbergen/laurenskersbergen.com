@@ -1,0 +1,1190 @@
+/* Hori: the app's own look (its starter-kit tokens: warm greys at hue 85, Inter there and the
+   site's Geist here, one blue accent), measured from the running app. It follows the system like
+   the app does, so every colour is a light-dark() pair. The 3D garden is the app's render and is
+   the same in both. */
+.hr .ss-stage {
+  --ss-accent: light-dark(oklch(0.55 0.17 258), oklch(0.72 0.14 258));
+  --ss-accent-soft: light-dark(oklch(0.55 0.17 258 / 0.12), oklch(0.72 0.14 258 / 0.18));
+  --hr-ink: light-dark(oklch(0.145 0.004 85), oklch(0.97 0.0024 85));
+  --hr-ink-2: light-dark(oklch(0.439 0.004 85), oklch(0.708 0.004 85));
+  --hr-ink-3: light-dark(oklch(0.708 0.004 85), oklch(0.556 0.004 85));
+  --hr-line: light-dark(oklch(0.922 0.0032 85), oklch(0.269 0.004 85));
+  --hr-line-2: light-dark(oklch(0.87 0.004 85), oklch(0.371 0.004 85));
+  --hr-fill: light-dark(oklch(0.97 0.0024 85), oklch(0.269 0.004 85));
+  --hr-selected: light-dark(oklch(0.145 0.004 85 / 0.07), oklch(0.985 0.0016 85 / 0.1));
+  --hr-side: light-dark(#fff, oklch(0.175 0.004 85));
+  --hr-main: light-dark(#fff, oklch(0.145 0.004 85));
+  --hr-popover: light-dark(#fff, oklch(0.205 0.004 85));
+  --hr-surface: light-dark(#fff, oklch(0.205 0.004 85));
+  --hr-warn: light-dark(rgb(145 100 0), oklch(0.8 0.13 85));
+  --hr-harvest: light-dark(oklch(0.93 0.035 145), oklch(0.33 0.045 145));
+  --hr-strong: light-dark(oklch(0.269 0.004 85), oklch(0.922 0.0032 85));
+  --hr-on-strong: light-dark(oklch(0.985 0.0016 85), oklch(0.205 0.004 85));
+  --hr-overlay: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.06), oklch(1 0 0 / 0.08)), 0 4px 12px -2px light-dark(oklch(0.145 0.004 85 / 0.08), oklch(0 0 0 / 0.35)), 0 16px 40px -12px light-dark(oklch(0.145 0.004 85 / 0.16), oklch(0 0 0 / 0.5));
+  --hr-control: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.08), oklch(1 0 0 / 0.08)), 0 1px 2px light-dark(oklch(0.145 0.004 85 / 0.06), oklch(0 0 0 / 0.3));
+  /* The 3D view's clear colour, around the garden in every render. */
+  --hr-sky: #f3f2ef;
+  color: var(--hr-ink);
+}
+
+/* ---- the window ---- */
+
+.hr .hr-window {
+  position: absolute;
+  left: 80px;
+  top: 80px;
+  width: 1180px;
+  height: 760px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.hr .hr-app {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  height: 100%;
+  background: var(--hr-main);
+}
+
+.hr .hr-window,
+.hr .hr-compact,
+.hr .hr-panel,
+.hr .hr-cal,
+.hr .hr-section .ss-collapse {
+  will-change: transform;
+}
+
+/* ---- the sidebar ---- */
+
+.hr .hr-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: 1px solid var(--hr-line);
+  background: var(--hr-side);
+}
+
+.hr .hr-side__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 8px 0 12px;
+}
+
+.hr .hr-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-user__avatar {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--hr-fill);
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.hr .hr-user__name {
+  color: var(--hr-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.hr .hr-side__icons {
+  display: flex;
+  gap: 2px;
+}
+
+.hr .hr-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-icon--dot::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--hr-side);
+  border-radius: 999px;
+  background: var(--ss-accent);
+}
+
+.hr .hr-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 8px 8px;
+  border-bottom: 1px solid var(--hr-line);
+}
+
+.hr .hr-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 6px;
+  color: var(--hr-ink-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.hr .hr-tab[data-on] {
+  padding: 0 10px 0 8px;
+  background: var(--hr-selected);
+  color: var(--hr-ink);
+}
+
+.hr .hr-lists {
+  padding: 4px 8px 0;
+}
+
+.hr .hr-section__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px 6px;
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.hr .hr-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--hr-fill);
+  color: var(--hr-ink-2);
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A task: the tick, the crop or what to do, its title and where, and "later" at the end. */
+.hr .hr-task {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 58px;
+  padding-right: 6px;
+  border-radius: 8px;
+  transition: background-color 160ms ease;
+}
+
+.hr .hr-task[data-selected] {
+  background: var(--hr-selected);
+}
+
+.hr .hr-task__check {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+}
+
+.hr .hr-task__thumb {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--hr-fill);
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-task__thumb img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.hr .hr-task__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  margin-left: 12px;
+}
+
+.hr .hr-task__title {
+  overflow: hidden;
+  color: var(--hr-ink);
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hr .hr-task__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hr-ink-2);
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.hr .hr-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--hr-line-2);
+}
+
+.hr .hr-late {
+  color: var(--hr-warn);
+}
+
+.hr .hr-task__later {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--hr-ink-2);
+}
+
+/* The app's tick: a ring in its third ink that fills with the accent. */
+.hr .ss-check__ring {
+  stroke: var(--hr-ink-3);
+}
+
+.hr .ss-check__fill {
+  fill: var(--ss-accent);
+}
+
+/* ---- the top bar ---- */
+
+.hr .hr-main {
+  display: grid;
+  grid-template-rows: 52px minmax(0, 1fr);
+  min-width: 0;
+}
+
+.hr .hr-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--hr-line);
+  background: var(--hr-main);
+}
+
+.hr .hr-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hr-ink);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.hr .hr-select svg {
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--hr-line);
+}
+
+/* Boven and 3D: the kit's segmented control as the app draws it. */
+.hr .hr-seg {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--hr-fill);
+}
+
+.hr .hr-seg > span {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  color: var(--hr-ink-2);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.hr .hr-seg > span[data-on] {
+  background: var(--hr-surface);
+  box-shadow: var(--hr-control);
+  color: var(--hr-ink);
+}
+
+.hr .hr-season {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hr .hr-play {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--hr-ink);
+}
+
+.hr .hr-scrub {
+  position: relative;
+  width: 140px;
+  height: 16px;
+}
+
+.hr .hr-scrub::before,
+.hr .hr-scrub__fill {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 0;
+  height: 2px;
+  border-radius: 999px;
+}
+
+.hr .hr-scrub::before {
+  right: 0;
+  background: var(--hr-line-2);
+}
+
+.hr .hr-scrub__fill {
+  width: calc(var(--at) * 100%);
+  background: var(--hr-ink);
+  transition: width 480ms var(--ease-travel, ease);
+}
+
+.hr .hr-scrub__knob {
+  position: absolute;
+  top: 1px;
+  left: calc(var(--at) * 100% - 7px);
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--hr-surface);
+  box-shadow: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.18), oklch(1 0 0 / 0.2)), 0 1px 3px oklch(0 0 0 / 0.2);
+  transition: left 480ms var(--ease-travel, ease);
+}
+
+.hr .hr-week {
+  display: inline-flex;
+  color: var(--hr-ink);
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+
+/* ---- the canvas ---- */
+
+.hr .hr-canvas {
+  position: relative;
+  overflow: hidden;
+  background: var(--hr-sky);
+}
+
+/* The camera's flight from the whole garden to Blok 6, as one move. The wide render pushes in on
+   Blok 6 (300, 256 in it) to where the close render has it (195, 170); the close render, on top,
+   travels the same path in from the wide render's framing, and fades in mid-flight, so there is
+   always a garden on the canvas and never a wash of sky between the two. */
+.hr .hr-garden {
+  position: absolute;
+  inset: 0;
+}
+
+.hr .hr-shot {
+  position: absolute;
+  max-width: none;
+  /* On a layer for good, so the bed's label lands without a sub-pixel hop. */
+  will-change: transform, opacity;
+  transition:
+    opacity 320ms ease 220ms,
+    transform 760ms cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+.hr .hr-shot--wide {
+  top: 0;
+  left: 0;
+  width: 764px;
+  height: 532px;
+  transform-origin: 300px 256px;
+}
+
+.hr .hr-garden[data-zoomed] .hr-shot--wide {
+  transform: translate(-105px, -86px) scale(1.95);
+}
+
+.hr .hr-shot--bed {
+  top: -130px;
+  left: -60px;
+  width: 800px;
+  height: 640px;
+  opacity: 0;
+  transform: translate(105px, 86px) scale(0.513);
+  transform-origin: 255px 300px;
+}
+
+.hr .hr-garden[data-zoomed] .hr-shot--bed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Blok 6 at 195%: the render and its one label, wherever it is placed. */
+.hr .hr-shot--bed img,
+.hr .hr-compact__bed img,
+.hr .hr-rot__garden img {
+  display: block;
+  width: 800px;
+  height: 640px;
+  max-width: none;
+}
+
+/* A bed's label as the app draws it over the 3D view: a white pill, the family's dot, the bed in
+   semibold, a hairline, the family. */
+.hr .hr-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 0 0 0.75px #e6e6e3, 0 1px 3px rgb(0 0 0 / 0.1);
+  color: #1c1c1a;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hr .hr-chip__dot {
+  width: 5px;
+  height: 5px;
+  margin-right: 1px;
+  border-radius: 999px;
+  background: var(--dot);
+}
+
+.hr .hr-chip__rule {
+  width: 0.75px;
+  height: 8px;
+  margin: 0 2px;
+  background: #d6d6d2;
+}
+
+.hr .hr-tools {
+  position: absolute;
+  left: 16px;
+  top: 446px;
+  display: flex;
+  gap: 8px;
+}
+
+.hr .hr-toolgroup {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 2px;
+  border-radius: 8px;
+  background: var(--hr-surface);
+  box-shadow: var(--hr-control);
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-tool {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--hr-ink);
+}
+
+.hr .hr-tool[data-hover] {
+  background: var(--hr-selected);
+}
+
+.hr .hr-tool--rule {
+  margin-left: 2px;
+  border-left: 1px solid var(--hr-line);
+  border-radius: 0 6px 6px 0;
+}
+
+.hr .hr-tool--off {
+  color: var(--hr-ink-3);
+}
+
+.hr .hr-zoom {
+  min-width: 46px;
+  color: var(--hr-ink);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the panels ---- */
+
+.hr .hr-panel {
+  --ss-popover-bg: var(--hr-popover);
+  --ss-popover-shadow: var(--hr-overlay);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 360px;
+  padding: 16px 16px 0;
+  border-radius: 12px;
+  background: var(--hr-popover);
+  box-shadow: var(--hr-overlay);
+  color: var(--hr-ink);
+}
+
+.hr .hr-canvas .hr-panel {
+  position: absolute;
+  left: 280px;
+  top: 172px;
+}
+
+/* The toast: top centre of what the stage shows of the canvas (720 wide), as the app puts it. */
+.hr .hr-toastslot {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 720px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hr .hr-toast {
+  gap: 12px;
+  /* One inset all round, the button's; the message carries the rest of its left space itself. */
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--hr-popover);
+  box-shadow: var(--hr-overlay);
+  color: var(--hr-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.hr .hr-toast > span:not(.ss-toast__action) {
+  padding-left: 10px;
+}
+
+.hr .hr-toast .ss-toast__action {
+  margin-left: 0;
+  color: var(--hr-ink);
+}
+
+.hr .hr-toast__undo {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: var(--hr-surface);
+  box-shadow: inset 0 0 0 1px var(--hr-line-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.hr .hr-toast__undo[data-pressed] {
+  background: var(--hr-fill);
+}
+
+.hr .hr-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hr .hr-panel__head > .ss-check {
+  margin-top: 2px;
+}
+
+.hr .hr-panel__title {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.hr .hr-panel__sub {
+  color: var(--hr-ink-2);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.hr .hr-panel__close {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: -2px -4px 0 0;
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-facts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.hr .hr-fact {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  align-items: center;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.hr .hr-fact dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--hr-ink-2);
+}
+
+.hr .hr-fact dd {
+  margin: 0;
+  color: var(--hr-ink);
+}
+
+.hr .hr-panel__foot {
+  display: flex;
+  gap: 6px;
+  margin: 2px -16px 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--hr-line);
+}
+
+/* Gedaan: the app's strong button, a near-black fill (near-white in dark mode). */
+.hr .hr-done {
+  --ss-accent: var(--hr-strong);
+  color: var(--hr-on-strong);
+  font-size: 13px;
+}
+
+.hr .hr-later {
+  color: var(--hr-ink);
+  font-size: 13px;
+}
+
+/* ---- the hero on phones: the bed and its task ---- */
+
+.hr .hr-compact {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--hr-sky);
+}
+
+.hr .hr-compact__bed {
+  position: absolute;
+  left: -76px;
+  top: -200px;
+}
+
+.hr .hr-compact .hr-toastslot {
+  width: 100%;
+}
+
+.hr .hr-compact .hr-toast {
+  font-size: 13px;
+}
+
+.hr .hr-compact .hr-panel {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: auto;
+}
+
+.hr .hr-compact .hr-fact {
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+
+/* ---- the card: the season bar over the garden, hung from the top-right ---- */
+
+.hr .hr-cover {
+  position: absolute;
+  top: -32px;
+  right: -32px;
+  width: 392px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--hr-sky);
+  box-shadow: var(--ss-shadow-card);
+}
+
+.hr .hr-cover__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 84px;
+  padding: 32px 0 0 14px;
+  border-bottom: 1px solid var(--hr-line);
+  background: var(--hr-main);
+}
+
+.hr .hr-cover__garden {
+  position: absolute;
+  top: 84px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.hr .hr-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.hr .hr-frame[data-on] {
+  opacity: 1;
+}
+
+/* ---- the rotation: the bed's panel over the bed ---- */
+
+.hr .hr-rot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--hr-sky);
+}
+
+.hr .hr-rot__garden {
+  position: absolute;
+  top: -120px;
+  left: -120px;
+}
+
+/* Where the app puts it: the canvas's bottom-right, here a gutter in. */
+.hr .hr-bed {
+  position: absolute;
+  right: 32px;
+  bottom: 32px;
+  padding-bottom: 16px;
+}
+
+.hr .hr-bed__no {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--hr-fill);
+  color: var(--hr-ink);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hr .hr-bed .hr-panel__head {
+  align-items: center;
+}
+
+.hr .hr-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hr .hr-block__label {
+  margin-bottom: 0;
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.hr .hr-block__text {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.hr .hr-block__hint {
+  color: var(--hr-ink-2);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* Three years on one line: last year, this one (filled), the next. */
+.hr .hr-rotation {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hr .hr-rotation::before,
+.hr .hr-rotation::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  height: 2px;
+}
+
+/* Last year to this one in ink, this one to the next quieter: dot centre to dot centre. */
+.hr .hr-rotation::before {
+  left: 6px;
+  right: 50%;
+  background: var(--hr-ink);
+}
+
+.hr .hr-rotation::after {
+  left: 50%;
+  right: 6px;
+  background: var(--hr-line-2);
+}
+
+.hr .hr-rotation__step {
+  position: relative;
+  display: grid;
+  justify-items: start;
+}
+
+.hr .hr-rotation__dot {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+}
+
+.hr .hr-rotation__step:nth-child(2) {
+  justify-items: center;
+}
+
+.hr .hr-rotation__step:nth-child(3) {
+  justify-items: end;
+}
+
+.hr .hr-rotation__year {
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.hr .hr-rotation__dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--hr-ink);
+  border-radius: 999px;
+  background: var(--hr-popover);
+}
+
+.hr .hr-rotation__step[data-state="now"] .hr-rotation__dot {
+  background: var(--hr-ink);
+}
+
+.hr .hr-rotation__step[data-state="next"] .hr-rotation__dot {
+  border-color: var(--hr-line-2);
+}
+
+.hr .hr-rotation__crop {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.hr .hr-rotation__step[data-state="now"] .hr-rotation__crop {
+  font-weight: 500;
+}
+
+.hr .hr-bed__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px -16px 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--hr-line);
+  color: var(--hr-ink);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* ---- the calendar: the cabbages through the year ---- */
+
+.hr .hr-cal {
+  /* The whole year inside the card: 48 quarter months across its 552px track. */
+  --hr-q: 11.5px;
+  --hr-from: 0;
+  /* The calendar goes on below the crop: its last rows fade out at the foot (Stageshow's fade crop). */
+  mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  right: 28px;
+  bottom: -40px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--hr-main);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.hr .hr-cal__legend {
+  display: flex;
+  gap: 16px;
+  height: 44px;
+  align-items: center;
+  padding: 0 16px;
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.hr .hr-cal__legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hr .hr-swatch {
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.hr .hr-swatch--pre {
+  background: repeating-linear-gradient(-45deg, var(--hr-line-2) 0 1px, var(--hr-surface) 1px 4px);
+  box-shadow: inset 0 0 0 1px var(--hr-line-2);
+}
+
+.hr .hr-swatch--bed {
+  background: var(--hr-surface);
+  box-shadow: inset 0 0 0 1px var(--hr-line-2);
+}
+
+.hr .hr-swatch--harvest {
+  background: var(--hr-harvest);
+  box-shadow: inset 0 0 0 1px var(--hr-line-2);
+}
+
+.hr .hr-cal__grid {
+  padding: 0 0 0 16px;
+}
+
+.hr .hr-cal__months {
+  position: relative;
+  height: 32px;
+  border-top: 1px solid var(--hr-line);
+  border-bottom: 1px solid var(--hr-line);
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 32px;
+}
+
+.hr .hr-cal__months > span:not(.hr-cal__today) {
+  position: absolute;
+  top: 0;
+  padding-left: 6px;
+}
+
+.hr .hr-cal__today {
+  position: absolute;
+  top: 6px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--ss-accent);
+  color: light-dark(oklch(0.99 0 0), oklch(0.17 0.02 258));
+  font-weight: 500;
+  line-height: 20px;
+  transform: translateX(-50%);
+}
+
+.hr .hr-cal__body {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.hr .hr-cal__rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--hr-line);
+}
+
+.hr .hr-cal__now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ss-accent);
+}
+
+.hr .hr-cal__group {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: fit-content;
+  padding-right: 10px;
+  background: var(--hr-main);
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.hr .hr-cal__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ss-accent);
+}
+
+.hr .hr-cal__row {
+  position: relative;
+  height: 40px;
+}
+
+.hr .hr-phase {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+}
+
+.hr .hr-phase--pre {
+  border-radius: 6px 0 0 6px;
+  background: repeating-linear-gradient(-45deg, var(--hr-line-2) 0 1px, var(--hr-surface) 1px 5px);
+}
+
+.hr .hr-phase--bed {
+  background: var(--hr-surface);
+}
+
+.hr .hr-phase--harvest {
+  border-radius: 0 6px 6px 0;
+  background: var(--hr-harvest);
+}
+
+.hr .hr-phase--edge {
+  border: 1px solid var(--hr-line-2);
+  border-radius: 6px;
+}
+
+.hr .hr-cal__label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+  color: var(--hr-ink);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  text-shadow:
+    0 0 3px var(--hr-surface),
+    0 0 3px var(--hr-surface);
+}
+
+.hr .hr-cal__label img {
+  width: 16px;
+  height: 16px;
+  padding: 1px;
+  border-radius: 4px;
+  background: var(--hr-surface);
+  object-fit: contain;
+}
+
+.hr .hr-cal__detail {
+  color: var(--hr-ink-2);
+}
+
+/* ---- the app's own pace for the small motions ---- */
+
+/* The tick draws as soon as the disc is in, so a done task never reads as a picked radio. */
+.hr .ss-check[data-on] .ss-check__tick {
+  transition: stroke-dashoffset 0.22s cubic-bezier(0.65, 0, 0.35, 1) 0.08s, opacity 0.01s 0.08s;
+}
+
+/* A row brought back is at full ink as soon as its space is open. */
+.hr .hr-section .ss-collapse[data-open] {
+  transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out 0.12s;
+}
+
+/* ---- the stills on phones: laid out at the column's width, drawn 1:1 ---- */
+
+.hr .ss-stage[data-layout="compact"] .hr-rot__garden {
+  top: -215px;
+  left: -105px;
+}
+
+.hr .ss-stage[data-layout="compact"] .hr-bed {
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: auto;
+}
+
+.hr .ss-stage[data-layout="compact"] .hr-bed .hr-block__hint {
+  display: none;
+}
+
+/* March to December across the phone's column: 40 quarter months on a 294px track. */
+.hr .ss-stage[data-layout="compact"] .hr-cal {
+  --hr-q: 7.35px;
+  --hr-from: 8;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.hr .ss-stage[data-layout="compact"] .hr-cal__legend {
+  gap: 12px;
+}
+
+.hr .ss-stage[data-layout="compact"] .hr-cal__months > span:not(.hr-cal__today) {
+  width: calc(4 * var(--hr-q));
+  padding-left: 0;
+  text-align: center;
+}
+
+.hr .ss-stage[data-layout="compact"] .hr-cal__body {
+  padding-bottom: 0;
+}

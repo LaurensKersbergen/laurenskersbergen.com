@@ -16,8 +16,9 @@ export function getPosts(): PostMeta[] {
     return [];
   }
 
+  // iCloud saves conflicting copies as "name 2.mdx"; a file name with a space is never a post.
   const files = fs.readdirSync(postsDirectory).filter((file) =>
-    file.endsWith(".mdx")
+    file.endsWith(".mdx") && !/\s/.test(file)
   );
 
   const posts = files.map((file) => {

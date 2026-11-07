@@ -103,8 +103,7 @@ import { cn } from "./cn";
 
 /**
  * The icon library. Apps import icons from @kit/ui, never from lucide-react, so every icon has the
- * same look and the set can change in this one file: 16px, a 1.5px line at every size (like Linear
- * and Notion), round ends, the text colour. Lucide (ISC licence) draws them; to add one, pick it on
+ * same look and the set can change in this one file: 16px, a 1.5px line at every size, round ends, the text colour. Lucide (ISC licence) draws them; to add one, pick it on
  * lucide.dev, add a line below and put it in a group so /design shows it.
  */
 

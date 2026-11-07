@@ -17,7 +17,7 @@
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   height: 100%;
-  background: #fff;
+  background: var(--ss-surface);
 }
 
 /* ---- the lesson list ---- */
@@ -28,7 +28,7 @@
   gap: 18px;
   padding: 24px 20px;
   border-right: 1px solid var(--ss-line);
-  background: #fafafa;
+  background: light-dark(#fafafa, #161618);
 }
 
 .gt .gt-course {
@@ -98,7 +98,8 @@
 .gt .gt-eyebrow {
   font-size: 13px;
   font-weight: 500;
-  color: var(--ss-accent);
+  /* The accent itself is too dark to read on a dark surface; its text step is lighter. */
+  color: light-dark(var(--ss-accent), var(--ss-accent-text));
 }
 
 .gt .gt-title {
@@ -167,7 +168,7 @@
   right: 16px;
   bottom: -40px;
   border-radius: 18px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-hero);
 }
 
@@ -203,7 +204,7 @@
   height: 100%;
   padding: 28px 56px 24px 24px;
   border: 0;
-  background: #fff;
+  background: var(--ss-surface);
 }
 
 /* ---- progress ---- */
@@ -219,7 +220,7 @@
   gap: 14px;
   padding: 36px;
   border-radius: 22px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-ground);
 }
 
@@ -274,7 +275,7 @@
   gap: 8px;
   padding: 12px;
   border-radius: 22px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-ground);
 }
 

@@ -25,7 +25,7 @@
   --ui-surface: light-dark(white, var(--palette-900));
   --ui-popover: light-dark(white, var(--palette-900));
   --ui-fill: light-dark(var(--palette-100), var(--palette-800));
-  /* Hover: a see-through tint of the text colour, like Notion's, so it shows on white, the sidebar and coloured alerts alike. */
+  /* Hover: a see-through tint of the text colour, so it shows on white, the sidebar and coloured alerts alike. */
   --ui-hover: light-dark(color-mix(in oklch, var(--palette-950) 6%, transparent), color-mix(in oklch, var(--palette-50) 8%, transparent));
   /* Selected: the row that's open, one step stronger than hover so the two never look alike. */
   --ui-selected: light-dark(color-mix(in oklch, var(--palette-950) 9%, transparent), color-mix(in oklch, var(--palette-50) 12%, transparent));
@@ -241,7 +241,7 @@
   --ui-info-tint: var(--ui-vivid-blue-subtle);
 
   /*
-   * Motion, after Hori and Notion: one soft ease-out curve (fast start, long gentle stop) and
+   * Motion: one soft ease-out curve (fast start, long gentle stop) and
    * three speeds. Fast for colour and tooltips, base for popups appearing, slow for things that
    * move or change size (indicators, sidebar, a tab label sliding open). Reduced motion turns it
    * all off (theme.css).

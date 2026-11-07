@@ -1,10 +1,11 @@
 import type { VividHue } from "@/kit/ui/vivid";
 
 /**
- * The last five years, newest first. `from` and `to` are years as decimals; where only the year is
+ * The last ten years, newest first. `from` and `to` are years as decimals; where only the year is
  * known, a change of job sits mid-year. `to: null` is still going. `href` links a row to its project.
  * The years come from Laurens's earlier sites (KPN 2018 to 2021, Growth Tribe 2021 to 2022, Miro
- * since 2022).
+ * since 2022). Side projects go back further than the window, to before 2018 with no exact start:
+ * any `from` before the first year draws the bar fading in from the left edge.
  */
 export interface TimelineEntry {
   name: string;
@@ -18,16 +19,19 @@ export interface TimelineEntry {
 }
 
 export const timeline: TimelineEntry[] = [
-  { name: "Side projects", role: "A meal planner and this site", label: "2026", from: 2026.1, to: null, color: "orange", href: "/projects/meal-planner" },
+  { name: "Side projects", role: "Lately Hori, a meal planner and this site", label: "Since before 2018", from: 2015, to: null, color: "orange", href: "/projects/meal-planner" },
   { name: "Miro", role: "Product manager, databases and AI", label: "Since 2022", from: 2022.5, to: null, color: "yellow", href: "/projects/miro" },
   { name: "Growth Tribe", role: "Product manager", label: "2021 to 2022", from: 2021.5, to: 2022.5, color: "purple", href: "/projects/growth-tribe" },
   { name: "KPN", role: "Marketing, then product for growth", label: "2018 to 2021", from: 2018, to: 2021.5, color: "green", href: "/projects/kpn" },
 ];
 
-/** The years along the top: five full years back from this one, and this one. */
+/** How many years the timeline spans, this one included. */
+export const TIMELINE_SPAN = 10;
+
+/** The years along the top: the nine full years back from this one, and this one. */
 export function timelineYears(now: Date) {
   const current = now.getFullYear();
-  return Array.from({ length: 6 }, (_, i) => current - 5 + i);
+  return Array.from({ length: TIMELINE_SPAN }, (_, i) => current - TIMELINE_SPAN + 1 + i);
 }
 
 /** Where `year` falls across the window of `years`, from 0 at its start to 1 at its end, clamped. */

@@ -1,7 +1,7 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
 // The floating island menu: a disclosure in the top-right corner of every page. Only a press on its
-// toggle (the panel's first row) opens it; the toggle reads "Menu" collapsed and "Close" open.
+// toggle (the panel's first row) opens it; the toggle reads "menu" collapsed and "close" open.
 const island = (page: Page) => page.getByRole("navigation", { name: "Site" });
 const toggle = (page: Page) => island(page).getByRole("button");
 const menuLink = (page: Page, name: string) => island(page).getByRole("link", { name, exact: true });
@@ -21,33 +21,33 @@ async function press(page: Page, testInfo: TestInfo) {
 
 async function expectOpen(page: Page) {
   await expect(toggle(page)).toHaveAttribute("aria-expanded", "true");
-  await expect(toggle(page)).toHaveAccessibleName("Close");
+  await expect(toggle(page)).toHaveAccessibleName("close");
 }
 
 async function expectClosed(page: Page) {
   await expect(toggle(page)).toHaveAttribute("aria-expanded", "false");
-  await expect(toggle(page)).toHaveAccessibleName("Menu");
+  await expect(toggle(page)).toHaveAccessibleName("menu");
 }
 
 test("the toggle reads Menu on every page, and the current section's link is marked as current", async ({ page }) => {
   await open(page, "/");
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("Home");
+  await expect(currentLink(page)).toHaveText("home");
 
   await open(page, "/writing/hello-world");
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("Writing");
+  await expect(currentLink(page)).toHaveText("writing");
 
   await open(page, "/listening");
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("Listening");
+  await expect(currentLink(page)).toHaveText("listening");
 });
 
 test("pressing the toggle opens it, showing every link, and pressing it again closes it", async ({ page }, testInfo) => {
   await open(page, "/");
   await press(page, testInfo);
   await expectOpen(page);
-  for (const name of ["Home", "Projects", "Writing", "About", "Listening"]) await expect(menuLink(page, name)).toBeVisible();
+  for (const name of ["home", "projects", "writing", "about", "listening"]) await expect(menuLink(page, name)).toBeVisible();
 
   await press(page, testInfo);
   await expectClosed(page);
@@ -66,17 +66,17 @@ test("a press outside closes it", async ({ page }, testInfo) => {
 test("following a link closes it and the new page's link becomes current", async ({ page }, testInfo) => {
   await open(page, "/");
   await press(page, testInfo);
-  if (testInfo.project.name === "iphone") await menuLink(page, "Writing").tap();
-  else await menuLink(page, "Writing").click();
+  if (testInfo.project.name === "iphone") await menuLink(page, "writing").tap();
+  else await menuLink(page, "writing").click();
   await expect(page).toHaveURL(/\/writing$/);
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("Writing");
+  await expect(currentLink(page)).toHaveText("writing");
 });
 
 test("a route change closes it and resets the toggle to Menu", async ({ page }, testInfo) => {
   await open(page, "/");
   await press(page, testInfo);
-  await menuLink(page, "About").click();
+  await menuLink(page, "about").click();
   await expect(page).toHaveURL(/\/about$/);
 
   await press(page, testInfo);
@@ -84,23 +84,25 @@ test("a route change closes it and resets the toggle to Menu", async ({ page }, 
   await page.goBack();
   await expect(page).toHaveURL(/\/$/);
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("Home");
+  await expect(currentLink(page)).toHaveText("home");
 });
 
 test.describe("keyboard", () => {
   test.skip(({ isMobile }) => isMobile, "keyboard paths are checked on the desktop profile");
 
-  test("after the name, the toggle is the next tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
+  test("after the name and work with me, the toggle is the next tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
     await open(page, "/");
     await page.keyboard.press("Tab");
-    await expect(page.getByRole("link", { name: "Laurens K", exact: true })).toBeFocused();
+    await expect(page.getByRole("link", { name: "laurens", exact: true })).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("banner").getByRole("link", { name: "work with me" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(toggle(page)).toBeFocused();
     await expect(toggle(page)).toHaveAttribute("aria-expanded", "false");
 
     await page.keyboard.press("Enter");
     await expectOpen(page);
-    for (const name of ["Home", "Projects", "Writing", "About", "Listening"]) {
+    for (const name of ["home", "projects", "writing", "about", "listening"]) {
       await page.keyboard.press("Tab");
       await expect(menuLink(page, name)).toBeFocused();
     }
@@ -121,7 +123,7 @@ test.describe("keyboard", () => {
     await toggle(page).focus();
     await page.keyboard.press("Enter");
     await page.keyboard.press("Tab");
-    await expect(menuLink(page, "Home")).toBeFocused();
+    await expect(menuLink(page, "home")).toBeFocused();
 
     await page.keyboard.press("Escape");
     await expectClosed(page);
@@ -133,7 +135,7 @@ test.describe("keyboard", () => {
     await toggle(page).focus();
     await page.keyboard.press("Enter");
     await page.keyboard.press("Tab");
-    await expect(menuLink(page, "Home")).toBeFocused();
+    await expect(menuLink(page, "home")).toBeFocused();
 
     // On past the last link, out of the menu into the page.
     for (let i = 0; i < 5; i++) await page.keyboard.press("Tab");
@@ -173,7 +175,7 @@ test("with reduced motion, opening still expands it and shows the links", async 
   for (const item of await island(page).getByRole("listitem").all()) {
     await expect(item).toHaveCSS("opacity", "1");
   }
-  await expect(menuLink(page, "Projects")).toBeVisible();
+  await expect(menuLink(page, "projects")).toBeVisible();
 });
 
 test("on phones, scrolling down past 80px hides it and scrolling back up shows it; on desktop it stays", async ({ page }, testInfo) => {
@@ -225,7 +227,7 @@ test("it sits in the top-right corner and opens downward", async ({ page }) => {
 });
 
 test.describe("the name", () => {
-  const name = (page: Page) => page.getByRole("banner").getByRole("link", { name: "Laurens K", exact: true });
+  const name = (page: Page) => page.getByRole("banner").getByRole("link", { name: "laurens", exact: true });
 
   test("links home from every page, marked current on the homepage", async ({ page }, testInfo) => {
     await open(page, "/about");

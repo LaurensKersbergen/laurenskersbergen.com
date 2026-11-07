@@ -48,9 +48,9 @@ test("the carousel's arrows step through it, the first one disabled at the start
   await expect(previous).toBeEnabled();
 });
 
-test("the timeline lists the last five years, each role with its period", async ({ page }) => {
+test("the timeline lists the last ten years, each role with its period", async ({ page }) => {
   await page.goto("/");
-  const section = page.getByRole("region", { name: "The last five years" });
+  const section = page.getByRole("region", { name: "The last ten years" });
   const rows = section.locator(".timeline__row");
   await expect(rows).toHaveCount(timeline.length);
   for (const [i, entry] of timeline.entries()) {
@@ -74,8 +74,8 @@ test("the sitemap lists the projects overview and each published project", async
   expect(response.status()).toBe(200);
   const xml = await response.text();
 
-  expect(xml).toContain("<loc>https://laurenskersbergen.com/projects</loc>");
+  expect(xml).toContain("<loc>https://www.laurenskersbergen.com/projects</loc>");
   for (const project of published) {
-    expect(xml).toContain(`<loc>https://laurenskersbergen.com/projects/${project.slug}</loc>`);
+    expect(xml).toContain(`<loc>https://www.laurenskersbergen.com/projects/${project.slug}</loc>`);
   }
 });

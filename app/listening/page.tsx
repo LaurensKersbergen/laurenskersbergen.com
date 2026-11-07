@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { getRecentlyPlayed, RecentlyPlayedItem } from "@/lib/spotify";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Listening",
-  description: "What I've been listening to on Spotify.",
-};
+  description: "What Laurens Kersbergen has been listening to on Spotify lately.",
+  path: "/listening",
+});
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -79,8 +81,8 @@ export default async function ListeningPage() {
   }
 
   return (
-    <div className="page-column enter">
-      <h1 className="text-title my-6.5">Listening</h1>
+    <div className="page-column ends-on-text enter">
+      <h1 className="display-xl mb-[42px] max-[62rem]:mb-[45px] max-md:mb-6">Listening</h1>
 
       <p className="mb-7 text-(--muted)">Recently played on Spotify.</p>
 

@@ -119,7 +119,7 @@ export function Count({ value, format = (n) => Math.round(n).toLocaleString('en-
   // digits it already had rolling in place and only the new leading one appears
   let fromRight = digits.length
   return (
-    <span {...rest} ref={el} className={`ss-count${className ? ` ${className}` : ''}`} style={style} aria-label={text}>
+    <span {...rest} ref={el} className={`ss-count${className ? ` ${className}` : ''}`} style={style} role="img" aria-label={text}>
       {chars.map((c, i) => {
         if (c < '0' || c > '9') return <span key={`s${i}-${c}`} className="ss-count__char" aria-hidden>{c}</span>
         const column = --fromRight

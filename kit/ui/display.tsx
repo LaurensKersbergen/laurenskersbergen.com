@@ -139,7 +139,7 @@ export function tagColor(name: string): CategoryColor {
 
 /**
  * A value people named themselves, like a variety ("Helda"): a soft rectangle in a colour that comes
- * from the name, as Notion's tags, so the same name looks the same everywhere. Badges are for what
+ * from the name, so the same name looks the same everywhere. Badges are for what
  * the app says (a state, a group); tags are for people's own words.
  */
 export function Tag({ children, color, className }: { children: string; color?: CategoryColor; className?: string }) {
@@ -329,7 +329,7 @@ export function Chip({
 }
 
 /**
- * Properties as label and value, as in Notion's and Linear's side panels: Blok, Kas; Zaaien, 15
+ * Properties as label and value, as in a side panel: Blok, Kas; Zaaien, 15
  * februari. Every row is 32px; a value that wraps (tags) keeps its label level with its first line. A value people can change is an inline field (Select or DatePicker
  * with variant="inline"), in full ink with a chevron; a value they can't is plain text, muted
  * and without hover, so the difference is clear at a glance. Plain strings count as read-only; pass

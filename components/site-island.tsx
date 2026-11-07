@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Island } from "@kit/ui";
+import { BookCall, bookingHref } from "@/components/book-call";
+import { Kbd } from "@/components/kbd";
 
 const sections = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/writing", label: "Writing" },
-  { href: "/about", label: "About" },
-  { href: "/listening", label: "Listening" },
+  { href: "/", label: "home" },
+  { href: "/projects", label: "projects" },
+  { href: "/writing", label: "writing" },
+  { href: "/about", label: "about" },
+  { href: "/listening", label: "listening" },
 ];
 
 export function SiteIsland() {
@@ -19,13 +21,20 @@ export function SiteIsland() {
 
   return (
     <Island
-      label="Menu"
+      label="menu"
+      closeLabel="close"
+      shortcut="m"
+      hint={<Kbd>m</Kbd>}
       path={pathname}
-      links={sections.map((section) => ({
-        ...section,
-        current: section === current,
-        render: <Link href={section.href} />,
-      }))}
+      links={[
+        ...sections.map((section) => ({
+          ...section,
+          current: section === current,
+          render: <Link href={section.href} />,
+        })),
+        /* On phones the header has no room for the button, so it's the menu's last row (site.css). */
+        { href: bookingHref, label: "work with me", startsGroup: true, render: <BookCall className="island-book" /> },
+      ]}
     />
   );
 }

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { getPosts, type PostMeta } from "@/lib/posts";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Writing",
-  description: "Thoughts on product, design, and development.",
-};
+  description: "Writing by Laurens Kersbergen on product management, design and building software.",
+  path: "/writing",
+});
 
 /** Posts grouped by the year they were published, newest year first (posts arrive newest first). */
 function groupByYear(posts: PostMeta[]) {
@@ -23,8 +25,8 @@ export default function WritingPage() {
   const groups = groupByYear(getPosts());
 
   return (
-    <div className="page-column enter">
-      <h1 className="text-title my-6.5">Writing</h1>
+    <div className="page-column ends-on-text enter">
+      <h1 className="display-xl mb-[44px] max-[62rem]:mb-[47px] max-md:mb-[26px]">Writing</h1>
       {groups.length === 0 ? (
         <p className="text-(--muted)">No posts yet.</p>
       ) : (

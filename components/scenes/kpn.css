@@ -15,7 +15,7 @@
 
 .kp .kp-page {
   height: 100%;
-  background: #fff;
+  background: var(--ss-surface);
 }
 
 .kp .kp-nav {
@@ -33,7 +33,7 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--ss-accent);
+  color: light-dark(var(--ss-accent), var(--ss-accent-text));
 }
 
 .kp .kp-body {
@@ -68,8 +68,8 @@
   row-gap: 8px;
   padding: 18px 20px;
   border-radius: 14px;
-  background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  background: var(--ss-surface);
+  box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12));
   transition: box-shadow 200ms ease, background-color 200ms ease;
 }
 
@@ -78,11 +78,11 @@
 }
 
 .kp .kp-option[data-hover] {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.12));
 }
 
 .kp .kp-option[data-picked] {
-  background: rgba(0, 122, 0, 0.04);
+  background: light-dark(rgba(0, 122, 0, 0.04), rgba(0, 122, 0, 0.064));
   box-shadow: inset 0 0 0 2px var(--ss-accent);
 }
 
@@ -91,7 +91,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1.5px light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.12));
   transition: box-shadow 200ms ease;
 }
 
@@ -143,7 +143,7 @@
   gap: 14px;
   padding: 22px;
   border-radius: 16px;
-  background: #f7f7f5;
+  background: light-dark(#f7f7f5, #222225);
 }
 
 .kp .kp-summary__title {
@@ -189,7 +189,7 @@
   bottom: -40px;
   padding: 22px 18px;
   border-radius: 18px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-hero);
 }
 
@@ -206,7 +206,7 @@
   width: 316px;
   padding: 64px 22px 22px;
   border-radius: 18px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-card);
 }
 
@@ -238,12 +238,12 @@
 }
 
 .kp .kp-close .kp-option {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12)), 0 10px 30px -14px light-dark(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.6));
 }
 
 .kp .kp-close .kp-option[data-picked] {
-  background: #fff;
-  box-shadow: inset 0 0 0 2px var(--ss-accent), 0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  background: var(--ss-surface);
+  box-shadow: inset 0 0 0 2px var(--ss-accent), 0 10px 30px -14px light-dark(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.6));
 }
 
 .kp .kp-test {
@@ -257,7 +257,7 @@
   gap: 14px;
   padding: 28px;
   border-radius: 22px;
-  background: #fff;
+  background: var(--ss-surface);
   box-shadow: var(--ss-shadow-ground);
 }
 
@@ -291,7 +291,7 @@
   row-gap: 12px;
   padding: 16px;
   border-radius: 14px;
-  background: #f7f7f5;
+  background: light-dark(#f7f7f5, #222225);
 }
 
 .kp .kp-variant__name {
@@ -300,11 +300,11 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: #fff;
+  background: var(--ss-surface);
   font-size: 13px;
   font-weight: 700;
   color: var(--ss-text-strong);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.112));
 }
 
 .kp .kp-variant[data-leading] .kp-variant__name {
@@ -330,7 +330,7 @@
 
 .kp .kp-variant__bars > span {
   border-radius: 6px 6px 3px 3px;
-  background: rgba(0, 0, 0, 0.1);
+  background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12));
 }
 
 .kp .kp-variant[data-leading] .kp-variant__bars > span {
@@ -357,7 +357,7 @@
   gap: 10px;
   padding: 16px;
   border-radius: 14px;
-  background: #f7f7f5;
+  background: light-dark(#f7f7f5, #222225);
 }
 
 .kp .kp-tile__icon {
@@ -369,8 +369,8 @@
 }
 
 .kp .kp-close .kp-summary {
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.084)), 0 10px 30px -14px light-dark(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.6));
 }
 
 /* A lasting layer, so text inside never snaps to whole pixels while the stage scales. */
