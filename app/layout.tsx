@@ -5,6 +5,7 @@ import { RevealObserver } from "@/components/reveal-observer";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteIsland } from "@/components/site-island";
 import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
+import { LiquidGlass } from "@/components/liquid-glass";
 import { HeaderBookCall, SiteName } from "@/components/site-name";
 import { UISounds } from "@/components/ui-sounds";
 import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
@@ -56,6 +57,7 @@ export default function RootLayout({
           <SiteName />
           <HeaderBookCall />
           <SiteIsland />
+          <LiquidGlass />
         </header>
         <main>{children}</main>
         <SiteFooter />

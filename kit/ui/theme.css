@@ -308,10 +308,10 @@
     will-change: width, height, transform, top;
     border: 1px solid var(--ui-island-edge);
     border-radius: var(--ui-radius-island);
-    background: var(--ui-island);
+    background-color: var(--ui-island);
     box-shadow: var(--ui-shadow-island);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: var(--ui-island-glass);
+    backdrop-filter: var(--glass-refract,) var(--ui-island-glass);
     -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: auto;
     -webkit-tap-highlight-color: transparent;
@@ -336,8 +336,23 @@
     top: 24px;
     transform: translateX(0);
     border-radius: 26px;
-    background: var(--ui-island-open);
+    background-color: var(--ui-island-open);
     box-shadow: var(--ui-shadow-island-open);
+    -webkit-backdrop-filter: var(--ui-island-glass-open);
+    backdrop-filter: var(--glass-refract,) var(--ui-island-glass-open);
+  }
+  /* Asked for less transparency, the glass turns solid: no blur, no bending, the same lit edge. */
+  @media (prefers-reduced-transparency: reduce) {
+    .ui-island {
+      background-color: light-dark(#fff, #1c1c1c);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .ui-island[data-open] {
+      background-color: light-dark(#f6f6f6, #2c2c2c);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
   /* While the window resizes, and while the collapsed width is first measured, nothing animates. */
   .ui-island[data-no-anim],
@@ -430,10 +445,20 @@
     background: currentColor;
   }
   .ui-island-trigger {
+    position: relative;
     border: none;
     background: transparent;
     font-style: normal;
     cursor: pointer;
+  }
+  /* Collapsed, the whole pill is the button. The toggle itself is a 28px line inside the 36px
+     pill, ending 10px short of its right side, so the pill's edges were dead: a slow pointer got
+     the arrow, then the hand a few pixels in, and the arrow again near the right end. This
+     reaches past every edge and the island's rounded clip trims it to exactly the pill. */
+  .ui-island:not([data-open]) .ui-island-trigger::after {
+    content: "";
+    position: absolute;
+    inset: -16px -32px;
   }
   .ui-island-trigger:focus-visible {
     outline: none;
@@ -494,16 +519,17 @@
  */
 @layer components {
   .ui-island-pill {
+    position: relative;
     display: inline-flex;
     align-items: center;
     height: 48px;
     padding: 0 21px;
     border: 1px solid var(--ui-island-edge);
     border-radius: var(--ui-radius-island);
-    background: var(--ui-island);
+    background-color: var(--ui-island);
     box-shadow: var(--ui-shadow-island);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: var(--ui-island-glass);
+    backdrop-filter: var(--glass-refract,) var(--ui-island-glass);
     font-size: 17px;
     line-height: 28px;
     font-weight: 400;
@@ -519,8 +545,70 @@
   }
   @media (hover: hover) {
     .ui-island-pill:hover {
-      background: var(--ui-island-open);
+      background-color: var(--ui-island-open);
       box-shadow: var(--ui-shadow-island-open);
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .ui-island-pill {
+      background-color: light-dark(#fff, #1c1c1c);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+}
+
+/*
+ * New to the kit: the light on the glass, shared by the island and the pill.
+ *
+ * The rim: a 1.25px ring of light round the inside of the edge, brightest where the light comes
+ * from (--glass-light, an angle; top left at rest), dimmest a quarter turn away, and catching a
+ * fainter second highlight on the far side, the way a rounded slab of glass lights up across from
+ * its source. components/liquid-glass.tsx turns it toward the pointer as a mouse comes near and
+ * brightens it (--glass-near, 0 to 1), so the glass seems to notice the hand.
+ *
+ * The press: a soft bloom of light under the finger or pointer (--press-x, --press-y), up as the
+ * press lands and fading after it lifts (--glass-press, 0 to 1, also from liquid-glass.tsx).
+ */
+@layer components {
+  .ui-island::before,
+  .ui-island-pill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1.25px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--glass-light, 315deg),
+      var(--ui-island-rim-hot),
+      var(--ui-island-rim-cool) 25%,
+      var(--ui-island-rim-back) 50%,
+      var(--ui-island-rim-cool) 75%,
+      var(--ui-island-rim-hot)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: calc(0.72 + 0.28 * var(--glass-near, 0));
+    pointer-events: none;
+  }
+  .ui-island,
+  .ui-island-pill {
+    background-image: radial-gradient(
+      circle 56px at var(--press-x, 50%) var(--press-y, 50%),
+      light-dark(rgb(255 255 255 / calc(0.7 * var(--glass-press, 0))), rgb(255 255 255 / calc(0.22 * var(--glass-press, 0)))),
+      transparent
+    );
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .ui-island::before,
+    .ui-island-pill::before {
+      opacity: 0.72;
     }
   }
 }

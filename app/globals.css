@@ -35,7 +35,7 @@
   --ink-hover: color-mix(in oklab, var(--ink) 84%, var(--bg));
   /* The header pills' hover and the open menu: in dark mode a lighter surface (elevation shows as
      lightness on black), where the kit's dark value is barely different from the resting pill. */
-  --ui-island-open: light-dark(rgb(244 244 244 / 0.78), rgb(44 44 44 / 0.88));
+  --ui-island-open: light-dark(rgb(246 246 246 / 0.82), rgb(44 44 44 / 0.8));
   /* Corners of images and videos in write-ups and galleries (kit Media). */
   --media-radius: 1rem;
   --link-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='7'%3E%3Cpath d='M0 3.5C3 1.5 6 1.8 9 3.5S15 5.6 18 3.5S24 1.2 27 3.4S33 5.3 36 3.5' fill='none' stroke='%23000' stroke-width='1.75'/%3E%3C/svg%3E");

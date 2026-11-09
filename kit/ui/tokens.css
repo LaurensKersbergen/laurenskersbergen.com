@@ -274,25 +274,39 @@
   --ui-text-prose-line-height: 2.125rem;
 
   /*
-   * New to the kit: the floating island menu's surface, frosted glass (theme.css blurs what is
-   * behind it): see-through white with a matching edge on light pages, near-black with a faint edge
-   * on dark ones, a little greyer and deeper-shadowed once open. Its text is grey: the lightest
-   * alpha that keeps 4.5:1 on the open surface, measured over the busiest page behind it (a blurred
-   * photo lifts the dark surface), darker on hover and darkest for the current page;
-   * the "Menu" label is near-black while collapsed. The phone shadows are below.
+   * New to the kit: the floating island menu's surface, liquid glass. Clear rather than frosted:
+   * a light blur, the colour behind it lifted (saturate), and a thin tint, so what scrolls under a
+   * pill still reads as itself; at the rim it bends (components/liquid-glass.tsx). Light catches
+   * the glass at its edge instead of a cast shadow: a bright rim (--ui-island-rim-*), strongest
+   * where the light comes from, inside a hairline that keeps it drawn on a white page. Open, the
+   * menu is frosted more and tinted more, so its links read over anything. Its text is grey: the
+   * lightest alpha that keeps 4.5:1 on the open surface, measured over the busiest page behind it,
+   * darker on hover and darkest for the current page; the "Menu" label is near-black while
+   * collapsed. With less transparency asked for, the glass turns solid (theme.css).
    */
-  --ui-island: light-dark(rgb(255 255 255 / 0.75), rgb(28 28 28 / 0.85));
-  --ui-island-open: light-dark(rgb(244 244 244 / 0.78), rgb(28 28 28 / 0.78));
-  --ui-island-edge: light-dark(rgb(255 255 255 / 0.75), rgb(180 180 180 / 0.1));
+  --ui-island: light-dark(rgb(255 255 255 / 0.55), rgb(18 18 18 / 0.62));
+  --ui-island-open: light-dark(rgb(246 246 246 / 0.82), rgb(34 34 34 / 0.82));
+  --ui-island-edge: transparent;
   --ui-island-divider: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.1));
   --ui-island-text: light-dark(rgb(0 0 0 / 0.55), rgb(255 255 255 / 0.61));
   --ui-island-text-hover: light-dark(rgb(0 0 0 / 0.78), rgb(255 255 255 / 0.92));
   --ui-island-text-current: light-dark(rgb(0 0 0 / 0.95), rgb(255 255 255));
-  --ui-island-label: light-dark(rgb(0 0 0 / 0.85), rgb(255 255 255 / 0.85));
-  --ui-shadow-island: 0 8px 36px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.45)), 0 1px 2px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+  --ui-island-label: light-dark(rgb(0 0 0 / 0.85), rgb(255 255 255 / 0.88));
+  --ui-island-glass: blur(3px) saturate(180%);
+  --ui-island-glass-open: blur(14px) saturate(170%);
   /* The collapsed island's corners, shared with .ui-island-pill. */
   --ui-radius-island: 25px;
-  --ui-shadow-island-open: 0 14px 60px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.55)), 0 2px 4px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+  /* The glass's rim light (theme.css draws it as a ring, turned toward the light): bright where the
+     light comes from, faint a quarter turn away, a second, softer highlight opposite. */
+  --ui-island-rim-hot: light-dark(rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.42));
+  --ui-island-rim-cool: light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.06));
+  --ui-island-rim-back: light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.18));
+  /* Inside the rim, a glow from the glass's own thickness; round it, the hairline that keeps it
+     drawn on a page of its own colour. */
+  --ui-shadow-island:
+    inset 0 0 10px -2px light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.05)),
+    0 0 0 0.5px light-dark(color-mix(in oklch, var(--palette-950) 12%, transparent), rgb(0 0 0 / 0.6));
+  --ui-shadow-island-open: var(--ui-shadow-island);
 
   /* Shape */
   --ui-radius-control: var(--brand-radius);
@@ -325,14 +339,6 @@
   :root {
     --ui-text-prose: 1.1875rem;
     --ui-text-prose-line-height: 1.875rem;
-  }
-}
-
-/* New to the kit: on phones (720px and narrower) the floating island menu casts one tighter shadow. */
-@media (width <= 45rem) {
-  :root {
-    --ui-shadow-island: 0 4px 24px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.45));
-    --ui-shadow-island-open: 0 4px 24px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.55));
   }
 }
 
