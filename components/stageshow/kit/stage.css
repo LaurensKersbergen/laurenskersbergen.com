@@ -15,6 +15,14 @@
     margin-inline: auto;
   }
 
+  /* The stage's description for screen readers (StageLabelContext): an empty picture over the
+     scene, which is itself inert and hidden from assistive tech. */
+  .ss-label {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
   .ss-stage {
     /* Surfaces */
     --ss-canvas: #f6f5f4;

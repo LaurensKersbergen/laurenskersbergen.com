@@ -5,6 +5,9 @@ import { useEffect } from "react";
 
 let firstRoute = true;
 
+/** When site.css shows every block anyway, in case this never runs. */
+const REVEAL_FALLBACK_MS = 1500;
+
 /**
  * Marks every [data-reveal] element with data-in once a little of it is in view, so its entrance
  * in site.css plays as it scrolls in (the timeline's bars grow the same way). Mounted once in the
@@ -14,6 +17,9 @@ let firstRoute = true;
  *
  * After the first route change it also marks <html data-intro-seen>: the intro's logos fly in on
  * a full load, not again each time someone comes back to the homepage.
+ *
+ * It also marks <html data-reveal-ready>, which stands down site.css's fallback: without it, every
+ * block comes in by itself 1.5s after load, so content never depends on this script.
  */
 export function RevealObserver() {
   const pathname = usePathname();
@@ -34,6 +40,12 @@ export function RevealObserver() {
     );
 
     const frame = requestAnimationFrame(() => {
+      // Starting after site.css's 1.5s fallback has already shown everything: keep it shown
+      // rather than hide it again to replay the entrance.
+      if (!document.documentElement.hasAttribute("data-reveal-ready") && performance.now() > REVEAL_FALLBACK_MS) {
+        document.querySelectorAll("[data-reveal]").forEach((element) => element.setAttribute("data-in", ""));
+      }
+      document.documentElement.setAttribute("data-reveal-ready", "");
       document.querySelectorAll("[data-reveal]:not([data-in])").forEach((element) => observer.observe(element));
     });
 

@@ -511,7 +511,8 @@
   background: #fff;
   box-shadow: 0 0 0 0.75px #e6e6e3, 0 1px 3px rgb(0 0 0 / 0.1);
   color: #1c1c1a;
-  font-size: 10px;
+  /* 11px, the smallest size Apple's guidelines allow for text. */
+  font-size: 11px;
   line-height: 1;
   font-weight: 600;
   white-space: nowrap;

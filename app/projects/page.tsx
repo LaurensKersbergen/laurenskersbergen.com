@@ -21,7 +21,7 @@ export default function ProjectsPage() {
       <ul className="-mt-[10px] grid grid-cols-3 gap-4 max-[62rem]:grid-cols-2 max-md:-mt-[8px] max-md:grid-cols-1">
         {projects.map((project, i) => (
           <li key={project.slug} data-reveal style={{ "--reveal-delay": `${(i % 3) * 90}ms` } as CSSProperties}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} heading="h2" />
           </li>
         ))}
       </ul>

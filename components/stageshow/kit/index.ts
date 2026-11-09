@@ -3,7 +3,7 @@
 // kit/stageshow.css explicitly loads every kit style up front.
 
 // The stage: the canvas, the script, the cursor, measuring and playback
-export { Stage } from './stage'
+export { Stage, StageLabelContext } from './stage'
 export { useLook } from './looks'
 export { useReducedMotion } from './reduced-motion'
 export { inset, box, between, contains } from './measure'

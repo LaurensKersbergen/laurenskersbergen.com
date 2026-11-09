@@ -216,9 +216,9 @@
   box-sizing: content-box;
   max-width: 42.5rem;
   margin-inline: auto;
-  padding: calc(20px + 36px + env(safe-area-inset-top) + 3rem) 1.5rem 0;
+  padding: calc(20px + var(--pill-h) + env(safe-area-inset-top) + 3rem) 1.5rem 0;
   @media (width >= 48rem) {
-    padding-top: calc(32px + 36px + 6rem);
+    padding-top: calc(32px + var(--pill-h) + 6rem);
   }
   /* The first block's top margin and the last's bottom one (a title's my-6.5, a list's mb-9, a
      post's last paragraph) would add to those spaces; the column's edges are the page's. */

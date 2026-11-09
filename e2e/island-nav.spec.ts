@@ -90,8 +90,10 @@ test("a route change closes it and resets the toggle to Menu", async ({ page }, 
 test.describe("keyboard", () => {
   test.skip(({ isMobile }) => isMobile, "keyboard paths are checked on the desktop profile");
 
-  test("after the name and work with me, the toggle is the next tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
+  test("after the skip link, the name and work with me, the toggle is the next tab stop; Enter opens it and the links follow it in tab order", async ({ page }) => {
     await open(page, "/");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "skip to content" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "laurens", exact: true })).toBeFocused();
     await page.keyboard.press("Tab");

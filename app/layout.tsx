@@ -8,6 +8,7 @@ import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
 import { LiquidGlass } from "@/components/liquid-glass";
 import { HeaderBookCall, SiteName } from "@/components/site-name";
 import { UISounds } from "@/components/ui-sounds";
+import { preferenceFlags } from "@/lib/preferences";
 import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -39,8 +40,9 @@ export const viewport: Viewport = {
   ],
 };
 
-/* Set before the first paint: scripts run, so blocks may wait to reveal themselves (site.css). */
-const motionFlag = "document.documentElement.setAttribute('data-motion','')";
+/* Set before the first paint: scripts run, so blocks may wait to reveal themselves (site.css), and
+   the visitor's own switches for sounds and shortcuts (lib/preferences.ts). */
+const motionFlag = `document.documentElement.setAttribute('data-motion','');${preferenceFlags}`;
 
 export default function RootLayout({
   children,
@@ -53,13 +55,19 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: motionFlag }} />
       </head>
       <body className="min-h-screen">
+        {/* The first stop for a keyboard: straight past the header to the page's own content. */}
+        <a href="#main" className="skip-link">
+          skip to content
+        </a>
         <header>
           <SiteName />
           <HeaderBookCall />
           <SiteIsland />
           <LiquidGlass />
         </header>
-        <main>{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <SiteFooter />
         <RevealObserver />
         <KeyboardShortcuts />

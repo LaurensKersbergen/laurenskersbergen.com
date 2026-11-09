@@ -1,3 +1,4 @@
+import { SitePreferences } from "@/components/site-preferences";
 import { socials } from "@/lib/site";
 
 const place = {
@@ -7,7 +8,7 @@ const place = {
 
 /**
  * The foot of every page: the places to find Laurens in large type, where the
- * site is made, and the copyright.
+ * site is made, the copyright, and the switches for sounds and shortcuts.
  */
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -35,6 +36,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-legal">
           <p>© {year} Laurens Kersbergen. All rights reserved.</p>
+          <SitePreferences />
         </div>
       </div>
     </footer>

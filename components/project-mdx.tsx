@@ -12,7 +12,7 @@ export const projectMdxComponents: MDXComponents = {
   a: MdxLink,
   Scene: ({ name }: { name: string }) => (
     <figure className="media-frame" data-reveal>
-      <ProjectScene name={name} />
+      <ProjectScene name={name} describe />
     </figure>
   ),
   Pair: ({ children }: { children: ReactNode }) => <div className="media-pair">{children}</div>,

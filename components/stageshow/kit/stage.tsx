@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import './stage.css'
 import { checkSeam, createAct, Stopped, type Script } from './act'
 import { Cursor, ripple as spawnRipple, type CursorKind, type CursorStyle } from './cursor'
@@ -13,6 +13,14 @@ import { clamp, easeInOutCubic, isDev, warn } from './util'
 // while it is on screen, and draws the cursor and keycaps over the scene.
 // The script API is act.ts, the cursor cursor.tsx, measuring measure.ts and
 // the look context looks.ts.
+
+/**
+ * What a stage shows, in words, for screen readers. The scene itself is a picture of an interface:
+ * inert and hidden from assistive tech, so nobody tabs into its buttons. A host that wants the
+ * picture described (a project page) provides this; without it the stage is decorative (a card,
+ * whose own text names it).
+ */
+export const StageLabelContext = createContext<string | undefined>(undefined)
 
 /** loop: repeats while on screen. once: plays when first seen, then holds the end. hover: plays while the pointer is over it, settles back when it leaves; on a screen with no hover (a phone) it plays once. */
 export type Play = 'loop' | 'once' | 'hover'
@@ -132,7 +140,11 @@ export function Stage<S extends object>({
   const rootRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
-  const still = !script || reduced
+  const label = useContext(StageLabelContext)
+  // A scene that loops can be paused (WCAG 2.2.2): paused, it shows its still, as under reduced motion.
+  const [paused, setPaused] = useState(false)
+  const pausable = !!script && playProp === 'loop' && !reduced
+  const still = !script || reduced || paused
 
   const [state, setState] = useState<S>(() => (still && poster ? poster : initial))
   const stateRef = useRef(state)
@@ -569,9 +581,12 @@ export function Stage<S extends object>({
 
   return (
     <div ref={fitRef} className={`ss-fit${className ? ` ${className}` : ''}`} style={{ maxWidth: grows ? undefined : width, height: designH * scale }}>
+      {label && <div role="img" aria-label={label} className="ss-label" />}
       <div
         ref={rootRef}
         className="ss-stage"
+        inert
+        aria-hidden
         data-specimen={specimen || undefined}
         data-unframed={unframed || undefined}
         data-still={still || undefined}
@@ -607,6 +622,22 @@ export function Stage<S extends object>({
         {script && <Keycaps rows={[lastKeys, keys]} at={typeof keysAt === 'string' ? keysAt : keysAt[layout]} />}
         {showCursor && <Cursor cursorRef={cursorRef} style={cursor!.style} kind={kind} />}
       </div>
+      {pausable && (
+        <button
+          type="button"
+          className="ss-pause"
+          // One name, its state in aria-pressed: "Pause animation, pressed" while it's paused
+          aria-label="Pause animation"
+          aria-pressed={paused}
+          onClick={() => setPaused((p) => !p)}
+        >
+          {paused ? (
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden><path d="M4 2.5v9l7.5-4.5z" fill="currentColor" /></svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden><rect x="3" y="2.5" width="3" height="9" rx="1" fill="currentColor" /><rect x="8" y="2.5" width="3" height="9" rx="1" fill="currentColor" /></svg>
+          )}
+        </button>
+      )}
     </div>
   )
 }

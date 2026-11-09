@@ -21,12 +21,12 @@
   /* Where the page content starts: 96px under the header pills (36px tall, 32px from
      the top; 20px from the top and 48px under them on phones). */
   .page-top {
-    padding-top: calc(32px + 36px + 6rem);
+    padding-top: calc(32px + var(--pill-h) + 6rem);
   }
 
   @media (width < 48rem) {
     .page-top {
-      padding-top: calc(20px + 36px + env(safe-area-inset-top) + 3rem);
+      padding-top: calc(20px + var(--pill-h) + env(safe-area-inset-top) + 3rem);
     }
   }
 
@@ -71,6 +71,20 @@
   /* Sideways, for cards coming in along the carousel. */
   :root[data-motion] [data-reveal="x"]:not([data-in]) {
     transform: translateX(40px);
+  }
+
+  /* A safety net: if the script that reveals blocks hasn't run 1.5s in (a slow network, a failed
+     load), everything comes in anyway, so content never waits on JavaScript. The observer marks
+     <html data-reveal-ready> when it starts (components/reveal-observer.tsx). */
+  :root[data-motion]:not([data-reveal-ready]) [data-reveal]:not([data-in]) {
+    animation: reveal-fallback 600ms var(--ease-out) 1.5s forwards;
+  }
+
+  @keyframes reveal-fallback {
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
@@ -251,18 +265,19 @@
 /* ------------------------------------------------------------------------------------------ */
 
 @layer components {
-  /* The header pills' size: 36px tall, 14px words at 500, 12px either side. */
+  /* The header pills' size (--pill-h, --pill-text below): 36px tall with 14px words at 500 for a
+     mouse, 44px with 17px words on touch screens; 12px either side. */
   .pill {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    height: 36px;
-    padding: 0 12px;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
     border-radius: 999px;
     background: var(--ghost);
     color: var(--ink);
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
     font-weight: 500;
     text-decoration: none;
     white-space: nowrap;
@@ -307,8 +322,8 @@
   .round-button {
     display: inline-grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: var(--pill-h);
+    height: var(--pill-h);
     border: 0;
     border-radius: 999px;
     background: var(--ghost);
@@ -1253,6 +1268,25 @@
     border-radius: 0.25rem;
   }
 
+  /* On touch screens every footer link is at least 44px tall, Apple's minimum touch target; the
+     rows close up the gaps they had between them, so the footer keeps its rhythm. */
+  @media (pointer: coarse) {
+    .footer-social a,
+    .footer-place a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+    }
+
+    .footer-social {
+      row-gap: 0;
+    }
+
+    .footer-place {
+      gap: 0;
+    }
+  }
+
   .footer-place {
     display: grid;
     gap: 0.5rem;
@@ -1273,6 +1307,10 @@
   }
 
   .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
     font-size: 0.9375rem;
     line-height: 1.5rem;
     color: var(--muted);
@@ -1282,6 +1320,92 @@
     .footer-legal {
       font-size: 0.875rem;
     }
+  }
+
+  /* The switches for sounds and shortcuts (components/site-preferences.tsx): muted words like the
+     copyright beside them, each with its state in ink. Only for a mouse or trackpad, where the
+     sounds play and the keys exist. */
+  .site-preferences {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .site-preferences__switch {
+    display: inline-flex;
+    gap: 0.375rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: color 160ms ease;
+  }
+
+  .site-preferences__state {
+    color: var(--ink);
+  }
+
+  @media (hover: hover) {
+    .site-preferences__switch:hover {
+      color: var(--ink);
+    }
+  }
+
+  .site-preferences__switch:focus-visible {
+    border-radius: 0.25rem;
+  }
+
+  @media (pointer: coarse) {
+    .site-preferences {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Skip link: the first Tab stop, out of sight until it has focus                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* Focused, it lands over the name pill in the same spot and shape, in solid ink so it can't be
+     missed; one more Tab and it is gone again. */
+  .skip-link {
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top));
+    left: calc(20px + env(safe-area-inset-left));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+    font-weight: 500;
+    text-decoration: none;
+    transform: translateY(calc(-100% - 40px));
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  @media (width > 45rem) {
+    .skip-link {
+      top: 32px;
+      left: 36px;
+    }
+  }
+
+  /* The skip link's target takes focus so Tab carries on from the content, without a ring round
+     the whole page. */
+  #main:focus {
+    outline: none;
   }
 }
 
@@ -1374,14 +1498,14 @@
   .header-book__pill {
     display: inline-flex;
     align-items: center;
-    height: 36px;
-    padding: 0 12px;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
     border: 1px solid transparent;
     border-radius: 999px;
     background: var(--ink);
     color: var(--bg);
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
     font-weight: 500;
     white-space: nowrap;
     text-decoration: none;
@@ -1504,7 +1628,7 @@
   .copy-email {
     display: inline-flex;
     align-items: center;
-    height: 36px;
+    height: var(--pill-h);
     max-width: 100%;
     border-radius: 999px;
     background: var(--ghost);
@@ -1512,12 +1636,12 @@
 
   .copy-email__address {
     min-width: 0;
-    padding: 0 8px 0 12px;
+    padding: 0 0.5rem 0 0.75rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 14px;
-    line-height: 36px;
+    font-size: var(--pill-text);
+    line-height: var(--pill-h);
     font-weight: 500;
     color: var(--ink);
     text-decoration: none;
@@ -1527,7 +1651,7 @@
     display: inline-flex;
     align-items: center;
     height: 100%;
-    padding: 0 12px 0 8px;
+    padding: 0 0.75rem 0 0.5rem;
     border: 0;
     border-radius: 0 999px 999px 0;
     background: transparent;
@@ -1535,7 +1659,7 @@
        darker keeps it. Dark mode's muted already clears it. */
     color: light-dark(var(--palette-600), var(--muted));
     font: inherit;
-    font-size: 14px;
+    font-size: var(--pill-text);
     font-weight: 500;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -1617,11 +1741,12 @@
  */
 @layer components {
   .site-name .ui-island-pill {
-    height: 36px;
-    gap: 8px;
-    padding: 0 12px 0 5px;
-    font-size: 14px;
-    line-height: 20px;
+    height: var(--pill-h);
+    gap: 0.5rem;
+    /* The avatar sits an even inset from the top, bottom and left, plus the 1px edge. */
+    padding: 0 0.75rem 0 calc((var(--pill-h) - 1.5rem) / 2 - 1px);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
     font-weight: 500;
   }
 
@@ -1629,8 +1754,8 @@
      is an outline, which draws over the photo. */
   .site-avatar {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     overflow: hidden;
     outline: 1px solid light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.12));
@@ -1742,33 +1867,57 @@
    */
   nav.ui-island {
     --island-collapsed-w: var(--menu-w);
-    --island-collapsed-h: 36px;
-    --island-open-w: 132px;
+    --island-collapsed-h: var(--pill-h);
+    --island-open-w: 8.25rem;
   }
 
+  /* The toggle's row (its words and 4px above and below) centred in the pill, less the 1px edge. */
   nav.ui-island .ui-island-inner {
-    padding: 3px 16px 6px 36px;
+    padding: calc((var(--pill-h) - var(--pill-line) - 8px) / 2 - 1px) 16px 6px 36px;
   }
 
   /* With the key hint showing, the toggle's right side is the hint's 10px inset (see the hints
      below): 13px here, less the 4px the collapsed contents sit right, plus the 1px edge. */
   @media (pointer: fine) {
-    nav.ui-island .ui-island-inner {
+    :root:not([data-shortcuts="off"]) nav.ui-island .ui-island-inner {
       padding-right: 13px;
     }
   }
 
-  /* The toggle centres its words and hint on one line, like the pills beside it. */
+  /* The toggle centres its words and hint on one line, like the pills beside it. It is as wide as
+     they are, at the panel's right, so it sits inside the collapsed pill however wide the open
+     panel is (its ::after makes the whole pill the button). */
   nav.ui-island .ui-island-trigger {
     display: flex;
+    align-self: flex-end;
     align-items: center;
     justify-content: flex-end;
   }
 
   nav.ui-island .ui-island-trigger,
   nav.ui-island .ui-island-link {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+  }
+
+  /* On touch screens each link is a 44px row, Apple's minimum touch target, and the panel opens
+     wide enough for the longest one at 17px. */
+  @media (pointer: coarse) {
+    :root nav.ui-island {
+      --island-open-w: 10.25rem;
+    }
+
+    nav.ui-island .ui-island-link {
+      padding-block: calc((2.75rem - var(--pill-line)) / 2);
+    }
+
+    /* Open, "close" is a 32px row; its press area reaches up over the panel's top edge (but not
+       down into "home") to make the 44px. */
+    nav.ui-island[data-open] .ui-island-trigger::after {
+      content: "";
+      position: absolute;
+      inset: -13px -12px 0 -36px;
+    }
   }
 
   nav.ui-island .ui-island-trigger {
@@ -1778,7 +1927,7 @@
   @media (width <= 45rem) {
     /* Phones: the "work with me" row is the longest (88px), so the panel opens to fit it. */
     nav.ui-island {
-      --island-open-w: 140px;
+      --island-open-w: 8.75rem;
     }
 
     nav.ui-island .ui-island-inner {
@@ -1792,7 +1941,7 @@
 
   /* A narrow window with a mouse: no sideways nudge here, so 9px and the edge make the 10px. */
   @media (width <= 45rem) and (pointer: fine) {
-    nav.ui-island .ui-island-inner {
+    :root:not([data-shortcuts="off"]) nav.ui-island .ui-island-inner {
       padding-right: 9px;
     }
   }
@@ -1820,13 +1969,23 @@
  */
 :root {
   /* The collapsed menu: 12px and the edge, "menu" (37px), its hint (6px + 16px) and the hint's
-     10px inset (see the hints below). */
-  --menu-w: 82px;
+     10px inset (see the hints below). In rem, like the pills, so it grows with the words when
+     someone asks their browser for larger text. */
+  --menu-w: 5.125rem;
+  /* The header pills: 36px tall, 14px words on a 20px line. */
+  --pill-h: 2.25rem;
+  --pill-text: 0.875rem;
+  --pill-line: 1.25rem;
 }
 
+/* Touch screens: 44px pills, Apple's minimum touch target, with 17px words, the size of iOS's own
+   bar buttons. The menu's hint goes, so it is "menu" (45px) with 12px either side and the edge. */
 @media (pointer: coarse) {
   :root {
-    --menu-w: 63px;
+    --menu-w: 4.4375rem;
+    --pill-h: 2.75rem;
+    --pill-text: 1.0625rem;
+    --pill-line: 1.5rem;
   }
 }
 
@@ -1836,8 +1995,8 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    min-width: 16px;
-    height: 16px;
+    min-width: 1rem;
+    height: 1rem;
     margin-left: 6px;
     padding: 0 2px;
     border: 0.5px solid light-dark(rgb(0 0 0 / 0.063), rgb(255 255 255 / 0.1));
@@ -1845,8 +2004,8 @@
     background: light-dark(rgb(0 0 0 / 0.063), rgb(255 255 255 / 0.1));
     color: light-dark(rgb(0 0 0 / 0.6), rgb(255 255 255 / 0.66));
     font-family: inherit;
-    font-size: 11px;
-    line-height: 16px;
+    font-size: 0.6875rem;
+    line-height: 1rem;
     font-weight: 500;
     text-transform: uppercase;
     user-select: none;
@@ -1859,13 +2018,13 @@
   }
 
   @media (pointer: fine) {
-    .pill:has(> .kbd),
-    .copy-email__button {
+    :root:not([data-shortcuts="off"]) .pill:has(> .kbd),
+    :root:not([data-shortcuts="off"]) .copy-email__button {
       padding-right: 10px;
     }
 
     /* This one has a 1px edge. */
-    .header-book__pill:has(> .kbd) {
+    :root:not([data-shortcuts="off"]) .header-book__pill:has(> .kbd) {
       padding-right: 9px;
     }
   }
@@ -1877,10 +2036,26 @@
     color: light-dark(rgb(255 255 255 / 0.72), rgb(0 0 0 / 0.6));
   }
 
+  /* Shortcuts turned off in the footer (lib/preferences.ts): no hints, and the pills and the menu
+     go back to the words alone, as on a touch screen. */
+  :root[data-shortcuts="off"] .kbd {
+    display: none;
+  }
+
   @media (pointer: coarse) {
     .kbd {
       display: none;
     }
+  }
+}
+
+:root[data-shortcuts="off"] {
+  --menu-w: 3.9375rem;
+}
+
+@media (pointer: coarse) {
+  :root[data-shortcuts="off"] {
+    --menu-w: 4.4375rem;
   }
 }
 
@@ -1913,7 +2088,7 @@
 
   .about__aside {
     position: sticky;
-    top: calc(32px + 36px + 2rem);
+    top: calc(32px + var(--pill-h) + 2rem);
     flex: 0 1 24rem;
     min-width: 0;
   }
