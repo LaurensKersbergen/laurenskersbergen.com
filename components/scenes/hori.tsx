@@ -8,6 +8,7 @@ import {
   ChevronDown,
   CircleCheck,
   Clock,
+  Image as ImageIcon,
   Maximize2,
   MapPin,
   Minus,
@@ -18,6 +19,7 @@ import {
   Redo2,
   Shovel,
   Sprout,
+  SquareDashedMousePointer,
   Undo2,
   X,
 } from "lucide-react";
@@ -126,7 +128,9 @@ function Sidebar({ s }: { s: S }) {
       </div>
       <div className="hr-tabs" aria-hidden>
         <span className="hr-tab" data-on="">
-          <CircleCheck size={16} strokeWidth={1.5} />
+          <span className="hr-tab__icon">
+            <CircleCheck size={16} strokeWidth={1.5} />
+          </span>
           Taken
         </span>
         <span className="hr-tab">
@@ -496,7 +500,7 @@ function Cover({ still }: SceneProps) {
 }
 
 /* ------------------------------------------------------------------------------------------------
- * The rotation: a bed's panel, over the bed it describes.
+ * The rotation: a blok's panel, over the blok it describes: its rotation and its notes.
  * --------------------------------------------------------------------------------------------- */
 
 const ROTATION = [
@@ -505,13 +509,20 @@ const ROTATION = [
   { year: "2028", crop: "Aardappel", state: "next" },
 ];
 
+/* A blok's own note, as Gerrit keeps them ("knoflook op ruggen", "veel slakken"). */
+const NOTE = "Veel slakken na regen. Bierval bij de sla.";
+
+/**
+ * Blok 6's panel as the app has it now: its crop rotation, then its notes, which also take photos
+ * (the dashed tile adds one). Bemesten is left out so the panel fits the card whole.
+ */
 function Rotation() {
   return (
     <Stage width={640} height={520} compact={{ below: 480, width: 358, height: 420 }} fill className="scene hr">
-      {() => (
+      {(_s, _rect, layout) => (
         <div className="hr-rot">
           <BedShot className="hr-rot__garden" />
-          <div className="hr-panel hr-bed">
+          <Popover show origin="bottom right" className="hr-panel hr-bed">
             <div className="hr-panel__head">
               <span className="hr-bed__no">6</span>
               <span className="hr-panel__title">
@@ -527,19 +538,32 @@ function Rotation() {
               <div className="hr-rotation">
                 {ROTATION.map((step) => (
                   <span key={step.year} className="hr-rotation__step" data-state={step.state}>
+                    <span className="hr-rotation__year">{step.year}</span>
                     <span className="hr-rotation__dot" />
                     <span className="hr-rotation__crop">{step.crop}</span>
-                    <span className="hr-rotation__year">{step.year}</span>
                   </span>
                 ))}
               </div>
             </div>
             <div className="hr-block">
-              <span className="hr-block__label">Bemesten</span>
-              <span className="hr-block__text">2 kg compost per m² voor blad</span>
-              <span className="hr-block__hint">Begin november, of vroeg in het voorjaar.</span>
+              <span className="hr-block__label">Notities</span>
+              <span className="hr-note">{NOTE}</span>
+              <span className="hr-photos">
+                <span className="hr-photo-add">
+                  <ImageIcon size={16} strokeWidth={1.5} />
+                  Foto
+                </span>
+              </span>
             </div>
-          </div>
+            {layout === "compact" ? null : (
+              <div className="hr-panel__foot hr-bed__foot">
+                <span className="hr-select-all">
+                  <SquareDashedMousePointer size={16} strokeWidth={1.5} />
+                  Alles selecteren
+                </span>
+              </div>
+            )}
+          </Popover>
         </div>
       )}
     </Stage>

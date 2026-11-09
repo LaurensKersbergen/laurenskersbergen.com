@@ -17,10 +17,12 @@
   --hr-popover: light-dark(#fff, oklch(0.205 0.004 85));
   --hr-surface: light-dark(#fff, oklch(0.205 0.004 85));
   --hr-warn: light-dark(rgb(145 100 0), oklch(0.8 0.13 85));
-  --hr-harvest: light-dark(oklch(0.93 0.035 145), oklch(0.33 0.045 145));
+  --hr-harvest: light-dark(#eef3ed, #242b26);
+  /* The calendar's header band, a step off the page. */
+  --hr-band: light-dark(#fdfdfd, oklch(0.175 0.004 85));
   --hr-strong: light-dark(oklch(0.269 0.004 85), oklch(0.922 0.0032 85));
   --hr-on-strong: light-dark(oklch(0.985 0.0016 85), oklch(0.205 0.004 85));
-  --hr-overlay: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.06), oklch(1 0 0 / 0.08)), 0 4px 12px -2px light-dark(oklch(0.145 0.004 85 / 0.08), oklch(0 0 0 / 0.35)), 0 16px 40px -12px light-dark(oklch(0.145 0.004 85 / 0.16), oklch(0 0 0 / 0.5));
+  --hr-overlay: 0 0 0 0.5px light-dark(oklch(0.439 0.004 85 / 0.2), oklch(1 0 0 / 0.12)), 0 2px 4px -1px light-dark(oklch(0.145 0.004 85 / 0.06), oklch(0 0 0 / 0.3)), 0 12px 32px -8px light-dark(oklch(0.145 0.004 85 / 0.16), oklch(0 0 0 / 0.5));
   --hr-control: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.08), oklch(1 0 0 / 0.08)), 0 1px 2px light-dark(oklch(0.145 0.004 85 / 0.06), oklch(0 0 0 / 0.3));
   /* The 3D view's clear colour, around the garden in every render. */
   --hr-sky: #f3f2ef;
@@ -67,15 +69,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 0 8px 0 12px;
+  gap: 4px;
+  height: 56px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--hr-line);
 }
 
 .hr .hr-user {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--hr-ink-2);
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: var(--hr-ink-3);
 }
 
 .hr .hr-user__avatar {
@@ -92,14 +99,14 @@
 
 .hr .hr-user__name {
   color: var(--hr-ink);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 500;
 }
 
 .hr .hr-side__icons {
   display: flex;
-  gap: 2px;
+  gap: 4px;
 }
 
 .hr .hr-icon {
@@ -114,11 +121,10 @@
 .hr .hr-icon--dot::after {
   content: "";
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
-  border: 1.5px solid var(--hr-side);
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
   background: var(--ss-accent);
 }
@@ -126,8 +132,7 @@
 .hr .hr-tabs {
   display: flex;
   gap: 4px;
-  padding: 0 8px 8px;
-  border-bottom: 1px solid var(--hr-line);
+  padding: 8px;
 }
 
 .hr .hr-tab {
@@ -136,43 +141,64 @@
   gap: 6px;
   height: 32px;
   padding: 0 8px;
-  border-radius: 6px;
-  color: var(--hr-ink-2);
-  font-size: 14px;
-  line-height: 20px;
+  border-radius: 8px;
+  color: var(--hr-ink-3);
+  font-size: 13px;
+  line-height: 18px;
 }
 
 .hr .hr-tab[data-on] {
-  padding: 0 10px 0 8px;
+  padding: 0 12px 0 8px;
   background: var(--hr-selected);
   color: var(--hr-ink);
 }
 
+/* Taken's dot: there is something to do this week. */
+.hr .hr-tab__icon {
+  position: relative;
+  display: grid;
+}
+
+.hr .hr-tab__icon::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ss-accent);
+}
+
 .hr .hr-lists {
-  padding: 4px 8px 0;
+  padding: 12px 8px 0;
+}
+
+.hr .hr-section + .hr-section {
+  margin-top: 12px;
 }
 
 .hr .hr-section__head {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 14px 8px 6px;
-  color: var(--hr-ink-2);
+  padding: 0 8px 6px;
+  color: var(--hr-ink-3);
   font-size: 12px;
   line-height: 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .hr .hr-count {
   display: inline-grid;
   place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
   border-radius: 999px;
   background: var(--hr-fill);
   color: var(--hr-ink-2);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -184,7 +210,7 @@
   align-items: center;
   gap: 4px;
   height: 58px;
-  padding-right: 6px;
+  margin-bottom: 1px;
   border-radius: 8px;
   transition: background-color 160ms ease;
 }
@@ -196,9 +222,9 @@
 .hr .hr-task__check {
   display: grid;
   place-items: center;
+  flex: none;
   width: 32px;
   height: 32px;
-  margin-left: 4px;
 }
 
 .hr .hr-task__thumb {
@@ -232,8 +258,8 @@
 .hr .hr-task__title {
   overflow: hidden;
   color: var(--hr-ink);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -243,8 +269,8 @@
   align-items: center;
   gap: 6px;
   color: var(--hr-ink-2);
-  font-size: 13px;
-  line-height: 18px;
+  font-size: 12px;
+  line-height: 16px;
   white-space: nowrap;
 }
 
@@ -279,14 +305,14 @@
 
 .hr .hr-main {
   display: grid;
-  grid-template-rows: 52px minmax(0, 1fr);
+  grid-template-rows: 56px minmax(0, 1fr);
   min-width: 0;
 }
 
 .hr .hr-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 0 16px;
   border-bottom: 1px solid var(--hr-line);
   background: var(--hr-main);
@@ -296,24 +322,30 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  height: 32px;
+  /* The inline select's hover reaches 8px past its text; 8px more keep it off the divider. */
+  margin-right: 8px;
+  padding: 0 8px;
+  border-radius: 8px;
   color: var(--hr-ink);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
 }
 
 .hr .hr-select svg {
-  color: var(--hr-ink-2);
+  color: var(--hr-ink-3);
 }
 
 .hr .hr-divider {
   width: 1px;
-  height: 20px;
+  height: 24px;
   background: var(--hr-line);
 }
 
 /* Boven and 3D: the kit's segmented control as the app draws it. */
 .hr .hr-seg {
   display: inline-flex;
+  gap: 2px;
   padding: 2px;
   border-radius: 8px;
   background: var(--hr-fill);
@@ -326,8 +358,8 @@
   padding: 0 12px;
   border-radius: 6px;
   color: var(--hr-ink-2);
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 500;
 }
 
@@ -340,7 +372,7 @@
 .hr .hr-season {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .hr .hr-play {
@@ -348,22 +380,23 @@
   place-items: center;
   width: 32px;
   height: 32px;
-  color: var(--hr-ink);
+  color: var(--hr-ink-2);
 }
 
+/* The week slider: a 4px track, filled in the strong ink, and a 16px knob. */
 .hr .hr-scrub {
   position: relative;
-  width: 140px;
-  height: 16px;
+  width: 160px;
+  height: 20px;
 }
 
 .hr .hr-scrub::before,
 .hr .hr-scrub__fill {
   content: "";
   position: absolute;
-  top: 7px;
+  top: 8px;
   left: 0;
-  height: 2px;
+  height: 4px;
   border-radius: 999px;
 }
 
@@ -374,16 +407,16 @@
 
 .hr .hr-scrub__fill {
   width: calc(var(--at) * 100%);
-  background: var(--hr-ink);
+  background: var(--hr-strong);
   transition: width 480ms var(--ease-travel, ease);
 }
 
 .hr .hr-scrub__knob {
   position: absolute;
-  top: 1px;
-  left: calc(var(--at) * 100% - 7px);
-  width: 14px;
-  height: 14px;
+  top: 2px;
+  left: calc(var(--at) * 100% - 8px);
+  width: 16px;
+  height: 16px;
   border-radius: 999px;
   background: var(--hr-surface);
   box-shadow: 0 0 0 1px light-dark(oklch(0.145 0.004 85 / 0.18), oklch(1 0 0 / 0.2)), 0 1px 3px oklch(0 0 0 / 0.2);
@@ -393,8 +426,8 @@
 .hr .hr-week {
   display: inline-flex;
   color: var(--hr-ink);
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -468,6 +501,7 @@
    semibold, a hairline, the family. */
 .hr .hr-chip {
   position: absolute;
+  will-change: transform;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -541,9 +575,9 @@
 }
 
 .hr .hr-zoom {
-  min-width: 46px;
+  min-width: 48px;
   color: var(--hr-ink);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 20px;
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -556,7 +590,7 @@
   --ss-popover-shadow: var(--hr-overlay);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
   width: 360px;
   padding: 16px 16px 0;
   border-radius: 12px;
@@ -585,19 +619,19 @@
 .hr .hr-toast {
   gap: 12px;
   /* One inset all round, the button's; the message carries the rest of its left space itself. */
-  padding: 6px;
+  padding: 8px;
   border-radius: 12px;
   background: var(--hr-popover);
   box-shadow: var(--hr-overlay);
   color: var(--hr-ink);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .hr .hr-toast > span:not(.ss-toast__action) {
-  padding-left: 10px;
+  padding-left: 8px;
 }
 
 .hr .hr-toast .ss-toast__action {
@@ -608,12 +642,13 @@
 .hr .hr-toast__undo {
   display: inline-grid;
   place-items: center;
-  height: 28px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 12px;
   border-radius: 8px;
   background: var(--hr-surface);
-  box-shadow: inset 0 0 0 1px var(--hr-line-2);
-  font-size: 13px;
+  box-shadow: var(--hr-control);
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 500;
 }
 
@@ -623,12 +658,8 @@
 
 .hr .hr-panel__head {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.hr .hr-panel__head > .ss-check {
-  margin-top: 2px;
+  align-items: center;
+  gap: 20px;
 }
 
 .hr .hr-panel__title {
@@ -637,39 +668,43 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 500;
 }
 
 .hr .hr-panel__sub {
   color: var(--hr-ink-2);
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 450;
 }
 
+/* The close button's 32px square, its corner 12px in from the panel's. */
 .hr .hr-panel__close {
   display: grid;
+  flex: none;
+  align-self: flex-start;
   place-items: center;
-  width: 24px;
-  height: 24px;
-  margin: -2px -4px 0 0;
+  width: 32px;
+  height: 32px;
+  margin: -4px -4px 0 0;
   color: var(--hr-ink-2);
 }
 
 .hr .hr-facts {
   display: grid;
-  gap: 10px;
+  gap: 4px;
   margin: 0;
 }
 
 .hr .hr-fact {
   display: grid;
-  grid-template-columns: 108px minmax(0, 1fr);
+  grid-template-columns: 116px minmax(0, 1fr);
   align-items: center;
+  height: 30px;
   font-size: 13px;
-  line-height: 20px;
+  line-height: 18px;
 }
 
 .hr .hr-fact dt {
@@ -679,29 +714,41 @@
   color: var(--hr-ink-2);
 }
 
-.hr .hr-fact dd {
-  margin: 0;
-  color: var(--hr-ink);
+.hr .hr-fact dt svg {
+  color: var(--hr-ink-3);
 }
 
+.hr .hr-fact dd {
+  margin: 0;
+  color: var(--hr-ink-2);
+}
+
+/* The panel's foot: its buttons 8px in, the corner's own inset. */
 .hr .hr-panel__foot {
   display: flex;
-  gap: 6px;
-  margin: 2px -16px 0;
-  padding: 12px 16px;
+  gap: 4px;
+  margin: 0 -16px;
+  padding: 8px;
   border-top: 1px solid var(--hr-line);
+}
+
+.hr .hr-done,
+.hr .hr-later {
+  --ss-button-pad: 12px;
+  --ss-button-pad-icon: 10px;
+  --ss-button-gap: 6px;
+  border-radius: 8px;
+  font-size: 12px;
 }
 
 /* Gedaan: the app's strong button, a near-black fill (near-white in dark mode). */
 .hr .hr-done {
   --ss-accent: var(--hr-strong);
   color: var(--hr-on-strong);
-  font-size: 13px;
 }
 
 .hr .hr-later {
-  color: var(--hr-ink);
-  font-size: 13px;
+  color: var(--hr-ink-2);
 }
 
 /* ---- the hero on phones: the bed and its task ---- */
@@ -760,7 +807,8 @@
   display: flex;
   align-items: center;
   height: 84px;
-  padding: 32px 0 0 14px;
+  /* The toolbar's 16px gutter, under the card's 32px bleed. */
+  padding: 32px 0 0 16px;
   border-bottom: 1px solid var(--hr-line);
   background: var(--hr-main);
 }
@@ -802,102 +850,75 @@
   left: -120px;
 }
 
-/* Where the app puts it: the canvas's bottom-right, here a gutter in. */
+/* Where the app puts it: the canvas's bottom-right, here a gutter in. Sections 16px apart, as the
+   app's panel spaces them. */
 .hr .hr-bed {
   position: absolute;
   right: 32px;
   bottom: 32px;
-  padding-bottom: 16px;
+  gap: 16px;
 }
 
 .hr .hr-bed__no {
   display: grid;
   flex: none;
   place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: var(--hr-fill);
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  /* Blad's tile: its group's tint (the app's green). */
+  background: light-dark(#eef3ed, #242b26);
   color: var(--hr-ink);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
+/* The head's number tile sits 12px from its title, the check's 32px target 20px. */
 .hr .hr-bed .hr-panel__head {
-  align-items: center;
+  gap: 12px;
 }
 
 .hr .hr-block {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
 .hr .hr-block__label {
-  margin-bottom: 0;
-  color: var(--hr-ink-2);
+  padding-bottom: 6px;
+  color: var(--hr-ink-3);
   font-size: 12px;
   line-height: 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.hr .hr-block__text {
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.hr .hr-block__hint {
-  color: var(--hr-ink-2);
-  font-size: 13px;
-  line-height: 20px;
-}
-
-/* Three years on one line: last year, this one (filled), the next. */
+/* Three years on one line: each year over its dot, its crop under it, all left-aligned in thirds;
+   last year to this one in ink, this one to the next quieter, dot to dot. */
 .hr .hr-rotation {
-  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.hr .hr-rotation::before,
-.hr .hr-rotation::after {
-  content: "";
-  position: absolute;
-  top: 5px;
-  height: 2px;
-}
-
-/* Last year to this one in ink, this one to the next quieter: dot centre to dot centre. */
-.hr .hr-rotation::before {
-  left: 6px;
-  right: 50%;
-  background: var(--hr-ink);
-}
-
-.hr .hr-rotation::after {
-  left: 50%;
-  right: 6px;
-  background: var(--hr-line-2);
+  column-gap: 16px;
 }
 
 .hr .hr-rotation__step {
   position: relative;
   display: grid;
   justify-items: start;
+  gap: 8px;
 }
 
-.hr .hr-rotation__dot {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 8px;
+.hr .hr-rotation__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 29px;
+  left: 16px;
+  right: -16px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--hr-ink);
 }
 
-.hr .hr-rotation__step:nth-child(2) {
-  justify-items: center;
-}
-
-.hr .hr-rotation__step:nth-child(3) {
-  justify-items: end;
+.hr .hr-rotation__step[data-state="now"]::after {
+  background: var(--hr-line-2);
 }
 
 .hr .hr-rotation__year {
@@ -907,6 +928,7 @@
 }
 
 .hr .hr-rotation__dot {
+  box-sizing: border-box;
   width: 12px;
   height: 12px;
   border: 2px solid var(--hr-ink);
@@ -923,24 +945,65 @@
 }
 
 .hr .hr-rotation__crop {
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
 }
 
-.hr .hr-rotation__step[data-state="now"] .hr-rotation__crop {
+/* The blok's note, in its field as the app keeps it editable: three lines high. */
+.hr .hr-note {
+  box-sizing: border-box;
+  height: 72px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--hr-surface);
+  box-shadow: inset 0 0 0 1px var(--hr-line-2);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.hr .hr-photos {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* The tile that adds a photo: dashed, its icon over its word. */
+.hr .hr-photo-add {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  width: 76px;
+  height: 76px;
+  box-sizing: border-box;
+  border: 1px dashed var(--hr-line-2);
+  border-radius: 6px;
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.hr .hr-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  /* On the panel's 16px edge with everything above it. */
+  padding: 0;
+  border-radius: 8px;
+  color: var(--hr-ink-2);
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 500;
 }
 
 .hr .hr-bed__foot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 2px -16px 0;
-  padding: 12px 16px;
-  border-top: 1px solid var(--hr-line);
-  color: var(--hr-ink);
-  font-size: 13px;
-  line-height: 20px;
+  padding: 8px 16px;
+}
+
+.hr .hr-select-all svg {
+  color: var(--hr-ink-2);
 }
 
 /* ---- the calendar: the cabbages through the year ---- */
@@ -968,6 +1031,7 @@
   height: 44px;
   align-items: center;
   padding: 0 16px;
+  background: var(--hr-band);
   color: var(--hr-ink-2);
   font-size: 12px;
   line-height: 16px;
@@ -1007,8 +1071,10 @@
 .hr .hr-cal__months {
   position: relative;
   height: 32px;
-  border-top: 1px solid var(--hr-line);
   border-bottom: 1px solid var(--hr-line);
+  /* The band runs on under the grid's left inset too. */
+  background: var(--hr-band);
+  box-shadow: -16px 0 0 var(--hr-band), -16px 1px 0 var(--hr-line);
   color: var(--hr-ink-2);
   font-size: 12px;
   line-height: 32px;
@@ -1062,18 +1128,24 @@
   padding-right: 10px;
   background: var(--hr-main);
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   height: 40px;
-  font-size: 13px;
-  line-height: 20px;
-  font-weight: 500;
+  color: var(--hr-ink-3);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.hr .hr-cal__group .hr-count {
+  margin-left: 2px;
 }
 
 .hr .hr-cal__dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--ss-accent);
+  /* Kool's category colour, the app's info blue. */
+  background: light-dark(#3c7098, #5990e3);
 }
 
 .hr .hr-cal__row {
@@ -1115,8 +1187,8 @@
   gap: 6px;
   padding-left: 8px;
   color: var(--hr-ink);
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
   white-space: nowrap;
   text-shadow:
     0 0 3px var(--hr-surface),
@@ -1162,8 +1234,9 @@
   width: auto;
 }
 
-.hr .ss-stage[data-layout="compact"] .hr-bed .hr-block__hint {
-  display: none;
+/* No foot on phones (the panel would outgrow the card), so it closes on its own padding. */
+.hr .ss-stage[data-layout="compact"] .hr-bed {
+  padding-bottom: 16px;
 }
 
 /* March to December across the phone's column: 40 quarter months on a 294px track. */
