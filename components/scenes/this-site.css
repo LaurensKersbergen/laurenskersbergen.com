@@ -30,7 +30,8 @@
 
 .ts .ts-island[data-open] {
   width: 148px;
-  height: 242px;
+  /* The toggle row, four 34px links and the bottom inset. */
+  height: 208px;
   border-radius: 29px;
   background: light-dark(rgba(246, 246, 246, 0.9), rgba(38, 38, 42, 0.9));
   box-shadow: var(--ui-shadow-island-open);

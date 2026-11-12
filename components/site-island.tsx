@@ -9,7 +9,6 @@ import { Kbd } from "@/components/kbd";
 const sections = [
   { href: "/", label: "home" },
   { href: "/projects", label: "projects" },
-  { href: "/writing", label: "writing" },
   { href: "/about", label: "about" },
   { href: "/listening", label: "listening" },
 ];

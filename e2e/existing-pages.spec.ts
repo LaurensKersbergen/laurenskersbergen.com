@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { expectAccessible } from "./helpers";
 
 // The pages that existed before the starter kit's theme came in: they still load and pass axe in both schemes.
-const pages = ["/", "/about", "/writing", "/listening"];
+const pages = ["/", "/about", "/listening"];
 
 for (const colorScheme of ["light", "dark"] as const) {
   test.describe(`${colorScheme} mode`, () => {

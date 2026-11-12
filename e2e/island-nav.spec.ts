@@ -34,9 +34,9 @@ test("the toggle reads Menu on every page, and the current section's link is mar
   await expectClosed(page);
   await expect(currentLink(page)).toHaveText("home");
 
-  await open(page, "/writing/hello-world");
+  await open(page, "/projects/meal-planner");
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("writing");
+  await expect(currentLink(page)).toHaveText("projects");
 
   await open(page, "/listening");
   await expectClosed(page);
@@ -47,7 +47,7 @@ test("pressing the toggle opens it, showing every link, and pressing it again cl
   await open(page, "/");
   await press(page, testInfo);
   await expectOpen(page);
-  for (const name of ["home", "projects", "writing", "about", "listening"]) await expect(menuLink(page, name)).toBeVisible();
+  for (const name of ["home", "projects", "about", "listening"]) await expect(menuLink(page, name)).toBeVisible();
 
   await press(page, testInfo);
   await expectClosed(page);
@@ -66,11 +66,11 @@ test("a press outside closes it", async ({ page }, testInfo) => {
 test("following a link closes it and the new page's link becomes current", async ({ page }, testInfo) => {
   await open(page, "/");
   await press(page, testInfo);
-  if (testInfo.project.name === "iphone") await menuLink(page, "writing").tap();
-  else await menuLink(page, "writing").click();
-  await expect(page).toHaveURL(/\/writing$/);
+  if (testInfo.project.name === "iphone") await menuLink(page, "projects").tap();
+  else await menuLink(page, "projects").click();
+  await expect(page).toHaveURL(/\/projects$/);
   await expectClosed(page);
-  await expect(currentLink(page)).toHaveText("writing");
+  await expect(currentLink(page)).toHaveText("projects");
 });
 
 test("a route change closes it and resets the toggle to Menu", async ({ page }, testInfo) => {
@@ -104,7 +104,7 @@ test.describe("keyboard", () => {
 
     await page.keyboard.press("Enter");
     await expectOpen(page);
-    for (const name of ["home", "projects", "writing", "about", "listening"]) {
+    for (const name of ["home", "projects", "about", "listening"]) {
       await page.keyboard.press("Tab");
       await expect(menuLink(page, name)).toBeFocused();
     }
@@ -202,7 +202,7 @@ test("on phones, scrolling down past 80px hides it and scrolling back up shows i
 });
 
 test("the collapsed toggle never covers a page title", async ({ page }) => {
-  for (const path of ["/", "/projects", "/projects/meal-planner", "/writing", "/about"]) {
+  for (const path of ["/", "/projects", "/projects/meal-planner", "/about"]) {
     await open(page, path);
     const title = (await page.locator("main h1").first().boundingBox())!;
     const bar = (await island(page).boundingBox())!;
@@ -253,7 +253,7 @@ test.describe("the name", () => {
   });
 
   test("never covers a page title", async ({ page }) => {
-    for (const path of ["/", "/projects", "/projects/meal-planner", "/writing", "/about"]) {
+    for (const path of ["/", "/projects", "/projects/meal-planner", "/about"]) {
       await page.goto(path);
       const title = (await page.locator("main h1").first().boundingBox())!;
       const pill = (await name(page).boundingBox())!;

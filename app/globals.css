@@ -200,7 +200,7 @@
 }
 
 @utility text-row {
-  /* Rows in the writing list: 19px, 17px on phones. */
+  /* Rows in a list (the listening page's tracks): 19px, 17px on phones. */
   font-size: 1.1875rem;
   line-height: 2rem;
   @media (width < 40rem) {

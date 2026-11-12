@@ -14,7 +14,7 @@ import { ground } from "@/lib/ground";
  * first line, the cards' titles and the menu.
  */
 
-const LINKS = ["home", "projects", "writing", "about", "listening"];
+const LINKS = ["home", "projects", "about", "listening"];
 type S = { open: boolean; hovered: number };
 const CLOSED: S = { open: false, hovered: -1 };
 const OPEN: S = { open: true, hovered: 1 };
