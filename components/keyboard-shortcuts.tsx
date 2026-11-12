@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { isOn } from "@/lib/preferences";
 
 /* Typing into something is never a shortcut. */
 function isTyping(target: EventTarget | null) {
@@ -15,15 +14,14 @@ function isTyping(target: EventTarget | null) {
  * one that's laid out wins (not display: none, like the phone-only menu row), so a key works
  * wherever its control is, even one still waiting below the fold to fade in. Focus moves to the control
  * first, as if it had been tabbed to, so after M opens the menu Tab carries on into its links.
- * Keys held with ⌘, Ctrl or Alt, held-down repeats and keys typed into a field are left alone, and
- * the footer's switch turns them all off (lib/preferences.ts).
+ * Keys held with ⌘, Ctrl or Alt, held-down repeats and keys typed into a field are left alone.
  * Mounted once in the layout.
  */
 export function KeyboardShortcuts() {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.defaultPrevented || event.repeat || event.metaKey || event.ctrlKey || event.altKey) return;
-      if (isTyping(event.target) || event.key.length !== 1 || !isOn("shortcuts")) return;
+      if (isTyping(event.target) || event.key.length !== 1) return;
       const key = event.key.toLowerCase();
       const controls = [...document.querySelectorAll<HTMLElement>(`[data-shortcut="${CSS.escape(key)}"]`)];
       const control = controls.find((el) => el.checkVisibility({ visibilityProperty: true }) && !el.closest("[inert]"));

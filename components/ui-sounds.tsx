@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { isOn } from "@/lib/preferences";
 import { playSound, unlockSounds } from "@/lib/ui-sounds";
 
 function interactiveElement(target: EventTarget | null) {
@@ -10,8 +9,7 @@ function interactiveElement(target: EventTarget | null) {
 
 // Hover and click sounds for links and buttons, on devices with a mouse or
 // trackpad. Internal links get the navigate sound, everything else a click.
-// Add `data-no-hover-sound` to an element to mute hover sounds inside it. The footer's switch
-// turns them all off (lib/preferences.ts).
+// Add `data-no-hover-sound` to an element to mute hover sounds inside it.
 export function UISounds() {
   useEffect(() => {
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
@@ -20,7 +18,7 @@ export function UISounds() {
 
     function onPointerOver(event: PointerEvent) {
       const element = interactiveElement(event.target);
-      if (element && element !== hovered && isOn("sounds") && !element.closest("[data-no-hover-sound]")) {
+      if (element && element !== hovered && !element.closest("[data-no-hover-sound]")) {
         playSound("hover");
       }
       hovered = element;
@@ -28,7 +26,7 @@ export function UISounds() {
 
     function onClick(event: MouseEvent) {
       const element = interactiveElement(event.target);
-      if (!element || !isOn("sounds")) return;
+      if (!element) return;
       const isInternal = element instanceof HTMLAnchorElement && element.origin === window.location.origin;
       playSound(isInternal ? "navigate" : "click");
     }

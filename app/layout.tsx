@@ -8,7 +8,6 @@ import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
 import { LiquidGlass } from "@/components/liquid-glass";
 import { HeaderBookCall, SiteName } from "@/components/site-name";
 import { UISounds } from "@/components/ui-sounds";
-import { preferenceFlags } from "@/lib/preferences";
 import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -40,9 +39,8 @@ export const viewport: Viewport = {
   ],
 };
 
-/* Set before the first paint: scripts run, so blocks may wait to reveal themselves (site.css), and
-   the visitor's own switches for sounds and shortcuts (lib/preferences.ts). */
-const motionFlag = `document.documentElement.setAttribute('data-motion','');${preferenceFlags}`;
+/* Set before the first paint: scripts run, so blocks may wait to reveal themselves (site.css). */
+const motionFlag = `document.documentElement.setAttribute('data-motion','');`;
 
 export default function RootLayout({
   children,
