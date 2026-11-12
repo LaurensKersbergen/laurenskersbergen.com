@@ -38,3 +38,12 @@ next-env.d.ts
 
 # obsidian
 .obsidian/
+
+# test output
+/test-results/
+/playwright-report/
+/blob-report/
+
+# iCloud Drive's conflicting copies ("page 2.tsx", "images 2/"): never source
+* [0-9]
+* [0-9].*

@@ -1,0 +1,150 @@
+/*
+ * What every project scene shares: the site's Geist in the faux UI, a transparent stage so the
+ * project's vivid ground (the card or media frame behind it) is the ground, and one figure
+ * language across the page (Stageshow's craft.md, A page of demos).
+ */
+.scene {
+  height: 100%;
+}
+
+.scene .ss-stage {
+  overflow: hidden;
+  --ss-font: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ss-mono: var(--font-geist-mono), ui-monospace, monospace;
+  background: transparent;
+  /* The kit's light inks are tuned for white cards on a grey canvas; these scenes sit on white and
+     on pale vivid grounds, so they step up a tone (Stageshow, craft.md) to keep 4.5:1. */
+  --ss-text: light-dark(#69696c, #9d9da1);
+  --ss-text-faint: light-dark(#6c6c6f, #939398);
+
+  /* Dark mode: the scenes follow the page. The stage keeps its light theme attribute, and every
+     surface, ink, line and shadow token resolves through light-dark() to the kit's own dark theme
+     values (stage.css, [data-theme="dark"]), so a server-rendered scene is right before any script
+     runs. The scene files use these tokens, and light-dark() where they set colours of their own. */
+  --ss-canvas: light-dark(#f6f5f4, #111113);
+  --ss-surface: light-dark(#fff, #1a1a1d);
+  --ss-chrome: light-dark(#fff, #1d1d20);
+  --ss-raised: light-dark(#fff, #26262a);
+  --ss-ink-1: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
+  --ss-ink-2: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.07));
+  --ss-ink-3: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
+  --ss-ink-4: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.13));
+  --ss-ink-5: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.2));
+  --ss-fill: light-dark(#ebebeb, #313134);
+  --ss-line: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+  --ss-line-faint: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
+  --ss-text-strong: light-dark(#262628, #ececee);
+  --ss-icon: light-dark(#707074, #9a9aa0);
+  --ss-icon-faint: light-dark(#c4c4c7, #4a4a50);
+  --ss-well: light-dark(#efeeec, #0a0a0b);
+  --ss-accent-text: light-dark(color-mix(in srgb, var(--ss-accent) 82%, #000), color-mix(in srgb, var(--ss-accent) 70%, #fff));
+  --ss-success-soft: light-dark(rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.16));
+  --ss-success-text: light-dark(#15803d, #4ade80);
+  --ss-danger-soft: light-dark(rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.16));
+  --ss-danger-text: light-dark(#b91c1c, #f87171);
+  --ss-warning-soft: light-dark(rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.18));
+  --ss-warning-text: light-dark(#b45309, #fbbf24);
+  --ss-shadow-window: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 4px 16px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.4));
+  --ss-shadow-float: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1)), 0 4px 16px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.4)), 0 12px 32px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
+  --ss-shadow-card: 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), transparent), 0 0 0 1px light-dark(transparent, rgba(255, 255, 255, 0.05));
+  --ss-shadow-hero: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 30px 60px -12px light-dark(rgba(50, 50, 93, 0.25), rgba(0, 0, 0, 0.6)), 0 18px 36px -18px light-dark(rgba(0, 0, 0, 0.3), transparent);
+  --ss-shadow-lift: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.1)), 0 12px 28px -6px light-dark(rgba(50, 50, 93, 0.28), rgba(0, 0, 0, 0.6)), 0 6px 12px -6px light-dark(rgba(0, 0, 0, 0.16), transparent);
+  --ss-shadow-satellite: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.1)), 0 14px 32px -8px light-dark(rgba(50, 50, 93, 0.24), rgba(0, 0, 0, 0.7)), 0 4px 10px -4px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+  --ss-shadow-ground: 0 0 0 1px light-dark(rgba(50, 50, 93, 0.06), rgba(255, 255, 255, 0.1)), 0 24px 48px -24px light-dark(rgba(50, 50, 93, 0.18), rgba(0, 0, 0, 0.6));
+  color: light-dark(#000, #fff);
+}
+
+/* The kit's dark-theme parts, in the page's scheme: a white pointer (macOS inverts its line
+   cursors on dark too), black titanium around the phones (a light band would be the brightest
+   thing in the shot), and a black screen with white status bar ink. */
+.scene .ss-cursor__arrow {
+  --ss-cursor-ink: light-dark(#111, #fff);
+}
+
+.scene .ss-cursor {
+  --ss-cursor-line: light-dark(#000, #fff);
+  --ss-cursor-edge: light-dark(#fff, rgba(0, 0, 0, 0.75));
+}
+
+.scene .ss-phone[data-frame="pro"] {
+  --ss-phone-band-1: light-dark(#e3e3e6, #5b5c61);
+  --ss-phone-band-2: light-dark(#9a9ba0, #2b2c2f);
+  --ss-phone-band-3: light-dark(#cfd0d4, #48494d);
+  --ss-phone-band-4: light-dark(#85868b, #232427);
+  --ss-phone-band-5: light-dark(#c9cacd, #404145);
+}
+
+.scene .ss-phone__screen {
+  background: light-dark(#fff, #000);
+  color: light-dark(#000, #fff);
+}
+
+@media (prefers-color-scheme: dark) {
+  .scene .ss-phone {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 calc(var(--ps) * 24) calc(var(--ps) * 48) calc(var(--ps) * -24) rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* A theme chip: a vivid tag in the product, its colour from --hue. */
+.scene .chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--chip-bg);
+  color: var(--chip-ink);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
+}
+
+/*
+ * The pause button on a scene that loops (stage.tsx): a small round control in the frame's bottom
+ * corner, on the same frosted fill as the header pills, so it reads over any ground. 32px to see,
+ * 44px to press (the ::after reaches out), as Apple's minimum touch target asks.
+ */
+.ss-pause {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: light-dark(rgb(255 255 255 / 0.72), rgb(30 30 30 / 0.72));
+  box-shadow:
+    0 0 0 0.5px light-dark(rgb(0 0 0 / 0.16), rgb(255 255 255 / 0.14)),
+    0 1px 3px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.4));
+  color: light-dark(rgb(0 0 0 / 0.75), rgb(255 255 255 / 0.85));
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  backdrop-filter: blur(8px) saturate(160%);
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ss-pause::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+.ss-pause:active {
+  transform: scale(0.94);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ss-pause {
+    background: light-dark(#fff, #1c1c1c);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

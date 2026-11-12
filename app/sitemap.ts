@@ -1,16 +1,15 @@
-import { getPosts } from "@/lib/posts";
 import type { MetadataRoute } from "next";
+import { getProjects } from "@/lib/projects";
+import { siteUrl } from "@/lib/site";
 
+/**
+ * Every page, on www (where the site lives). None has a real date of change, so lastModified is
+ * left out rather than claimed every build, which search engines learn to ignore.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getPosts().map((post) => ({
-    url: `https://laurenskersbergen.com/writing/${post.slug}`,
-    lastModified: new Date(post.date),
-  }));
+  const pages = ["", "/projects", "/about", "/listening"].map((path) => ({ url: `${siteUrl}${path}` }));
 
-  const routes = ["", "/about", "/writing"].map((route) => ({
-    url: `https://laurenskersbergen.com${route}`,
-    lastModified: new Date(),
-  }));
+  const projects = getProjects().map((project) => ({ url: `${siteUrl}/projects/${project.slug}` }));
 
-  return [...routes, ...posts];
+  return [...pages, ...projects];
 }

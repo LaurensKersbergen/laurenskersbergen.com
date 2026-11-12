@@ -1,0 +1,2218 @@
+/*
+ * The site's own parts: the header, the reveal motion, the homepage (intro, project
+ * carousel, timeline), the project page template and the footer. The frame and the project page
+ * share one set of measurements (a 56px gutter, a 64px title, 24px media corners, 8px between
+ * media); the motion has two ideas (the headline's logos open slots in the words and bloom
+ * into them; blocks rise into place on a long soft stop, a step apart). Colours come from the kit's tokens and its vivid hues.
+ */
+
+/* ------------------------------------------------------------------------------------------ */
+/* Frame                                                                                      */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .shell {
+    box-sizing: content-box;
+    max-width: calc(var(--page-max) - 2 * var(--page-gutter));
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* Where the page content starts: 96px under the header pills (36px tall, 32px from
+     the top; 20px from the top and 48px under them on phones). */
+  .page-top {
+    padding-top: calc(32px + var(--pill-h) + 6rem);
+  }
+
+  @media (width < 48rem) {
+    .page-top {
+      padding-top: calc(20px + var(--pill-h) + env(safe-area-inset-top) + 3rem);
+    }
+  }
+
+  /* A small caps label over a section or a link ("Selected work", "Next"). */
+  .label {
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Reveal: blocks arrive as they scroll into view                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+/*
+ * An element with data-reveal waits 16px below until it comes into view (components/
+ * reveal-observer.tsx sets data-in), then rises into place over 1000ms on --ease-out, after its
+ * own --reveal-delay. Its opacity
+ * arrives in half that, so a card or a frame is solid while it is still moving: solid things
+ * arrive by moving, they don't fade through (Stageshow). No blur here: blur is the logos',
+ * and on a block the size of a card it costs every frame. Only when scripts run (the layout marks
+ * <html data-motion>) and the visitor hasn't asked for less motion, so the content is never
+ * hidden from anyone else.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion] [data-reveal] {
+    transition:
+      opacity 500ms ease-out,
+      transform 1000ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  :root[data-motion] [data-reveal]:not([data-in]) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  /* Sideways, for cards coming in along the carousel. */
+  :root[data-motion] [data-reveal="x"]:not([data-in]) {
+    transform: translateX(40px);
+  }
+
+  /* A safety net: if the script that reveals blocks hasn't run 1.5s in (a slow network, a failed
+     load), everything comes in anyway, so content never waits on JavaScript. The observer marks
+     <html data-reveal-ready> when it starts (components/reveal-observer.tsx). */
+  :root[data-motion]:not([data-reveal-ready]) [data-reveal]:not([data-in]) {
+    animation: reveal-fallback 600ms var(--ease-out) 1.5s forwards;
+  }
+
+  @keyframes reveal-fallback {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Homepage intro                                                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .intro {
+    max-width: 66rem;
+    font-size: clamp(1.75rem, 1.2rem + 1.7vw, 2.75rem);
+    line-height: 1.16;
+    font-weight: 500;
+    letter-spacing: -0.028em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  /* Each sentence on its own line, the second quieter. */
+  .intro__line {
+    display: block;
+  }
+
+  .intro__muted {
+    color: var(--muted);
+  }
+
+  /* A company named in the intro: its logo in a slot that opens in the line, then its name. */
+  .intro__company {
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .intro__company:hover {
+      text-decoration: none;
+    }
+  }
+
+  /*
+   * The logo's place in the line: a zero-height inline box, so
+   * the logo never makes its line taller, closed to a word space (0.194em) until it opens to the
+   * logo (0.85em) with 0.2em either side. The logo hangs centred in it, 0.075em below the baseline.
+   */
+  .intro__slot {
+    --logo: 0.85em;
+    --logo-gap: 0.2em;
+    --slot-closed: 0.194em;
+    --slot-open: calc(var(--logo) + 2 * var(--logo-gap));
+    position: relative;
+    display: inline-block;
+    height: 0;
+    width: var(--slot-open);
+  }
+
+  .intro__slot-inner {
+    position: absolute;
+    left: 50%;
+    bottom: -0.075em;
+    width: var(--logo);
+    height: var(--logo);
+    transform: translateX(-50%);
+  }
+
+  .intro__logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 30%;
+    outline: 1px solid var(--image-outline);
+    outline-offset: -1px;
+  }
+
+  /* The name keeps the site's hand-drawn wave under it, faint until hovered. */
+  .intro__name {
+    position: relative;
+  }
+
+  .intro__name::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -0.12em;
+    height: 0.14em;
+    background-color: currentColor;
+    mask: var(--link-wave) 0 0 / 0.72em 0.14em repeat-x;
+    opacity: 0.22;
+    transition: opacity 200ms ease;
+  }
+
+  .intro__company:focus-visible .intro__name::after {
+    opacity: 0.7;
+  }
+
+  @media (hover: hover) {
+    .intro__company:hover .intro__name::after {
+      opacity: 0.7;
+    }
+  }
+
+  /*
+   * The entrance, timed to the millisecond: the words are there from the first frame and
+   * hold still. 1400ms in, each slot opens from a word space in 260ms on --ease-out, 60ms after the
+   * one before; 90ms behind its slot each logo blooms in 440ms, out of a 7px blur from 72%, sharp
+   * at 45% and settling 1.02, 0.995, 1.001, 1. It plays on a full load; after a route change back
+   * home (data-intro-seen) the logos are just there.
+   *
+   * Where opening a slot would push a word onto another line at this width (the check in
+   * components/home/intro.tsx sets data-intro-held), the slots start open and only the logos bloom.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-intro-seen]) .intro__slot {
+      animation: intro-slot-open 260ms var(--ease-out) both;
+      animation-delay: calc(1400ms + var(--j, 0) * 60ms);
+    }
+
+    :root:not([data-intro-seen]) .intro__slot-inner {
+      animation: intro-slot-in 440ms ease-out both;
+      animation-delay: calc(1490ms + var(--j, 0) * 60ms);
+    }
+
+    :root[data-intro-held] .intro__slot {
+      animation: none;
+    }
+  }
+
+  /* The check measures both states with nothing animating. */
+  .intro[data-measure] .intro__slot {
+    animation: none !important;
+  }
+
+  .intro[data-measure="closed"] .intro__slot {
+    width: var(--slot-closed);
+  }
+
+  @keyframes intro-slot-open {
+    from {
+      width: var(--slot-closed);
+    }
+    to {
+      width: var(--slot-open);
+    }
+  }
+
+  @keyframes intro-slot-in {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.72);
+      filter: blur(7px);
+    }
+    45% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.02);
+      filter: blur(0);
+    }
+    68% {
+      transform: translateX(-50%) scale(0.995);
+    }
+    85% {
+      transform: translateX(-50%) scale(1.001);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  .intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Pill buttons: a see-through ghost pill, and a solid ink one                                 */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* The header pills' size (--pill-h, --pill-text below): 36px tall with 14px words at 500 for a
+     mouse, 44px with 17px words on touch screens; 12px either side. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    background: var(--ghost);
+    color: var(--ink);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 160ms ease,
+      transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pill--strong {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  @media (hover: hover) {
+    .pill:hover {
+      background: var(--ghost-hover);
+      text-decoration: none;
+    }
+
+    .pill--strong:hover {
+      background: var(--ink-hover);
+    }
+  }
+
+  .pill:active {
+    transform: scale(0.97);
+  }
+
+  .pill__icon {
+    flex: none;
+    transition: transform 260ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .pill:hover .pill__icon {
+      transform: translateX(2px);
+    }
+  }
+
+  /* A round icon button: the carousel's arrows. */
+  .round-button {
+    display: inline-grid;
+    place-items: center;
+    width: var(--pill-h);
+    height: var(--pill-h);
+    border: 0;
+    border-radius: 999px;
+    background: var(--ghost);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      opacity 200ms ease,
+      transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .round-button:hover:not(:disabled) {
+      background: var(--ghost-hover);
+    }
+  }
+
+  .round-button:active:not(:disabled) {
+    transform: scale(0.94);
+  }
+
+  .round-button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project carousel                                                                            */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  /* Phones: 24px, still a step over the cards' 20px titles under it. */
+  @media (width < 48rem) {
+    .section-title {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+  }
+
+  .carousel {
+    /* The track runs edge to edge, but its first card lines up with the page column. */
+    --edge: max(var(--page-gutter), calc((100vw - var(--page-max)) / 2 + var(--page-gutter)));
+    position: relative;
+  }
+
+  .carousel__track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    padding: 0.75rem var(--edge) 1.5rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* While a drag or an arrow press moves the track, snapping waits until it settles. */
+  .carousel__track[data-dragging],
+  .carousel__track[data-gliding] {
+    scroll-snap-type: none;
+  }
+
+  .carousel__track[data-dragging] {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .carousel__track[data-dragging] a {
+    pointer-events: none;
+  }
+
+  .carousel__item {
+    flex: none;
+    width: clamp(17.5rem, 29vw, 27.5rem);
+    scroll-snap-align: start;
+  }
+
+  @media (width < 48rem) {
+    .carousel__item {
+      width: min(80vw, 22rem);
+    }
+  }
+
+  .carousel__controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  @media (width < 48rem) {
+    .carousel__controls {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project card                                                                                */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .project-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    border-radius: 1.75rem;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--ground);
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 600ms var(--ease-out);
+    /* On a layer for good: the hover's scale settles without the scene inside it snapping a
+       pixel as the card leaves its layer. */
+    will-change: transform;
+  }
+
+  /* A hairline inside the edge, so a pale ground keeps its shape on white. */
+  .project-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.04), rgb(255 255 255 / 0.05));
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    .project-card:hover {
+      transform: scale(1.015);
+      text-decoration: none;
+    }
+  }
+
+  .project-card:active {
+    transform: scale(0.99);
+  }
+
+  .project-card:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 3px;
+  }
+
+  .project-card__art {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Phones: a taller card and no line under the title, so the copy stays clear of the art. */
+  @media (width < 48rem) {
+    .project-card {
+      aspect-ratio: 3 / 4;
+    }
+
+    .project-card__tagline {
+      display: none;
+    }
+  }
+
+  /* The copy takes the bottom-left corner, the art hangs from the top-right (Stageshow's opposite corners). */
+  .project-card__copy {
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1;
+    display: grid;
+    gap: 0.75rem;
+    pointer-events: none;
+  }
+
+  .project-card__title {
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  @media (width < 48rem) {
+    .project-card__title {
+      font-size: 1.25rem;
+      line-height: 1.625rem;
+    }
+  }
+
+  .project-card__tagline {
+    margin-top: 0.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    color: color-mix(in oklch, var(--hue-ink) 72%, var(--ink));
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  /* On a tinted ground the tags sit on white (a darker step in dark mode), so their tint never
+     vanishes into the card. */
+  .project-card__tags .card-tag {
+    height: 1.625rem;
+    padding-inline: 0.5rem;
+    border-radius: 0.4375rem;
+    background: light-dark(rgb(255 255 255 / 0.82), rgb(0 0 0 / 0.22));
+    font-size: 0.8125rem;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Timeline                                                                                    */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .timeline {
+    --label-w: minmax(13rem, 1fr);
+    --year-lines: repeating-linear-gradient(to right, var(--ui-line) 0 1px, transparent 1px calc(100% / var(--years)));
+    display: grid;
+    grid-template-columns: var(--label-w) minmax(0, 2.4fr);
+    column-gap: 2rem;
+  }
+
+  /* One set of year lines from the header down through every lane, unbroken between rows; the
+     bars paint over them. On phones the lanes sit under the names, so each lane draws its own. */
+  .timeline::before {
+    content: "";
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    background-image: var(--year-lines);
+    pointer-events: none;
+  }
+
+  @media (width < 48rem) {
+    .timeline::before {
+      content: none;
+    }
+  }
+
+  @media (width < 48rem) {
+    .timeline {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* The years along the top, over the lanes; their lines run down through every row. */
+  .timeline__years {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--years), minmax(0, 1fr));
+    padding-bottom: 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeline__year {
+    padding-left: 0.5rem;
+  }
+
+  .timeline__year[data-now] {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  @media (width < 48rem) {
+    .timeline__years {
+      grid-column: 1;
+    }
+
+    /* Ten years are too many labels for a phone: every other one, counted back from this year,
+       each with its line, so a label can run over the hidden year beside it. */
+    .timeline__year {
+      border-left: 1px solid var(--ui-line);
+    }
+
+    .timeline__year:nth-last-child(even) {
+      border-left-color: transparent;
+      color: transparent;
+    }
+  }
+
+  .timeline__rows {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  @media (width < 48rem) {
+    .timeline__rows {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .timeline__row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+    padding-block: 0.75rem;
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  @media (width < 48rem) {
+    .timeline__row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0.625rem;
+      padding-block: 0.875rem;
+    }
+  }
+
+  /* Hovering one row quiets the others, so the one under the pointer stands out. */
+  @media (hover: hover) {
+    .timeline__rows:has(.timeline__row:hover) .timeline__row:not(:hover) {
+      opacity: 0.45;
+    }
+
+    a.timeline__row:hover {
+      text-decoration: none;
+    }
+  }
+
+  .timeline__who {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .timeline__name {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .timeline__role {
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    color: var(--muted);
+  }
+
+  /* On phones the bars are too short for words: the period goes under the role instead. */
+  .timeline__period {
+    display: none;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  @media (width < 48rem) {
+    .timeline__period {
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .timeline__bar-label {
+      display: none;
+    }
+
+    .timeline__lane {
+      height: 1.25rem;
+    }
+
+    .timeline__bar {
+      --bar-r: 0.375rem;
+    }
+  }
+
+  /* The lane a bar sits in; the year lines behind it come from .timeline::before. */
+  .timeline__lane {
+    position: relative;
+    height: 2.25rem;
+  }
+
+  @media (width < 48rem) {
+    .timeline__lane {
+      background-image: var(--year-lines);
+    }
+  }
+
+  .timeline__bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--from) * 100%);
+    width: calc((var(--to) - var(--from)) * 100%);
+    display: flex;
+    align-items: center;
+    padding-inline: 0.625rem;
+    border-radius: var(--bar-r, 0.5rem);
+    background: var(--bar);
+    color: var(--bar-ink);
+    font-size: 0.8125rem;
+    line-height: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: filter 200ms ease;
+  }
+
+  .timeline__bar-label--outside {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--to) * 100% + 0.625rem);
+    transform: translateY(-50%);
+    font-size: 0.8125rem;
+    line-height: 1rem;
+    font-weight: 500;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+
+  /* A bar that began before the window fades in from its left edge. */
+  .timeline__bar[data-clipped] {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    mask-image: linear-gradient(to right, transparent, #000 2.5rem);
+    padding-left: 2.5rem;
+  }
+
+  @media (hover: hover) {
+    .timeline__row:hover .timeline__bar {
+      filter: saturate(1.15) brightness(0.97);
+    }
+
+    /* On dark, a hovered bar lifts by lightening, not darkening. */
+    @media (prefers-color-scheme: dark) {
+      .timeline__row:hover .timeline__bar {
+        filter: saturate(1.1) brightness(1.18);
+      }
+    }
+  }
+
+  /* Still going: a dot at the bar's end that breathes. */
+  .timeline__live {
+    position: absolute;
+    right: 0.625rem;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: -0.25rem;
+    border-radius: 50%;
+    background: var(--bar-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline__live::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: inherit;
+      animation: live 2.4s var(--ease-out) infinite;
+    }
+
+    /* The bars grow from their start, one after another, once the timeline is in view. They're
+       uncovered rather than stretched (a clip, not scaleX), so their corners, words and the live
+       dot never distort on the way. */
+    :root[data-motion] .timeline:not([data-in]) .timeline__bar {
+      clip-path: inset(0 100% 0 0 round var(--bar-r, 0.5rem));
+    }
+
+    :root[data-motion] .timeline .timeline__bar {
+      clip-path: inset(0 0 0 0 round var(--bar-r, 0.5rem));
+      transition:
+        clip-path 1100ms var(--ease-out),
+        filter 200ms ease;
+      transition-delay: calc(200ms + var(--i, 0) * 110ms), 0ms;
+    }
+
+    :root[data-motion] .timeline:not([data-in]) .timeline__bar-label,
+    :root[data-motion] .timeline:not([data-in]) .timeline__live {
+      opacity: 0;
+    }
+
+    :root[data-motion] .timeline .timeline__bar-label,
+    :root[data-motion] .timeline .timeline__live {
+      transition: opacity 500ms ease calc(450ms + var(--i, 0) * 110ms);
+    }
+  }
+
+  @keyframes live {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Project page                                                                                */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* A page's title block sits 64px (40px on phones) over its content, measured from the block's
+     last box (tags, a pill) to the content's top. */
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6rem;
+    padding-bottom: 4rem;
+  }
+
+  /* Between 992 and 1280px the intro's fixed measure left the title a sliver (170px at 1024, a
+     tag per row): there the title takes 20rem and the intro the rest. */
+  @media (62rem <= width < 80rem) {
+    .project-header {
+      gap: 4rem;
+    }
+
+    .project-header > :first-child {
+      flex: none;
+      width: 20rem;
+    }
+
+    .project-header > :last-child {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .project-header .intro-text {
+      width: 100%;
+    }
+  }
+
+  @media (width < 62rem) {
+    .project-header {
+      flex-direction: column;
+      gap: 2rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .project-header {
+      gap: 1.5rem;
+      padding-bottom: 2.5rem;
+    }
+  }
+
+  .project-lead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .display-xl {
+    max-width: 30rem;
+    font-size: 4rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+
+  @media (width < 62rem) {
+    .display-xl {
+      max-width: 100%;
+      font-size: 3rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .display-xl {
+      font-size: 2.25rem;
+      letter-spacing: -0.03em;
+    }
+  }
+
+  /* The meta pills, in the kit's tag shape and the vivid hues. */
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .meta-tag {
+    height: 2.25rem;
+    padding-inline: 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 1.0625rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  @media (width < 48rem) {
+    .meta-tag {
+      height: 2rem;
+      padding-inline: 0.625rem;
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* The year: a quiet ghost pill beside the vivid tags. */
+  .meta-year {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ghost);
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .intro-text {
+    flex: none;
+    width: 40.375rem;
+    max-width: 100%;
+    font-size: 1.5rem;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  @media (width < 62rem) {
+    .intro-text {
+      width: 100%;
+      font-size: 1.375rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .intro-text {
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+  }
+
+  .project-visit {
+    margin-top: 1.5rem;
+  }
+
+  /* The media, one block under the next, 8px apart, 24px corners. */
+  /* The media and the projects either side are two sections: 144px apart (96px on phones), from
+     the last frame to the neighbours' thumbnails. */
+  .media-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 120px;
+  }
+
+  @media (width < 48rem) {
+    .media-stack {
+      padding-bottom: 80px;
+    }
+  }
+
+  .media-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (width < 48rem) {
+    .media-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .media-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: var(--ground);
+    isolation: isolate;
+  }
+
+  /* A write-up section between media, when a project has one: heading left, words right. */
+  .media-stack > h2 {
+    margin-top: 3rem;
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .media-stack > p {
+    max-width: 40.375rem;
+    margin-bottom: 3rem;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+
+  /* Previous and next, with a thumbnail each, at the foot of the page. No rules above or
+     below: whitespace alone sets it apart. Above it, .media-stack's 72px and these 24px (48px and
+     16px on phones) come to the footer's own space below it, so it sits evenly between the two. */
+  .project-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  @media (width < 48rem) {
+    .project-nav {
+      align-items: flex-start;
+      gap: 1rem;
+      padding-top: 1rem;
+      /* On phones the neighbours end on their names, a line of text: the footer's gap counts
+         from its baseline (.ends-on-text). */
+      margin-bottom: -6px;
+    }
+  }
+
+  .pn-side {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .pn-side--next {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+
+  @media (width < 48rem) {
+    .pn-side,
+    .pn-side--next {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .pn-side--next {
+      align-items: flex-end;
+    }
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover {
+      text-decoration: none;
+    }
+  }
+
+  .pn-arrow {
+    flex: none;
+    transition: transform 360ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover .pn-arrow {
+      transform: translateX(-4px);
+    }
+
+    .pn-side--next:hover .pn-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  .pn-thumb {
+    position: relative;
+    flex: none;
+    width: 15rem;
+    height: 10rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: var(--ground);
+    transition: transform 500ms var(--ease-out);
+  }
+
+  @media (width < 62rem) {
+    .pn-thumb {
+      width: 11.25rem;
+      height: 7.5rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .pn-thumb {
+      width: 8.75rem;
+      height: 6rem;
+      border-radius: 1rem;
+    }
+
+    .pn-side .pn-arrow {
+      display: none;
+    }
+  }
+
+  @media (hover: hover) {
+    .pn-side:hover .pn-thumb {
+      transform: scale(1.04);
+    }
+  }
+
+  .pn-col {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .pn-name {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  @media (width < 48rem) {
+    .pn-name {
+      font-size: 1.125rem;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Footer                                                                                      */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* The footer sits a section's gap under the page: 144px (96px on phones) from the last box a
+     page ends on to the footer's capitals. A page that ends on a line of text takes back the room
+     its line keeps under the baseline (.ends-on-text). */
+  .site-footer {
+    display: grid;
+    gap: 3rem;
+    padding-block: 138px 3rem;
+  }
+
+  @media (width < 48rem) {
+    .site-footer {
+      gap: 2rem;
+      padding-block: 91px 2rem;
+    }
+  }
+
+  .ends-on-text {
+    margin-bottom: -10px;
+  }
+
+  @media (width < 48rem) {
+    .ends-on-text {
+      margin-bottom: -8px;
+    }
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  /* A step under the section titles (28px), as the page's quietest part, and still well over the
+     body text: 24px, 22px below 62rem, 18px on phones. */
+  @media (width < 62rem) {
+    .footer-links {
+      font-size: 1.375rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .footer-links {
+      flex-direction: column;
+      font-size: 1.125rem;
+    }
+  }
+
+  .footer-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 3rem;
+  }
+
+  @media (width < 30rem) {
+    .footer-social {
+      column-gap: 1.5rem;
+    }
+  }
+
+  .footer-social a,
+  .footer-place a {
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      opacity 160ms ease,
+      color 160ms ease;
+  }
+
+  /* Hovering one link quiets its neighbours. */
+  @media (hover: hover) {
+    .footer-social:has(a:hover) a:not(:hover) {
+      opacity: 0.4;
+    }
+  }
+
+  .footer-social a:focus-visible,
+  .footer-place a:focus-visible {
+    border-radius: 0.25rem;
+  }
+
+  /* On touch screens every footer link is at least 44px tall, Apple's minimum touch target; the
+     rows close up the gaps they had between them, so the footer keeps its rhythm. */
+  @media (pointer: coarse) {
+    .footer-social a,
+    .footer-place a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+    }
+
+    .footer-social {
+      row-gap: 0;
+    }
+  }
+
+  .footer-place {
+    display: grid;
+    justify-items: end;
+    text-align: right;
+  }
+
+  @media (width < 48rem) {
+    .footer-place {
+      justify-items: start;
+      text-align: left;
+    }
+  }
+
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
+    color: var(--muted);
+  }
+
+  @media (width < 48rem) {
+    .footer-legal {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Skip link: the first Tab stop, out of sight until it has focus                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* Focused, it lands over the name pill in the same spot and shape, in solid ink so it can't be
+     missed; one more Tab and it is gone again. */
+  .skip-link {
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top));
+    left: calc(20px + env(safe-area-inset-left));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+    font-weight: 500;
+    text-decoration: none;
+    transform: translateY(calc(-100% - 40px));
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  @media (width > 45rem) {
+    .skip-link {
+      top: 32px;
+      left: 36px;
+    }
+  }
+
+  /* The skip link's target takes focus so Tab carries on from the content, without a ring round
+     the whole page. */
+  #main:focus {
+    outline: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* The name in the top-left corner, fixed like the menu                                        */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .site-name {
+    display: flex;
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top));
+    left: calc(20px + env(safe-area-inset-left));
+    z-index: 30;
+    transition:
+      opacity 216ms ease,
+      transform 160ms var(--ease-out);
+  }
+
+  /* Pressing the name gives the same 97% press as "work with me" and the pills, on the same clock.
+     The whole corner presses, not just its link, so the loupe (drawn beside the pill, not in it)
+     presses with what it magnifies. */
+  .site-name:has(> .ui-island-pill:active) {
+    transform: scale(0.97);
+  }
+
+  @media (width > 45rem) {
+    .site-name {
+      top: 32px;
+      left: 36px;
+    }
+  }
+
+  /* On phones scrolling down hides the menu and scrolling up brings it back (kit/ui/island.tsx);
+     the name goes and comes with it, on the menu's own fade, so the corners stay a pair. */
+  @media (width <= 45rem) {
+    body:has(.ui-island[data-scroll-hidden]:not(:focus-within)) .site-name:not(:focus-within) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* "work with me": a pill in the header above 45rem, the menu's last row below it              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* Fixed like the menu, level with it (top 32px) and 8px left of its collapsed pill: the island
+     sits 32px from the edge nudged 4px left (kit/ui/theme.css), --menu-w wide (below). */
+  .header-book {
+    display: flex;
+    position: fixed;
+    top: 32px;
+    right: calc(32px + 4px + var(--menu-w) + 8px);
+    z-index: 30;
+    transform-origin: 100% 50%;
+    /* Coming back, as the menu closes: it waits until the shrinking panel has passed it (its edge
+       clears the pill about 170ms in), then eases out of the panel's side, 8px in from the right,
+       a touch small and soft, so it reads as released by the panel rather than switched on
+       underneath it. */
+    transition:
+      opacity 320ms var(--ease-out) 150ms,
+      transform 560ms var(--ease-out) 150ms,
+      filter 320ms var(--ease-out) 150ms;
+  }
+
+  /* The menu opens wider, over the pill: the pill folds toward it at once and quickly, gone
+     before the panel's edge reaches it. */
+  body:has(.ui-island[data-open]) .header-book {
+    opacity: 0;
+    transform: translateX(8px) scale(0.96);
+    filter: blur(2px);
+    pointer-events: none;
+    transition:
+      opacity 140ms ease-out,
+      transform 220ms ease-out,
+      filter 140ms ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-book,
+    body:has(.ui-island[data-open]) .header-book {
+      transform: none;
+      filter: none;
+      transition: opacity 160ms ease;
+    }
+  }
+
+  .header-book__pill {
+    display: inline-flex;
+    align-items: center;
+    height: var(--pill-h);
+    padding: 0 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color 160ms ease,
+      transform 160ms var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .header-book__pill:hover {
+      background: var(--ink-hover);
+      text-decoration: none;
+    }
+  }
+
+  .header-book__pill:active {
+    transform: scale(0.97);
+  }
+
+  .header-book__pill:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+  }
+
+  @media (width <= 45rem) {
+    .header-book {
+      display: none;
+    }
+  }
+
+  /* In the menu it's a phone-only row, under a hairline, in ink so it reads as the one action. */
+  .ui-island-link.island-book {
+    color: var(--ink);
+  }
+
+  @media (width > 45rem) {
+    .ui-island-item:has(> .island-book),
+    .ui-island-divider:has(+ .ui-island-item > .island-book) {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* How I work: four short principles side by side                                              */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .approach {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.5rem 2rem;
+  }
+
+  @media (width < 62rem) {
+    .approach {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width < 48rem) {
+    .approach {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.75rem;
+    }
+  }
+
+  .approach__item {
+    display: grid;
+    gap: 0.375rem;
+    align-content: start;
+  }
+
+  /* The timeline's name and role, so the two sections read as one page. */
+  .approach__title {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .approach__text {
+    max-width: 20rem;
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* The closing line and the two ways to reach Laurens                                          */
+/* ------------------------------------------------------------------------------------------ */
+
+@layer components {
+  .contact__title {
+    max-width: 52rem;
+    font-size: clamp(1.75rem, 1.2rem + 1.7vw, 2.75rem);
+    line-height: 1.16;
+    font-weight: 500;
+    letter-spacing: -0.028em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .contact__muted {
+    color: var(--muted);
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+
+  /* The address and "copy" as one quiet pill, the address the link and "copy" its own button. */
+  .copy-email {
+    display: inline-flex;
+    align-items: center;
+    height: var(--pill-h);
+    max-width: 100%;
+    border-radius: 999px;
+    background: var(--ghost);
+  }
+
+  .copy-email__address {
+    min-width: 0;
+    padding: 0 0.5rem 0 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--pill-text);
+    line-height: var(--pill-h);
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .copy-email__button {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 0.75rem 0 0.5rem;
+    border: 0;
+    border-radius: 0 999px 999px 0;
+    background: transparent;
+    /* On the pill's grey, the page's muted grey falls just short of 4.5:1 in light mode; one step
+       darker keeps it. Dark mode's muted already clears it. */
+    color: light-dark(var(--palette-600), var(--muted));
+    font: inherit;
+    font-size: var(--pill-text);
+    font-weight: 500;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 160ms ease;
+  }
+
+  /* "copy" and "copied" in one grid cell: the slot is the longer word's, so nothing moves. */
+  .copy-email__slot {
+    display: grid;
+  }
+
+  /* Set to the slot's end, so "copy" sits its 6px from the hint and the room "copied" needs falls
+     before it instead. */
+  .copy-email__label {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: end;
+    transition:
+      opacity 180ms ease,
+      transform 320ms var(--ease-out);
+  }
+
+  .copy-email__label--done {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+
+  .copy-email__button[data-copied] .copy-email__label:not(.copy-email__label--done) {
+    opacity: 0;
+    transform: translateY(-0.4em);
+  }
+
+  .copy-email__button[data-copied] .copy-email__label--done {
+    opacity: 1;
+    transform: none;
+    color: var(--ink);
+  }
+
+  @media (hover: hover) {
+    .copy-email:has(.copy-email__address:hover) {
+      background: var(--ghost-hover);
+    }
+
+    .copy-email__address:hover {
+      text-decoration: none;
+    }
+
+    .copy-email__button:hover {
+      color: var(--ink);
+    }
+  }
+
+  .copy-email__button:active {
+    transform: scale(0.97);
+  }
+
+  .copy-email__button:focus-visible,
+  .copy-email__address:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-email__label {
+      transition: opacity 120ms ease;
+      transform: none !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Header pill size                                                                            */
+/* ------------------------------------------------------------------------------------------ */
+
+/*
+ * The name, "work with me" and the menu are all one size, small enough to stay out of the page's
+ * way and big enough to hit: 36px tall, 14px words at weight 500, 12px either side, 8px apart. They keep the kit's frosted look.
+ */
+@layer components {
+  .site-name .ui-island-pill {
+    height: var(--pill-h);
+    gap: 0.5rem;
+    /* The avatar sits an even inset from the top, bottom and left, plus the 1px edge. */
+    padding: 0 0.75rem 0 calc((var(--pill-h) - 1.5rem) / 2 - 1px);
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+    font-weight: 500;
+  }
+
+  /* The avatar: 24px in a 36px pill, an even 5px inset plus the 1px edge all round. The hairline
+     is an outline, which draws over the photo. */
+  .site-avatar {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    outline: 1px solid light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.12));
+    outline-offset: -1px;
+  }
+  .site-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /*
+   * The loupe (components/site-name.tsx sets its size, place and --t, 0 to 1, every frame). A copy
+   * of the pill sits inside, magnified around the lens's centre, over the page's own colour; the
+   * copy shows the pill's hovered look, as the real one has it while the lens is out. The glass
+   * comes up with --t: it lifts off the page on a shadow that grows and drops as it widens, a thin
+   * metal bezel lit from the top left (::before), and the glass itself (::after). While it is out
+   * the lens is the pointer.
+   */
+  .loupe {
+    --t: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    background: var(--bg);
+    box-shadow:
+      0 0 0 1px light-dark(rgb(0 0 0 / calc(0.1 * var(--t))), rgb(0 0 0 / calc(0.6 * var(--t)))),
+      0 calc(2px * var(--t)) calc(4px * var(--t)) light-dark(rgb(0 0 0 / calc(0.1 * var(--t))), rgb(0 0 0 / calc(0.4 * var(--t)))),
+      0 calc(10px * var(--t)) calc(24px * var(--t)) light-dark(rgb(0 0 0 / calc(0.16 * var(--t))), rgb(0 0 0 / calc(0.5 * var(--t))));
+  }
+  .site-name[data-loupe] .loupe {
+    visibility: visible;
+  }
+  /* While the lens is out the pill reaches past its edges to the lens's size, so the hand can
+     drift without dropping it (components/site-name.tsx); in that reach the lens is the pointer. */
+  .site-name > .ui-island-pill {
+    position: relative;
+  }
+  .site-name[data-loupe-held] > .ui-island-pill {
+    cursor: none;
+  }
+  .site-name[data-loupe-held] > .ui-island-pill::after {
+    content: "";
+    position: absolute;
+    inset: -20px -16px;
+    border-radius: 999px;
+  }
+  .loupe__view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+  .loupe__view .ui-island-pill {
+    background: var(--ui-island-open);
+    box-shadow: var(--ui-shadow-island-open);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /* Magnified, the avatar's hairline would be a 3px ring; inside the glass it stays as faint as
+     the hairline it is. (Browsers round outlines to half pixels, so it fades rather than thins.) */
+  .loupe__view .site-avatar {
+    outline-color: light-dark(rgb(0 0 0 / 0.025), rgb(255 255 255 / 0.04));
+  }
+  .loupe::before,
+  .loupe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    opacity: var(--t);
+  }
+  /* The bezel: 1.5px of polished metal, bright where the light comes from, darker opposite. */
+  .loupe::before {
+    background: conic-gradient(
+      from 315deg,
+      rgb(255 255 255),
+      light-dark(rgb(206 206 206), rgb(120 120 120)) 25%,
+      light-dark(rgb(160 160 160), rgb(70 70 70)) 50%,
+      light-dark(rgb(206 206 206), rgb(120 120 120)) 75%,
+      rgb(255 255 255)
+    );
+    mask: radial-gradient(closest-side, transparent calc(100% - 1.75px), #000 calc(100% - 1.25px));
+  }
+  /* The glass: a soft sheen across the lit side and a faint darkening toward the rim, where a
+     lens bends the light away. */
+  .loupe::after {
+    background:
+      radial-gradient(110% 70% at 30% 0%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 60%),
+      radial-gradient(closest-side, transparent 78%, light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.22)));
+  }
+
+  /*
+   * The menu at the same size. Collapsed it is 63px wide: "menu" (37px) with 12px either side and
+   * the 1px edge. The toggle's row is 28px (4px above and below 20px of words); 3px above it centres
+   * it in the 36px pill, and it stays put as the panel opens (the panel's top moves 8px up and its
+   * contents 8px down, kit/ui/theme.css). The panel's right side is 16px on desktop, where the
+   * collapsed contents sit 4px right, and 12px on phones, where they don't; the links follow the
+   * toggle down to 14px, so the open panel narrows to fit its longest row.
+   */
+  nav.ui-island {
+    --island-collapsed-w: var(--menu-w);
+    --island-collapsed-h: var(--pill-h);
+    --island-open-w: 8.25rem;
+  }
+
+  /* The toggle's row (its words and 4px above and below) centred in the pill, less the 1px edge. */
+  nav.ui-island .ui-island-inner {
+    padding: calc((var(--pill-h) - var(--pill-line) - 8px) / 2 - 1px) 16px 6px 36px;
+  }
+
+  /* With the key hint showing, the toggle's right side is the hint's 10px inset (see the hints
+     below): 13px here, less the 4px the collapsed contents sit right, plus the 1px edge. */
+  @media (pointer: fine) {
+    :root nav.ui-island .ui-island-inner {
+      padding-right: 13px;
+    }
+  }
+
+  /* The toggle centres its words and hint on one line, like the pills beside it. It is as wide as
+     they are, at the panel's right, so it sits inside the collapsed pill however wide the open
+     panel is (its ::after makes the whole pill the button). */
+  nav.ui-island .ui-island-trigger {
+    display: flex;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  nav.ui-island .ui-island-trigger,
+  nav.ui-island .ui-island-link {
+    font-size: var(--pill-text);
+    line-height: var(--pill-line);
+  }
+
+  /* On touch screens each link is a 44px row, Apple's minimum touch target, and the panel opens
+     wide enough for the longest one at 17px. */
+  @media (pointer: coarse) {
+    :root nav.ui-island {
+      --island-open-w: 10.25rem;
+    }
+
+    nav.ui-island .ui-island-link {
+      padding-block: calc((2.75rem - var(--pill-line)) / 2);
+    }
+
+    /* Open, "close" is a 32px row; its press area reaches up over the panel's top edge (but not
+       down into "home") to make the 44px. */
+    nav.ui-island[data-open] .ui-island-trigger::after {
+      content: "";
+      position: absolute;
+      inset: -13px -12px 0 -36px;
+    }
+  }
+
+  nav.ui-island .ui-island-trigger {
+    font-weight: 500;
+  }
+
+  @media (width <= 45rem) {
+    /* Phones: the "work with me" row is the longest (88px), so the panel opens to fit it. */
+    nav.ui-island {
+      --island-open-w: 8.75rem;
+    }
+
+    nav.ui-island .ui-island-inner {
+      padding-right: 12px;
+    }
+
+    nav.ui-island:not([data-open]) {
+      width: var(--island-collapsed-w);
+    }
+  }
+
+  /* A narrow window with a mouse: no sideways nudge here, so 9px and the edge make the 10px. */
+  @media (width <= 45rem) and (pointer: fine) {
+    :root nav.ui-island .ui-island-inner {
+      padding-right: 9px;
+    }
+  }
+}
+
+/* The carousel's track keeps 12px above the cards for their hover; its heading gives that back, so
+   the cards sit 24px under it like every other section's content. */
+@layer components {
+  .carousel .section-head {
+    margin-bottom: calc(1.5rem - 0.75rem);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* Key hints, after interfere.com's                                                            */
+/* ------------------------------------------------------------------------------------------ */
+
+/*
+ * The key that presses a control, in a 16px square 6px after its label: 11px words at 500, upper
+ * case, 4px corners, a 6% tint of the text with a hairline of the same. On a dark pill the tint is
+ * white. As on interfere.com, the hint sits as far from the control's end as from its top and
+ * bottom (10px in a 36px pill), tucked into the corner like an icon, so a control with a hint
+ * takes less padding after it than before its label. Touch screens have no keys to press, so there
+ * the hints go, and the padding and the menu's width go back to the words alone.
+ */
+:root {
+  /* The collapsed menu: 12px and the edge, "menu" (37px), its hint (6px + 16px) and the hint's
+     10px inset (see the hints below). In rem, like the pills, so it grows with the words when
+     someone asks their browser for larger text. */
+  --menu-w: 5.125rem;
+  /* The header pills: 36px tall, 14px words on a 20px line. */
+  --pill-h: 2.25rem;
+  --pill-text: 0.875rem;
+  --pill-line: 1.25rem;
+}
+
+/* Touch screens: 44px pills, Apple's minimum touch target, with 17px words, the size of iOS's own
+   bar buttons. The menu's hint goes, so it is "menu" (45px) with 12px either side and the edge. */
+@media (pointer: coarse) {
+  :root {
+    --menu-w: 4.4375rem;
+    --pill-h: 2.75rem;
+    --pill-text: 1.0625rem;
+    --pill-line: 1.5rem;
+  }
+}
+
+@layer components {
+  .kbd {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 1rem;
+    height: 1rem;
+    margin-left: 6px;
+    padding: 0 2px;
+    border: 0.5px solid light-dark(rgb(0 0 0 / 0.063), rgb(255 255 255 / 0.1));
+    border-radius: 4px;
+    background: light-dark(rgb(0 0 0 / 0.063), rgb(255 255 255 / 0.1));
+    color: light-dark(rgb(0 0 0 / 0.6), rgb(255 255 255 / 0.66));
+    font-family: inherit;
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* A .pill already spaces its children 6px apart. */
+  .pill .kbd {
+    margin-left: 0;
+  }
+
+  @media (pointer: fine) {
+    :root .pill:has(> .kbd),
+    :root .copy-email__button {
+      padding-right: 10px;
+    }
+
+    /* This one has a 1px edge. */
+    :root .header-book__pill:has(> .kbd) {
+      padding-right: 9px;
+    }
+  }
+
+  .header-book__pill .kbd,
+  .pill--strong .kbd {
+    border-color: light-dark(rgb(255 255 255 / 0.12), rgb(0 0 0 / 0.08));
+    background: light-dark(rgb(255 255 255 / 0.12), rgb(0 0 0 / 0.08));
+    color: light-dark(rgb(255 255 255 / 0.72), rgb(0 0 0 / 0.6));
+  }
+
+  @media (pointer: coarse) {
+    .kbd {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* About                                                                                       */
+/* ------------------------------------------------------------------------------------------ */
+
+/* The project header's two columns (.project-header): the title and portrait on the left, holding
+   still together under the header while the words on the right scroll by, and the words in the
+   intro column's width, which stays their measure when everything stacks below 992px. The words
+   start level with the portrait, so the portrait's top and the first line's capitals share one
+   line: they sit the title's one line (its 1.1 line height at 64px) and the 64px under it down. */
+@layer components {
+  .about__title {
+    margin-bottom: 4rem;
+  }
+
+  @media (width >= 62rem) {
+    .about__body {
+      padding-top: calc(4rem * 1.1 + 4rem);
+    }
+  }
+
+  .about {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6rem;
+  }
+
+  .about__aside {
+    position: sticky;
+    top: calc(32px + var(--pill-h) + 2rem);
+    flex: 0 1 24rem;
+    min-width: 0;
+  }
+
+  .about__body {
+    flex: none;
+    width: 40.375rem;
+    max-width: 100%;
+  }
+
+  @media (width < 62rem) {
+    .about {
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .about__aside {
+      position: static;
+      flex: none;
+    }
+
+    .about__title {
+      margin-bottom: 4rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .about {
+      gap: 2rem;
+    }
+
+    .about__title {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  /* An engraving on cream paper: a square tile with the media corners and a hairline edge, 320px
+     wide (70% of a phone's column). */
+  .about-portrait {
+    display: block;
+    width: 20rem;
+    max-width: 70%;
+    height: auto;
+    border-radius: var(--media-radius);
+    outline: 1px solid var(--image-outline);
+    outline-offset: -1px;
+  }
+
+  /* Beside the words it fills its column (up to 384px). */
+  @media (width >= 62rem) {
+    .about-portrait {
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  /* Ink on paper stays a print in dark mode, a step dimmer so the paper isn't the brightest thing
+     on the page. The header avatar is the same engraving and dims with it. */
+  @media (prefers-color-scheme: dark) {
+    .about-portrait,
+    .site-name img {
+      filter: brightness(0.88);
+    }
+  }
+
+  /* The opening, in the projects' intro size: who, in ink, then what now, quieter. */
+  /* A clear step over the 21px body: 28px here, where the project intro's 24px sits too close.
+     Trimmed to its capitals and baseline, so its top is the portrait's top and the space under it
+     is the space we set. */
+  .about__lead {
+    width: 100%;
+    font-size: 1.75rem;
+    line-height: 1.32;
+    letter-spacing: -0.018em;
+    text-box: trim-both cap alphabetic;
+  }
+
+  @media (width < 62rem) {
+    .about__lead {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (width < 48rem) {
+    .about__lead {
+      font-size: 1.3125rem;
+      line-height: 1.4;
+    }
+  }
+
+  .about__lead-muted {
+    color: var(--muted);
+  }
+
+  /* The rest reads as body text, a step under the lead. */
+  .about__prose {
+    margin-top: 2.5rem;
+    color: var(--fg);
+  }
+
+  /* The site's paragraph step (.prose p). */
+  .about__prose p + p {
+    margin-top: 1.75rem;
+  }
+
+  .about__section {
+    margin-top: 4.5rem;
+  }
+
+  @media (width < 48rem) {
+    .about__prose {
+      margin-top: 1.75rem;
+    }
+
+    .about__section {
+      margin-top: 3.5rem;
+    }
+  }
+
+  /* The work as rows on hairlines, in the timeline's sizes: the name, the role quieter, the years
+     at the end. Hovering a row quiets the others, as the timeline's do. */
+  .about-work {
+    border-top: 1px solid var(--border);
+  }
+
+  .about-work__row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1.125rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .about-work__name {
+    color: var(--ink);
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  .about-work__role {
+    color: var(--muted);
+  }
+
+  .about-work__period {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .about-work:has(.about-work__row:hover) .about-work__row:not(:hover) {
+      opacity: 0.45;
+    }
+
+    .about-work__row:hover {
+      text-decoration: none;
+    }
+  }
+
+  .about-work__row:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  /* Phones: the name and years on one line, the role under them. */
+  @media (width < 48rem) {
+    .about-work__row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "name period" "role role";
+      row-gap: 0.125rem;
+      column-gap: 1rem;
+      padding-block: 0.875rem;
+    }
+
+    .about-work__name {
+      grid-area: name;
+    }
+
+    .about-work__role {
+      grid-area: role;
+    }
+
+    .about-work__period {
+      grid-area: period;
+    }
+  }
+
+  .about__contact {
+    color: var(--fg);
+  }
+}
